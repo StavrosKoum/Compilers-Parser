@@ -87,8 +87,8 @@ class TernaryEvaluator {
     public int expr() throws IOException, ParseError 
     {
         
-        int test = isDigit(lookahead);
-        System.out.println("ok"+test+"\n");
+        // int test = isDigit(lookahead);
+        // System.out.println("ok"+test+"\n");
 
         if (isDigit(lookahead) || lookahead == '(')
         {
@@ -112,19 +112,30 @@ class TernaryEvaluator {
 
     public int factor() throws IOException, ParseError 
     {
+        int value = 0;
         //-> num | (expr)
         if(isDigit(lookahead))
         {
-            int value = num();
+            value = num();
         }
         else if(lookahead == '(')
         {
+            //call expr
+            value = expr();
 
+            if(lookahead != ')')
+            {
+                throw new ParseError();
+            }
+            //consume ')'
+            consume(lookahead);
         }
         else
         {
             throw new ParseError();
         }
+        
+        return value;
     }
 
     public int num() throws IOException, ParseError 
