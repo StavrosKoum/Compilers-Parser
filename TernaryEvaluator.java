@@ -42,7 +42,7 @@ class TernaryEvaluator {
 
     public int eval() throws IOException, ParseError {
        
-        
+        num();
         
         int value = Tern();
 
@@ -81,20 +81,15 @@ class TernaryEvaluator {
         throw new ParseError();
     }
 
-
-
-
-
-
-
-
-
-
+    
 
     /////////////////////////////////////////////
     public int expr() throws IOException, ParseError 
     {
-        System.out.println("ok\n");
+        
+        int test = isDigit(lookahead);
+        System.out.println("ok"+test+"\n");
+
         if (isDigit(lookahead) || lookahead == '(')
         {
             //->term exprtail
@@ -134,11 +129,45 @@ class TernaryEvaluator {
 
     public int num() throws IOException, ParseError 
     {
+        //-> digit num | e
+        StringBuilder dec_str = new StringBuilder();
+        int decimal_num;
+        int value;
+        
+        if(isDigit(lookahead))
+        {
+            
+            while(isDigit(lookahead))
+            {
+                value = digit();
+                dec_str.append(value);
+                consume(lookahead);
 
+            }
+            decimal_num = Integer.valueOf(dec_str.toString());
+            return decimal_num;
+
+        }
+        
         throw new ParseError();
     }
 
+    public int digit() throws IOException, ParseError 
+    {
+        return lookahead - '0';
+    }
+    
+    // int a = lookahead - '0';
+    // int b = 5;
+    // int c = 1;
+    // StringBuilder con = new StringBuilder();
+    // con.append(a);
+    // con.append(b);
+    // con.append(c);
+    // int k = Integer.valueOf(con.toString());
 
-
+    // System.out.println(k+"ok"+lookahead+"\n");
+    
+    
 }
 
