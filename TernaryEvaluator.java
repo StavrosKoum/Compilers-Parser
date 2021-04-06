@@ -107,12 +107,37 @@ class TernaryEvaluator {
         return value;
     }
 
-    public int tern() throws IOException, ParseError 
+    public int term() throws IOException, ParseError 
     {
         
         //->factor termtail
+        int value = factor();
         return value;
     }
+
+    public int factor() throws IOException, ParseError 
+    {
+        //-> num | (expr)
+        if(isDigit(lookahead))
+        {
+            int value = num();
+        }
+        else if(lookahead == '(')
+        {
+
+        }
+        else
+        {
+            throw new ParseError();
+        }
+    }
+
+    public int num() throws IOException, ParseError 
+    {
+
+        throw new ParseError();
+    }
+
 
 
 }
