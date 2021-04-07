@@ -87,14 +87,15 @@ class TernaryEvaluator {
     /////////////////////////////////////////////
     public int expr() throws IOException, ParseError 
     {
-        
+        int value = 0;
         // int test = isDigit(lookahead);
         // System.out.println("ok"+test+"\n");
 
         if (isDigit(lookahead) || lookahead == '(')
         {
             //->term exprtail
-            int value = term();
+            value = term();
+            value = value + exprtail();
         }
         else
         {
@@ -110,7 +111,7 @@ class TernaryEvaluator {
         int value = factor();
         //call termtail with value
         int pow = termtail();
-        value = Math(value,pow);
+        value = (int) Math.pow(value,pow);
 
 
         return value;
@@ -135,24 +136,50 @@ class TernaryEvaluator {
                 //call factor termtail
                 int val = factor();
                 int val2 = termtail();
-                ret = Math.pow(val,val2);
+                ret = (int) Math.pow(val,val2);
                 return ret;
 
 
 
 
-
+            //i think its not posible to read it because factor() consumes it
             case ')':
                 //return 1?
             case '\n':
-                //return 1?
+                return 1; //not sure
 
                
         }
 
+        throw new ParseError();
 
 
+    }
 
+
+    public int exprtail() throws IOException, ParseError 
+    {
+        int ret = 0;
+        switch (lookahead) 
+        {
+            case '+':
+                //+ term  +exprtail
+                consume(lookahead);
+                ret = term() + exprtail();
+                return ret;
+
+            case '-':
+                //-term +exprtail times(-1)
+                consume(lookahead);
+                ret = term() + exprtail(); 
+                ret = ret * (-1);
+                return ret;
+            case '\n':
+                return 0;
+
+
+        }
+        throw new ParseError();
 
 
     }
