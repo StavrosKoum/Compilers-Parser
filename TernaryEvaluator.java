@@ -1,5 +1,6 @@
 import java.io.InputStream;
 import java.io.IOException;
+import java.lang.Math;
 /*
 * -------------------------------------------------------------------------
 * 	        |     '0' .. '9'     |  ':'    |       '?'          |  $    |
@@ -107,7 +108,53 @@ class TernaryEvaluator {
         
         //->factor termtail
         int value = factor();
+        //call termtail with value
+        int pow = termtail();
+        value = Math(value,pow);
+
+
         return value;
+    }
+
+    public int termtail() throws IOException, ParseError 
+    {
+
+        int ret = 1;
+        switch (lookahead) 
+        {
+            case '+':
+            case '-':
+            case '*':
+                consume(lookahead);
+                if(lookahead!='*')
+                {
+                    throw new ParseError();
+                }
+                //consume second *
+                consume(lookahead);
+                //call factor termtail
+                int val = factor();
+                int val2 = termtail();
+                ret = Math.pow(val,val2);
+                return ret;
+
+
+
+
+
+            case ')':
+                //return 1?
+            case '\n':
+                //return 1?
+
+               
+        }
+
+
+
+
+
+
     }
 
     public int factor() throws IOException, ParseError 
