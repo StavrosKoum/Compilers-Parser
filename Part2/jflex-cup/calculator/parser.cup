@@ -1,0 +1,72 @@
+/* Simple +/-/* expression language; parser evaluates constant expressions on the fly*/
+/**
+ *  Package and Import Specifications
+ */
+import java_cup.runtime.*;
+
+/**
+ *  Usercode Components
+ */
+parser code {:
+    // Connect this parser to a scanner!
+    Scanner s;
+    Parser(Scanner s){ this.s=s; }
+:}
+
+/* define how to connect to the scanner! */
+scan with {: return s.next_token(); :};
+
+/**
+ *  Symbol Lists
+ */
+
+/* Terminals (tokens returned by the scanner). */
+terminal            SEMI, PLUS, MINUS, EXP , LPAREN, RPAREN,OPEN_BR,CLOSE_BR;
+terminal Integer    NUMBER;        // our scanner provides numbers as integers
+terminal String     STRING_LITERAL,ID; 
+
+/*  Non terminals */
+non terminal            program;
+non terminal String    expr, expr_list,goal,Function;      // used to store evaluated subexpressions
+
+/**
+ *  Precedence Declarations
+ */
+ precedence left ID;
+precedence left PLUS, MINUS;
+precedence right EXP;
+
+/**
+ *  The Grammar Rules
+ */
+
+program ::= goal:e {:
+			System.out.println("import java.lang.Math;\n");
+			System.out.println("public class Main {");
+			System.out.println("\tpublic static void main(String[] args) {");
+			System.out.printf("%s", e);
+			System.out.println("\t}");
+			System.out.println("}");
+			 :}
+	;
+
+
+goal            ::= goal:g Function:f     {: RESULT = String.format("%s\t\tSystem.out.println(%s);\n", g, f); :}
+                |                                {: RESULT = ""; :}
+                ;
+
+Function        ::= ID:id LPAREN RPAREN OPEN_BR CLOSE_BR Function:e                {: RESULT = String.format("%s()", id); :}
+                | ID:id  LPAREN RPAREN  OPEN_BR CLOSE_BR                  {: RESULT = String.format("%s()", id); :}
+                ;
+
+
+/**
+*goal        ::= Function:f                 {: RESULT = String.format("%s\t\tSystem.out.println(%s);\n", f); :}
+ *           |
+  *          ;
+
+
+*Function    ::= ID:id LPAREN   RPAREN OPEN_BR CLOSE_BR Function:f           {: RESULT = String.format("%s()", id); :}
+*            |
+*            ;
+*/
