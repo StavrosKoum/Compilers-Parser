@@ -50,23 +50,39 @@ program ::= goal:e {:
 			 :}
 	;
 
-
-goal            ::= goal:g Function:f     {: RESULT = String.format("%s\t\tSystem.out.println(%s);\n", g, f); :}
+/**
+goal            ::= Function:f goal:g     {: RESULT = String.format("%s\t\tSystem.out.println(%s);\n", g, f); :}
                 |                                {: RESULT = ""; :}
                 ;
 
 Function        ::= ID:id LPAREN RPAREN OPEN_BR CLOSE_BR Function:e                {: RESULT = String.format("%s()", id); :}
                 | ID:id  LPAREN RPAREN  OPEN_BR CLOSE_BR                  {: RESULT = String.format("%s()", id); :}
                 ;
-
-
-/**
-*goal        ::= Function:f                 {: RESULT = String.format("%s\t\tSystem.out.println(%s);\n", f); :}
- *           |
-  *          ;
-
-
-*Function    ::= ID:id LPAREN   RPAREN OPEN_BR CLOSE_BR Function:f           {: RESULT = String.format("%s()", id); :}
-*            |
-*            ;
 */
+
+
+goal        ::= goal:rest Function:e   CLOSE_BR {: RESULT = String.format("%s\t\tSystem.out.println(%s);\n", rest, e); :}
+            |                               {: RESULT = ""; :}
+            ;
+
+Function        ::= ID:id LPAREN RPAREN OPEN_BR  Function:e                {: RESULT = String.format("----%s()", id,e); :}
+                | ID:id  LPAREN RPAREN  OPEN_BR                            {: RESULT = String.format("%s()", id); :}
+                ;
+
+
+
+
+expr_list ::= expr_list:rest expr:e SEMI    {: RESULT = String.format("%s\t\tSystem.out.println(%s);\n", rest, e); :}
+            |                               {: RESULT = ""; :}
+            ;
+
+
+expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = String.format("%s + %s", e1, e2); :}
+             | expr:e1 MINUS expr:e2        {: RESULT = String.format("%s - %s", e1, e2); :}
+             | expr:e1 EXP expr:e2          {: RESULT = String.format("(int)Math.pow(%s, %s)", e1, e2); :}
+             | LPAREN expr:e RPAREN         {: RESULT = String.format("(%s)", e); :}
+             | NUMBER:n                     {: RESULT = String.format("%d", n); :}
+             | STRING_LITERAL:s             {: RESULT = String.format("Integer.parseInt(\"%s\", 16)", s); :}  
+             ;
+
+
