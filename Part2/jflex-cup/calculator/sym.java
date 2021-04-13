@@ -9,12 +9,13 @@ public interface sym {
   public static final int MINUS = 4;
   public static final int OPEN_BR = 8;
   public static final int CLOSE_BR = 9;
-  public static final int NUMBER = 10;
+  public static final int NUMBER = 11;
   public static final int SEMI = 2;
-  public static final int STRING_LITERAL = 11;
+  public static final int STRING_LITERAL = 12;
   public static final int EOF = 0;
   public static final int PLUS = 3;
-  public static final int ID = 12;
+  public static final int ID = 13;
+  public static final int COMMA = 10;
   public static final int error = 1;
   public static final int RPAREN = 7;
   public static final int LPAREN = 6;
@@ -30,6 +31,7 @@ public interface sym {
   "RPAREN",
   "OPEN_BR",
   "CLOSE_BR",
+  "COMMA",
   "NUMBER",
   "STRING_LITERAL",
   "ID"

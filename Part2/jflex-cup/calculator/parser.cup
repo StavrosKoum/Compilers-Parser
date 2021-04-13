@@ -21,20 +21,20 @@ scan with {: return s.next_token(); :};
  */
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, EXP , LPAREN, RPAREN,OPEN_BR,CLOSE_BR;
+terminal            SEMI, PLUS, MINUS, EXP , LPAREN, RPAREN,OPEN_BR,CLOSE_BR,COMMA;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
 terminal String     STRING_LITERAL,ID; 
 
 /*  Non terminals */
 non terminal            program;
-non terminal String    expr, expr_list,goal,Function;      // used to store evaluated subexpressions
+non terminal String    expr, expr_list,goal,Function,d_args;      // used to store evaluated subexpressions
 
 /**
  *  Precedence Declarations
  */
  precedence left ID;
-precedence left PLUS, MINUS;
-precedence right EXP;
+ precedence left PLUS, MINUS;
+ precedence right EXP;
 
 /**
  *  The Grammar Rules
@@ -44,30 +44,41 @@ program ::= goal:e {:
 			System.out.println("import java.lang.Math;\n");
 			System.out.println("public class Main {");
 			System.out.println("\tpublic static void main(String[] args) {");
-			System.out.printf("%s", e);
+			
 			System.out.println("\t}");
 			System.out.println("}");
+      System.out.printf("%s", e);
 			 :}
 	;
 
-/**
-goal            ::= Function:f goal:g     {: RESULT = String.format("%s\t\tSystem.out.println(%s);\n", g, f); :}
-                |                                {: RESULT = ""; :}
+
+
+
+goal            ::= goal:rest Function:e    {: RESULT = String.format("\n\n%s%s\n", rest, e); :}
+                |                               {: RESULT = ""; :}
                 ;
 
-Function        ::= ID:id LPAREN RPAREN OPEN_BR CLOSE_BR Function:e                {: RESULT = String.format("%s()", id); :}
-                | ID:id  LPAREN RPAREN  OPEN_BR CLOSE_BR                  {: RESULT = String.format("%s()", id); :}
+Function        ::= ID:id LPAREN d_args:arg RPAREN OPEN_BR CLOSE_BR Function:f                {: RESULT = String.format("public static String %s(%s){\n\n} \n %s", id,arg,f); :}
+                | ID:id2  LPAREN d_args:arg RPAREN  OPEN_BR  CLOSE_BR                          {: RESULT = String.format("public static String %s(%s){\n\n}", id2,arg); :}
+                | ID:id2  LPAREN  RPAREN  OPEN_BR CLOSE_BR                           {: RESULT = String.format("public static String %s(){\n\n}", id2); :}
+                | ID:id2  LPAREN  RPAREN  OPEN_BR CLOSE_BR  Function:f                         {: RESULT = String.format("public static String %s(){\n\n} \n %s", id2,f); :}
                 ;
-*/
 
 
-goal        ::= goal:rest Function:e   CLOSE_BR {: RESULT = String.format("%s\t\tSystem.out.println(%s);\n", rest, e); :}
-            |                               {: RESULT = ""; :}
-            ;
-
-Function        ::= ID:id LPAREN RPAREN OPEN_BR  Function:e                {: RESULT = String.format("----%s()", id,e); :}
-                | ID:id  LPAREN RPAREN  OPEN_BR                            {: RESULT = String.format("%s()", id); :}
+d_args          ::= ID:id COMMA d_args:arg                                         {: RESULT = String.format("%s , %s", id,arg); :}
+                | ID: id                                                         {: RESULT = String.format("%s", id); :}
                 ;
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -86,3 +97,38 @@ expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = String.format("%s + %s",
              ;
 
 
+/**
+goal            ::= Function:f goal:g     {: RESULT = String.format("%s\t\tSystem.out.println(%s);\n", g, f); :}
+                |                                {: RESULT = ""; :}
+                ;
+
+Function        ::= ID:id LPAREN RPAREN OPEN_BR CLOSE_BR Function:e                {: RESULT = String.format("%s()", id); :}
+                | ID:id  LPAREN RPAREN  OPEN_BR CLOSE_BR                  {: RESULT = String.format("%s()", id); :}
+
+                ;
+
+
+
+
+
+
+
+
+goal            ::= goal:rest Function:e   CLOSE_BR {: RESULT = String.format("%s\t\tSystem.out.println(%s);\n", rest, e); :}
+                |                               {: RESULT = ""; :}
+                ;
+
+Function        ::= ID:id LPAREN d_args:arg RPAREN OPEN_BR  Function:f                {: RESULT = String.format("----%s(%s),%s", id,arg,f); :}
+                | ID:id2  LPAREN d_args:arg RPAREN  OPEN_BR                            {: RESULT = String.format("%s(%s)", id2,arg); :}
+                | ID:id2  LPAREN  RPAREN  OPEN_BR                            {: RESULT = String.format("%s()", id2); :}
+                ;
+
+
+d_args          ::= ID:id COMMA d_args:arg                                         {: RESULT = String.format("%s , %s", id,arg); :}
+                | ID: id                                                         {: RESULT = String.format("%s  ", id); :}
+                ;
+
+
+
+
+*/

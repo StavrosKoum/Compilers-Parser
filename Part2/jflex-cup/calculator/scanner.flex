@@ -82,6 +82,7 @@ identifier = [a-zA-Z_][0-9a-zA-Z_]*
  ";"            { return symbol(sym.SEMI); }
  "{"              { return symbol(sym.OPEN_BR); }
  "}"              { return symbol(sym.CLOSE_BR); }
+ ","            { return symbol(sym.COMMA); }
 
  {dec_int_lit}  { return symbol(sym.NUMBER, new Integer(yytext())); }
  \"             { stringBuffer.setLength(0); yybegin(STRING); }
