@@ -27,7 +27,7 @@ terminal String     STRING_LITERAL,ID;
 
 /*  Non terminals */
 non terminal            program;
-non terminal String    expr, expr_list,goal,Function,d_args;      // used to store evaluated subexpressions
+non terminal String    expr, expr_list,goal,Function,d_args,Function_call;      // used to store evaluated subexpressions
 
 /**
  *  Precedence Declarations
@@ -54,14 +54,16 @@ program ::= goal:e {:
 
 
 
-goal            ::= goal:rest Function:e    {: RESULT = String.format("\n\n%s%s\n", rest, e); :}
-                |                               {: RESULT = ""; :}
+goal            ::=   Function:e Function_call:fc {: RESULT = String.format("\n\n%s\n\n %s ",e,fc); :}
                 ;
 
-Function        ::= ID:id LPAREN d_args:arg RPAREN OPEN_BR CLOSE_BR Function:f                {: RESULT = String.format("public static String %s(%s){\n\n} \n %s", id,arg,f); :}
-                | ID:id2  LPAREN d_args:arg RPAREN  OPEN_BR  CLOSE_BR                          {: RESULT = String.format("public static String %s(%s){\n\n}", id2,arg); :}
-                | ID:id2  LPAREN  RPAREN  OPEN_BR CLOSE_BR                           {: RESULT = String.format("public static String %s(){\n\n}", id2); :}
+Function        ::= ID:id LPAREN d_args:arg RPAREN OPEN_BR CLOSE_BR Function:f                {: RESULT = String.format("public static String %s(%s){\n\n} \n %s", id,arg,f); :}                
                 | ID:id2  LPAREN  RPAREN  OPEN_BR CLOSE_BR  Function:f                         {: RESULT = String.format("public static String %s(){\n\n} \n %s", id2,f); :}
+                |                                                                               {: RESULT = ""; :}
+                ;
+
+Function_call   ::= ID:id LPAREN Function_call:fc RPAREN                              {: RESULT = String.format("%s(%s)\n ", id,fc); :}
+                |                                                                     {: RESULT = ""; :}
                 ;
 
 
