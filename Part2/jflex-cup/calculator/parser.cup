@@ -21,13 +21,13 @@ scan with {: return s.next_token(); :};
  */
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, EXP , LPAREN, RPAREN,OPEN_BR,CLOSE_BR,COMMA,IF;
+terminal            SEMI, PLUS, MINUS, EXP , LPAREN, RPAREN,OPEN_BR,CLOSE_BR,COMMA,IF,ELSE;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
 terminal String     STRING_LITERAL,ID; 
 
 /*  Non terminals */
 non terminal            program;
-non terminal String    expr, expr_list,goal,Function,d_args,Function_call;      // used to store evaluated subexpressions
+non terminal String    expr, expr_list,goal,Function,d_args,Function_call,f_work;      // used to store evaluated subexpressions
 
 /**
  *  Precedence Declarations
@@ -54,11 +54,11 @@ program ::= goal:e {:
 
 
 
-goal            ::= Function:e  IF  {: RESULT = String.format("\n\n%s\n\n  ",e); :}
+goal            ::= Function:e   {: RESULT = String.format("\n\n%s\n\n  ",e); :}
                 ;
 
-Function        ::= ID:id LPAREN d_args:arg RPAREN OPEN_BR CLOSE_BR Function:f                {: RESULT = String.format("public static String %s(%s){\n\n} \n %s", id,arg,f); :}                
-                | ID:id2  LPAREN  RPAREN  OPEN_BR CLOSE_BR  Function:f                         {: RESULT = String.format("public static String %s(){\n\n} \n %s", id2,f); :}
+Function        ::= ID:id LPAREN d_args:arg RPAREN OPEN_BR f_work:fw CLOSE_BR Function:f                {: RESULT = String.format("public static String %s(%s){\n\n} %s \n %s", id,arg,f,fw); :}                
+                | ID:id2  LPAREN  RPAREN  OPEN_BR f_work:fw CLOSE_BR  Function:f                         {: RESULT = String.format("public static String %s(){\n\n %s }  \n %s", id2,f,fw); :}
                 |                                                                               {: RESULT = ""; :}
                 ;
 
@@ -71,9 +71,9 @@ d_args          ::= ID:id COMMA d_args:arg                                      
                 | ID: id                                                         {: RESULT = String.format("%s", id); :}
                 ;
 
-
-
-
+f_work          ::= IF  LPAREN RPAREN ELSE                                  {: RESULT = String.format("\t if() \n\t else \n"); :}
+                |                                                           {: RESULT = ""; :}
+                ;
 
 
 
