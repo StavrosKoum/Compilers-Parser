@@ -66,6 +66,7 @@ dec_int_lit = 0 | [1-9][0-9]*
 
 identifier = [a-zA-Z_][0-9a-zA-Z_]*
 
+
 %state STRING
 
 %%
@@ -73,7 +74,7 @@ identifier = [a-zA-Z_][0-9a-zA-Z_]*
 
 <YYINITIAL> {
 /* operators */
-{identifier}    { stringBuffer.setLength(0); stringBuffer.append( yytext() ); return symbol(sym.ID, stringBuffer.toString());}
+"if"            { return symbol(sym.IF); }
  "+"            { return symbol(sym.PLUS); }
  "-"            { return symbol(sym.MINUS); }
  "**"           { return symbol(sym.EXP); }
@@ -83,6 +84,10 @@ identifier = [a-zA-Z_][0-9a-zA-Z_]*
  "{"              { return symbol(sym.OPEN_BR); }
  "}"              { return symbol(sym.CLOSE_BR); }
  ","            { return symbol(sym.COMMA); }
+
+ {identifier}    { stringBuffer.setLength(0); stringBuffer.append( yytext() ); return symbol(sym.ID, stringBuffer.toString());}
+ 
+
 
  {dec_int_lit}  { return symbol(sym.NUMBER, new Integer(yytext())); }
  \"             { stringBuffer.setLength(0); yybegin(STRING); }

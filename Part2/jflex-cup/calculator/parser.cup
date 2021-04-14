@@ -21,7 +21,7 @@ scan with {: return s.next_token(); :};
  */
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, EXP , LPAREN, RPAREN,OPEN_BR,CLOSE_BR,COMMA;
+terminal            SEMI, PLUS, MINUS, EXP , LPAREN, RPAREN,OPEN_BR,CLOSE_BR,COMMA,IF;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
 terminal String     STRING_LITERAL,ID; 
 
@@ -54,7 +54,7 @@ program ::= goal:e {:
 
 
 
-goal            ::=   Function:e Function_call:fc {: RESULT = String.format("\n\n%s\n\n %s ",e,fc); :}
+goal            ::= Function:e  IF  {: RESULT = String.format("\n\n%s\n\n  ",e); :}
                 ;
 
 Function        ::= ID:id LPAREN d_args:arg RPAREN OPEN_BR CLOSE_BR Function:f                {: RESULT = String.format("public static String %s(%s){\n\n} \n %s", id,arg,f); :}                
