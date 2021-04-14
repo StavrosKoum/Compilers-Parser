@@ -685,7 +685,7 @@ class Scanner implements java_cup.runtime.Scanner {
             }
           case 35: break;
           case 13: 
-            { stringBuffer.setLength(0); yybegin(STRING);
+            { return symbol(sym.EAR);
             }
           case 36: break;
           case 14: 

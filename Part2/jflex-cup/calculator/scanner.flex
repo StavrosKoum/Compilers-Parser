@@ -85,6 +85,7 @@ identifier = [a-zA-Z_][0-9a-zA-Z_]*
  "{"              { return symbol(sym.OPEN_BR); }
  "}"              { return symbol(sym.CLOSE_BR); }
  ","            { return symbol(sym.COMMA); }
+ \"             { return symbol(sym.EAR); }
 
  {identifier}    { stringBuffer.setLength(0); stringBuffer.append( yytext() ); return symbol(sym.ID, stringBuffer.toString());}
  

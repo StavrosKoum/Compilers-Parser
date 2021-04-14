@@ -9,17 +9,18 @@ public interface sym {
   public static final int MINUS = 4;
   public static final int OPEN_BR = 8;
   public static final int CLOSE_BR = 9;
-  public static final int NUMBER = 13;
+  public static final int NUMBER = 14;
   public static final int SEMI = 2;
-  public static final int STRING_LITERAL = 14;
+  public static final int STRING_LITERAL = 15;
   public static final int EOF = 0;
   public static final int PLUS = 3;
   public static final int IF = 11;
-  public static final int ID = 15;
+  public static final int ID = 16;
   public static final int ELSE = 12;
   public static final int COMMA = 10;
   public static final int error = 1;
   public static final int RPAREN = 7;
+  public static final int EAR = 13;
   public static final int LPAREN = 6;
   public static final int EXP = 5;
   public static final String[] terminalNames = new String[] {
@@ -36,6 +37,7 @@ public interface sym {
   "COMMA",
   "IF",
   "ELSE",
+  "EAR",
   "NUMBER",
   "STRING_LITERAL",
   "ID"
