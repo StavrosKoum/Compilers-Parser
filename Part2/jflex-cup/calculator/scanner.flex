@@ -76,6 +76,8 @@ identifier = [a-zA-Z_][0-9a-zA-Z_]*
 /* operators */
 "if"            { return symbol(sym.IF); }
 "else"            { return symbol(sym.ELSE); }
+"prefix"            { return symbol(sym.PREFIX); }
+"suffix"         { return symbol(sym.SUFFIX); }
  "+"            { return symbol(sym.PLUS); }
  "-"            { return symbol(sym.MINUS); }
  "**"           { return symbol(sym.EXP); }

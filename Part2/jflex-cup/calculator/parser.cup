@@ -21,13 +21,13 @@ scan with {: return s.next_token(); :};
  */
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, EXP , LPAREN, RPAREN,OPEN_BR,CLOSE_BR,COMMA,IF,ELSE,EAR;
+terminal            SEMI, PLUS, MINUS, EXP , LPAREN, RPAREN,OPEN_BR,CLOSE_BR,COMMA,IF,ELSE,EAR,PREFIX,SUFFIX;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
 terminal String     STRING_LITERAL,ID; 
 
 /*  Non terminals */
 non terminal            program;
-non terminal String    expr, expr_list,goal,Function,d_args,Function_call,f_work,if_state,else_state,id_add;      // used to store evaluated subexpressions
+non terminal String    expr, expr_list,goal,Function,d_args,Function_call,f_work,if_state,else_state,id_add,if_args,after_if,inner_f_call;      // used to store evaluated subexpressions
 
 /**
  *  Precedence Declarations
@@ -76,7 +76,7 @@ f_work          ::= if_state:i                                {: RESULT = String
                 | EAR ID:ii EAR                               {: RESULT = String.format("\"%s\" ",ii); :}
                 ;
 
-if_state        ::= IF  LPAREN RPAREN  else_state:e                                  {: RESULT = String.format("\t if() \n\t else\n\t%s",e); :}
+if_state        ::= IF  LPAREN if_args:ia RPAREN after_if:ai else_state:e                                  {: RESULT = String.format("\t if(%s) \n\t\t%s\n\t else\n\t%s",ia,ai,e); :}
                 |                                                           {: RESULT = ""; :}
                 ;
 
@@ -89,57 +89,18 @@ id_add          ::= ID:id PLUS id_add:arg                                       
                 | ID: id                                                         {: RESULT = String.format("%s", id); :}
                 ;
 
-
-
-
-
-
-expr_list ::= expr_list:rest expr:e SEMI    {: RESULT = String.format("%s\t\tSystem.out.println(%s);\n", rest, e); :}
-            |                               {: RESULT = ""; :}
-            ;
-
-
-expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = String.format("%s + %s", e1, e2); :}
-             | expr:e1 MINUS expr:e2        {: RESULT = String.format("%s - %s", e1, e2); :}
-             | expr:e1 EXP expr:e2          {: RESULT = String.format("(int)Math.pow(%s, %s)", e1, e2); :}
-             | LPAREN expr:e RPAREN         {: RESULT = String.format("(%s)", e); :}
-             | NUMBER:n                     {: RESULT = String.format("%d", n); :}
-             | STRING_LITERAL:s             {: RESULT = String.format("Integer.parseInt(\"%s\", 16)", s); :}  
-             ;
-
-
-/**
-goal            ::= Function:f goal:g     {: RESULT = String.format("%s\t\tSystem.out.println(%s);\n", g, f); :}
-                |                                {: RESULT = ""; :}
+if_args         ::= ID:id PREFIX EAR ID:id2 EAR           {: RESULT = "PREFIX"; :}
+                | EAR ID:id2 EAR PREFIX ID:id              {: RESULT = "PREFIX"; :}
+                | ID:id SUFFIX EAR ID:id2 EAR              {: RESULT = "SUFFIX"; :}
+                | EAR ID:id2 EAR SUFFIX ID:id              {: RESULT = "SUFFIX"; :}
                 ;
 
-Function        ::= ID:id LPAREN RPAREN OPEN_BR CLOSE_BR Function:e                {: RESULT = String.format("%s()", id); :}
-                | ID:id  LPAREN RPAREN  OPEN_BR CLOSE_BR                  {: RESULT = String.format("%s()", id); :}
-
+after_if        ::= if_state:is               {: RESULT = "\n \t"; :}
+                |   EAR ID:id2 EAR             {: RESULT = String.format("\t\"%s\" \n", id2); :} 
+                |   inner_f_call:ifc            {: RESULT = String.format("\t%s \n", ifc); :} 
                 ;
 
-
-
-
-
-
-
-
-goal            ::= goal:rest Function:e   CLOSE_BR {: RESULT = String.format("%s\t\tSystem.out.println(%s);\n", rest, e); :}
-                |                               {: RESULT = ""; :}
+inner_f_call    ::= ID:id LPAREN  RPAREN                              {: RESULT = String.format("/n%s() \n", id); :}
+                |   ID:id LPAREN EAR ID:id2 EAR RPAREN                      {: RESULT = "PREFIX"; :}
                 ;
 
-Function        ::= ID:id LPAREN d_args:arg RPAREN OPEN_BR  Function:f                {: RESULT = String.format("----%s(%s),%s", id,arg,f); :}
-                | ID:id2  LPAREN d_args:arg RPAREN  OPEN_BR                            {: RESULT = String.format("%s(%s)", id2,arg); :}
-                | ID:id2  LPAREN  RPAREN  OPEN_BR                            {: RESULT = String.format("%s()", id2); :}
-                ;
-
-
-d_args          ::= ID:id COMMA d_args:arg                                         {: RESULT = String.format("%s , %s", id,arg); :}
-                | ID: id                                                         {: RESULT = String.format("%s  ", id); :}
-                ;
-
-
-
-
-*/
