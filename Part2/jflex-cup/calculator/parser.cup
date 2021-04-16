@@ -57,8 +57,8 @@ program ::= goal:e {:
 goal            ::=  Function:e   {: RESULT = String.format("\n\n%s\n\n  ",e); :}
                 ;
 
-Function        ::= ID:id LPAREN d_args:arg RPAREN OPEN_BR f_work:fw CLOSE_BR Function:f                {: RESULT = String.format("public static String %s(%s){\n\n %s \n} %s", id,arg,fw,f); :}                
-                | ID:id2  LPAREN  RPAREN  OPEN_BR f_work:fw CLOSE_BR  Function:f                         {: RESULT = String.format("public static String %s(){\n\n %s } \n%s \n ", id2,fw,f); :}
+Function        ::= ID:id LPAREN d_args:arg RPAREN OPEN_BR f_work:fw CLOSE_BR Function:f                {: RESULT = String.format("public static String %s(%s)\n{\n\t%s\n}\n%s", id,arg,fw,f); :}                
+                | ID:id2  LPAREN  RPAREN  OPEN_BR f_work:fw CLOSE_BR  Function:f                         {: RESULT = String.format("public static String %s()\n{\n\t%s\n }\n%s \n ", id2,fw,f); :}
                 |                                                                               {: RESULT = ""; :}
                 ;
 
@@ -72,21 +72,21 @@ d_args          ::= ID:id COMMA d_args:arg                                      
                 ;
 
 f_work          ::= if_state:i                                {: RESULT = String.format("%s\n",i); :}
-                | id_add:i                                    {: RESULT = String.format("%s\n",i); :}
-                | EAR ID:ii EAR                               {: RESULT = String.format("\"%s\" ",ii); :}
+                | id_add:i                                    {: RESULT = String.format("return %s\n",i); :}
+                | EAR ID:ii EAR                               {: RESULT = String.format("return \"%s\"; ",ii); :}
                 ;
 
-if_state        ::= IF  LPAREN if_args:ia RPAREN after_if:ai else_state:e                                  {: RESULT = String.format("\t if(%s) \n\t\t%s\n\t else\n\t%s",ia,ai,e); :}
-                |                                                           {: RESULT = ""; :}
+if_state        ::= IF  LPAREN if_args:ia RPAREN after_if:ai else_state:e                 {: RESULT = String.format("if(%s)\n\t\t%s\n\telse\n\t%s",ia,ai,e); :}
+                |                                                                         {: RESULT = ""; :}
                 ;
 
-else_state      ::= ELSE if_state:i                           {: RESULT = String.format("%s",i); :}
-                |   ELSE EAR ID:ii EAR                        {: RESULT = String.format("\"%s\" ",ii); :}
-                |   ELSE  ID:ii                               {: RESULT = String.format("%s ",ii); :}
+else_state      ::= ELSE if_state:i                           {: RESULT = String.format("\t %s",i); :}
+                |   ELSE EAR ID:ii EAR                        {: RESULT = String.format("\t \"%s\" ",ii); :}
+                |   ELSE  id_add:ii                               {: RESULT = String.format("\t %s ",ii); :}
                 ;
 
-id_add          ::= ID:id PLUS id_add:arg                                         {: RESULT = String.format("%s + %s", id,arg); :}
-                | ID: id                                                         {: RESULT = String.format("%s", id); :}
+id_add          ::= ID:id PLUS id_add:arg                                        {: RESULT = String.format("%s + %s;", id,arg); :}
+                | ID: id                                                         {: RESULT = String.format("%s;", id); :}
                 ;
 
 if_args         ::= ID:id PREFIX EAR ID:id2 EAR           {: RESULT = "PREFIX"; :}
@@ -95,12 +95,13 @@ if_args         ::= ID:id PREFIX EAR ID:id2 EAR           {: RESULT = "PREFIX"; 
                 | EAR ID:id2 EAR SUFFIX ID:id              {: RESULT = "SUFFIX"; :}
                 ;
 
-after_if        ::= if_state:is               {: RESULT = "\n \t"; :}
-                |   EAR ID:id2 EAR             {: RESULT = String.format("\t\"%s\" \n", id2); :} 
-                |   inner_f_call:ifc            {: RESULT = String.format("\t%s \n", ifc); :} 
+after_if        ::= if_state:is               {: RESULT = String.format("%s",is); :}
+                |   EAR ID:id2 EAR             {: RESULT = String.format("\"%s\"", id2); :} 
+                |   inner_f_call:ifc            {: RESULT = String.format(" %s ", ifc); :} 
                 ;
 
-inner_f_call    ::= ID:id LPAREN  RPAREN                              {: RESULT = String.format("/n%s() \n", id); :}
-                |   ID:id LPAREN EAR ID:id2 EAR RPAREN                      {: RESULT = "PREFIX"; :}
+inner_f_call    ::= ID:id LPAREN d_args:args RPAREN                          {: RESULT = String.format("\t%s(%s); \n", id,args); :}
+                |   ID:id LPAREN EAR ID:id2 EAR RPAREN                      {: RESULT = String.format("\t%s(\"%s\"); \n", id,id2); :}
+                |   ID:id LPAREN  RPAREN                              {: RESULT = String.format("\t%s(); \n", id); :}
                 ;
 
