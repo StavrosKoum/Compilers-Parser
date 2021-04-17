@@ -71,38 +71,38 @@ d_args          ::= ID:id COMMA d_args:arg                                      
                 | ID: id                                                         {: RESULT = String.format("%s", id); :}
                 ;
 
-f_work          ::= if_state:i                                {: RESULT = String.format("%s\n",i); :}
-                | id_add:i                                    {: RESULT = String.format("return %s;\n",i); :}
-                | EAR inside_ears:ii EAR                               {: RESULT = String.format("return \"%s\"; ",ii); :}
+f_work          ::= if_state:i                                          {: RESULT = String.format("return %s;\n",i); :}
+                | id_add:i                                              {: RESULT = String.format("return %s;\n",i); :}
+                | EAR inside_ears:ii EAR                                {: RESULT = String.format("return \"%s\"; ",ii); :}
                 ;
 
-if_state        ::= IF  LPAREN if_args:ia RPAREN after_if:ai else_state:e                 {: RESULT = String.format("%s ? %s : %s",ia,ai,e); :}
+if_state        ::= IF  LPAREN if_args:ia RPAREN after_if:ai else_state:e                 {: RESULT = String.format(" %s ? %s : %s",ia,ai,e); :}
                 |                                                                         {: RESULT = ""; :}
                 ;
 
 else_state      ::= ELSE if_state:i                           {: RESULT = String.format("%s",i); :}
-                |   ELSE EAR inside_ears:ii EAR                        {: RESULT = String.format("return \"%s\" ",ii); :}
-                |   ELSE  id_add:ii                               {: RESULT = String.format("return %s; ",ii); :}
+                |   ELSE EAR inside_ears:ii EAR                        {: RESULT = String.format(" \"%s\" ",ii); :}
+                |   ELSE  id_add:ii                               {: RESULT = String.format("%s ",ii); :}
                 ;
 
 id_add          ::= ID:id PLUS id_add:arg                                        {: RESULT = String.format("%s + %s", id,arg); :}
                 | ID: id                                                         {: RESULT = String.format("%s", id); :}
                 ;
 
-if_args         ::= ID:id PREFIX EAR inside_ears:id2 EAR           {: RESULT = "PREFIX"; :}
-                | EAR inside_ears:id2 EAR PREFIX ID:id              {: RESULT = "PREFIX"; :}
-                | ID:id SUFFIX EAR inside_ears:id2 EAR              {: RESULT = "SUFFIX"; :}
-                | EAR inside_ears:id2 EAR SUFFIX ID:id              {: RESULT = "SUFFIX"; :}
+if_args         ::= ID:id PREFIX EAR inside_ears:id2 EAR           {: RESULT = String.format("\"%s\".startsWith(%s)",id2,id); :}
+                | EAR inside_ears:id2 EAR PREFIX ID:id              {: RESULT = String.format("%s.startsWith(\"%s\")",id,id2); :}
+                | ID:id SUFFIX EAR inside_ears:id2 EAR              {: RESULT = String.format("%s.endsWith(\"%s\")",id,id2); :}
+                | EAR inside_ears:id2 EAR SUFFIX ID:id              {: RESULT = String.format("\"%s\".endsWith(\"%s\")",id,id2); :}
                 ;
 
 after_if        ::= if_state:is               {: RESULT = String.format("%s",is); :}
-                |   EAR inside_ears:id2 EAR             {: RESULT = String.format("return\"%s\"", id2); :} 
-                |   inner_f_call:ifc            {: RESULT = String.format("return %s ", ifc); :} 
+                |   EAR inside_ears:id2 EAR             {: RESULT = String.format("\"%s\"", id2); :} 
+                |   inner_f_call:ifc            {: RESULT = String.format("%s ", ifc); :} 
                 ;
 
-inner_f_call    ::= ID:id LPAREN d_args:args RPAREN                          {: RESULT = String.format("%s(%s); ", id,args); :}
-                |   ID:id LPAREN EAR inside_ears:id2 EAR RPAREN                      {: RESULT = String.format("%s(\"%s\"); ", id,id2); :}
-                |   ID:id LPAREN  RPAREN                              {: RESULT = String.format("%s(); ", id); :}
+inner_f_call    ::= ID:id LPAREN d_args:args RPAREN                          {: RESULT = String.format("%s(%s) ", id,args); :}
+                |   ID:id LPAREN EAR inside_ears:id2 EAR RPAREN                      {: RESULT = String.format("%s(\"%s\") ", id,id2); :}
+                |   ID:id LPAREN  RPAREN                              {: RESULT = String.format("%s() ", id); :}
                 ;
 
 
