@@ -21,20 +21,19 @@ scan with {: return s.next_token(); :};
  */
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, EXP , LPAREN, RPAREN,OPEN_BR,CLOSE_BR,COMMA,IF,ELSE,EAR,PREFIX,SUFFIX;
-terminal Integer    NUMBER;        // our scanner provides numbers as integers
-terminal String     STRING_LITERAL,ID; 
+terminal             PLUS,   LPAREN, RPAREN,OPEN_BR,CLOSE_BR,COMMA,IF,ELSE,EAR,PREFIX,SUFFIX;
+terminal String     ID; 
 
 /*  Non terminals */
 non terminal            program;
-non terminal String    expr, expr_list,goal,Function,d_args,Function_call,f_work,if_state,else_state,id_add,if_args,after_if,inner_f_call,inside_ears;      // used to store evaluated subexpressions
+non terminal String    goal,Function,d_args,f_work,if_state,else_state,id_add,if_args,after_if,inner_f_call,inside_ears;      // used to store evaluated subexpressions
 
 /**
  *  Precedence Declarations
  */
  precedence left ID;
- precedence left PLUS, MINUS;
- precedence right EXP;
+ precedence left PLUS;
+
 
 /**
  *  The Grammar Rules
@@ -60,10 +59,6 @@ goal            ::=  Function:e   {: RESULT = String.format("\n\n%s\n\n  ",e); :
 Function        ::= ID:id LPAREN d_args:arg RPAREN OPEN_BR f_work:fw CLOSE_BR Function:f                {: RESULT = String.format("public static String %s(%s)\n{\n\t%s\n}\n%s", id,arg,fw,f); :}                
                 | ID:id2  LPAREN  RPAREN  OPEN_BR f_work:fw CLOSE_BR  Function:f                        {: RESULT = String.format("public static String %s()\n{\n\t%s\n }\n%s \n ", id2,fw,f); :}
                 |                                                                                       {: RESULT = ""; :}
-                ;
-
-Function_call   ::= ID:id LPAREN Function_call:fc RPAREN                              {: RESULT = String.format("%s(%s)\n ", id,fc); :}
-                |                                                                     {: RESULT = ""; :}
                 ;
 
 
@@ -111,7 +106,8 @@ inside_ears     ::= ID:id inside_ears:ie                    {: RESULT = String.f
                 ;
 
 
-aif_state       ::= IF  LPAREN if_args:ia RPAREN after_if:ai else_state:e                 {: RESULT = String.format("if(%s)\n\t\t%s\n\telse\n\t%s",ia,ai,e); :}
-                |                                                                         {: RESULT = ""; :}
+/**
+Function_call   ::= ID:id LPAREN Function_call:fc RPAREN                              {: RESULT = String.format("%s(%s)\n ", id,fc); :}
+                |                                                                     {: RESULT = ""; :}
                 ;
-
+*/

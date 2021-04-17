@@ -79,11 +79,11 @@ identifier = [a-zA-Z_][0-9a-zA-Z_]*
 "prefix"            { return symbol(sym.PREFIX); }
 "suffix"         { return symbol(sym.SUFFIX); }
  "+"            { return symbol(sym.PLUS); }
- "-"            { return symbol(sym.MINUS); }
- "**"           { return symbol(sym.EXP); }
+ 
+
  "("            { return symbol(sym.LPAREN); }
  ")"            { return symbol(sym.RPAREN); }
- ";"            { return symbol(sym.SEMI); }
+ 
  "{"              { return symbol(sym.OPEN_BR); }
  "}"              { return symbol(sym.CLOSE_BR); }
  ","            { return symbol(sym.COMMA); }
@@ -93,21 +93,10 @@ identifier = [a-zA-Z_][0-9a-zA-Z_]*
  
 
 
- {dec_int_lit}  { return symbol(sym.NUMBER, new Integer(yytext())); }
- \"             { stringBuffer.setLength(0); yybegin(STRING); }
+
  {WhiteSpace}   { /* just skip what was found, do nothing */ }
 }
 
-<STRING> {
-      \"                             { yybegin(YYINITIAL);
-                                       return symbol(sym.STRING_LITERAL, stringBuffer.toString()); }
-      [^\n\r\"\\]+                   { stringBuffer.append( yytext() ); }
-      \\t                            { stringBuffer.append('\t'); }
-      \\n                            { stringBuffer.append('\n'); }
-      \\r                            { stringBuffer.append('\r'); }
-      \\\"                           { stringBuffer.append('\"'); }
-      \\                             { stringBuffer.append('\\'); }
-}
 
 /* No token was found for the input so throw an error.  Print out an
    Illegal character message with the illegal character that was found. */

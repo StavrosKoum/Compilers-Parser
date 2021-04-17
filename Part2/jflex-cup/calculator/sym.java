@@ -6,32 +6,24 @@
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int OPEN_BR = 8;
-  public static final int ELSE = 12;
-  public static final int PLUS = 3;
-  public static final int RPAREN = 7;
-  public static final int SEMI = 2;
-  public static final int PREFIX = 14;
-  public static final int IF = 11;
-  public static final int LPAREN = 6;
-  public static final int ID = 18;
-  public static final int EXP = 5;
-  public static final int STRING_LITERAL = 17;
-  public static final int COMMA = 10;
-  public static final int EAR = 13;
+  public static final int OPEN_BR = 5;
+  public static final int CLOSE_BR = 6;
+  public static final int PREFIX = 11;
   public static final int EOF = 0;
-  public static final int NUMBER = 16;
-  public static final int SUFFIX = 15;
-  public static final int MINUS = 4;
+  public static final int PLUS = 2;
+  public static final int IF = 8;
+  public static final int ID = 13;
+  public static final int ELSE = 9;
   public static final int error = 1;
-  public static final int CLOSE_BR = 9;
+  public static final int COMMA = 7;
+  public static final int RPAREN = 4;
+  public static final int EAR = 10;
+  public static final int SUFFIX = 12;
+  public static final int LPAREN = 3;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "SEMI",
   "PLUS",
-  "MINUS",
-  "EXP",
   "LPAREN",
   "RPAREN",
   "OPEN_BR",
@@ -42,8 +34,6 @@ public interface sym {
   "EAR",
   "PREFIX",
   "SUFFIX",
-  "NUMBER",
-  "STRING_LITERAL",
   "ID"
   };
 }
