@@ -3,12 +3,12 @@ import java.io.IOException;
 import java.lang.Math;
 
 
-class TernaryEvaluator {
+class calculator {
     private final InputStream in;
 
     private int lookahead;
 
-    public TernaryEvaluator(InputStream in) throws IOException {
+    public calculator(InputStream in) throws IOException {
         this.in = in;
         lookahead = in.read();
     }
@@ -35,55 +35,14 @@ class TernaryEvaluator {
         return c - '0';
     }
 
-    public int eval() throws IOException, ParseError {
-       
-        num();
-        
-        int value = Tern();
-
-        if (lookahead != -1 && lookahead != '\n')
-            throw new ParseError();
-
-        return value;
-    }
-
-    private int Tern() throws IOException, ParseError {
-        if (isDigit(lookahead)) {
-            int cond = evalDigit(lookahead);
-
-            consume(lookahead);
-            return TernTail(cond); 
-        }
-
-        throw new ParseError();
-    }
-
-    private int TernTail(int condition) throws IOException, ParseError {
-        switch (lookahead) {
-            case '?':
-                consume('?');
-                int left = Tern();
-                consume(':');
-                int right = Tern();
-
-                return condition != 0 ? left : right;
-            case -1:
-            case '\n':
-            case ':':
-                return condition;
-        }
-
-        throw new ParseError();
-    }
-
     
-
-  
     
     public int expr() throws IOException, ParseError 
     {
         int value = 0;
-        
+        // int test = isDigit(lookahead);
+        // System.out.println("ok"+test+"\n");
+
         if (isDigit(lookahead) || lookahead == '(')
         {
             //->term exprtail
@@ -96,10 +55,6 @@ class TernaryEvaluator {
         {
             throw new ParseError();
         }
-        // if(lookahead == ')')
-        // {
-        //     throw new ParseError();
-        // }
         return value;
     }
 
@@ -190,7 +145,6 @@ class TernaryEvaluator {
 
     public int factor() throws IOException, ParseError 
     {
-        
         int value = 0;
         //-> num | (expr)
         if(isDigit(lookahead))
@@ -221,7 +175,6 @@ class TernaryEvaluator {
         }
         else
         {
-            
             throw new ParseError();
         }
         
