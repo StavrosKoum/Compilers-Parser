@@ -19,7 +19,7 @@ public class Table extends GJDepthFirst<String,Void>
     public  void Insert_Class_Table(String class_name) throws Exception
     {
         
-        if(Table.get("testCLASS") != null )
+        if(Table.get(class_name) != null )
         {
             throw new Exception("Class" + class_name + " has already been declared");
             
@@ -36,6 +36,15 @@ public class Table extends GJDepthFirst<String,Void>
             Table.put(test.class_name,test);
         }
        
+    }
+
+    //more to insert here
+    public void Insert_Method_to_class_class(String method_name,String classname) throws Exception
+    {
+        class_class temp = Table.get(classname);
+        if(method_name != null)
+        temp.Insert_Method_MethTable(method_name);
+
     }
 
     public  void Print_Keys()
@@ -73,6 +82,7 @@ public class Table extends GJDepthFirst<String,Void>
         System.out.println("called");
         if(classname !=null)
         Insert_Class_Table(classname);
+       
         
         super.visit(n, argu);
 
@@ -87,7 +97,7 @@ public class Table extends GJDepthFirst<String,Void>
         //System.out.println("Classs: " + classname);
         if(classname !=null)
         Insert_Class_Table(classname);
-
+        
         super.visit(n, argu);
 
         System.out.println();
@@ -100,7 +110,7 @@ public class Table extends GJDepthFirst<String,Void>
         //System.out.println("Class: " + classname);
         if(classname !=null)
         Insert_Class_Table(classname);
-
+        
         super.visit(n, argu);
 
         System.out.println();
@@ -114,6 +124,7 @@ public class Table extends GJDepthFirst<String,Void>
 
         String myType = n.f1.accept(this, null);
         String myName = n.f2.accept(this, null);
+        Insert_Method_to_class_class(myName,"A");
        
         //System.out.println(myType + " " + myName + " -- " + argumentList);
         return null;
