@@ -18,16 +18,16 @@ public class class_class
     {
         if(Methods_Table.get(method_name) != null)
         {
-            throw new Exception("Function" + method_name + " has already been declared");
+            //throw new Exception("Function" + method_name + " has already been declared");
         }
         else
         {
-            System.out.println("Insert " + method_name + " and create method_class");
+            System.out.println("Insert method->" + method_name + " at class " + class_name);
             //create method_class here to instert other declarations later
             Method_class test = new Method_class(method_name);
             
             Methods_Table.put(method_name,test);
-            System.out.println("alalalalala" + Methods_Table.get(method_name));
+            //System.out.println("0000000lalala" + Methods_Table.get(method_name));
             
         }
     }

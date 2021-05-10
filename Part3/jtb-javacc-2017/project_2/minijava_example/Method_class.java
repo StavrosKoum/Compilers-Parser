@@ -5,6 +5,7 @@ public class Method_class
     //return type
     //arguments
     //etc
+    //offset
     
 
     public Method_class(String name)

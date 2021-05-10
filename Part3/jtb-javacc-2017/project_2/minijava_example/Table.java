@@ -13,7 +13,8 @@ import java.text.ParseException;
 public class Table extends GJDepthFirst<String,Void>
 {
     private HashMap <String,class_class> Table = new HashMap <String,class_class>();
-
+    private String temp_class;
+    private String temp_extended_class = null;
 
 
     public  void Insert_Class_Table(String class_name) throws Exception
@@ -44,6 +45,18 @@ public class Table extends GJDepthFirst<String,Void>
         class_class temp = Table.get(classname);
         if(method_name != null)
         temp.Insert_Method_MethTable(method_name);
+
+    }
+    public void Override_Insert_Method_to_class_class(String method_name,String classname,String Ex_classname) throws Exception
+    {
+
+        //search extended class for this method
+        //if already exists-update
+        //if not create new at classname
+
+        // class_class temp = Table.get(classname);
+        // if(method_name != null)
+        // temp.Insert_Method_MethTable(method_name);
 
     }
 
@@ -79,13 +92,14 @@ public class Table extends GJDepthFirst<String,Void>
     public String visit(MainClass n, Void argu) throws Exception {
         
         String classname = n.f1.accept(this, null);
-        System.out.println("called");
+        temp_extended_class = null;
+        
         if(classname !=null)
         Insert_Class_Table(classname);
-       
+        temp_class = classname;
+        
         
         super.visit(n, argu);
-
         System.out.println();
 
         return null;
@@ -94,12 +108,15 @@ public class Table extends GJDepthFirst<String,Void>
     @Override
     public String visit(ClassDeclaration n, Void argu) throws Exception {
         String classname = n.f1.accept(this, null);
-        //System.out.println("Classs: " + classname);
+        temp_extended_class = null;
+
         if(classname !=null)
         Insert_Class_Table(classname);
+        temp_class = classname;
+        
+        
         
         super.visit(n, argu);
-
         System.out.println();
 
         return null;
@@ -107,10 +124,14 @@ public class Table extends GJDepthFirst<String,Void>
     @Override
     public String visit(ClassExtendsDeclaration n, Void argu) throws Exception {
         String classname = n.f1.accept(this, null);
-        //System.out.println("Class: " + classname);
+        temp_extended_class = n.f3.accept(this, null);
+        //System.out.println("-----------> " + temp_extended_class);
+        
+        
         if(classname !=null)
         Insert_Class_Table(classname);
-        
+        temp_class = classname;
+        // System.out.println("lol" + temp_class);
         super.visit(n, argu);
 
         System.out.println();
@@ -124,7 +145,17 @@ public class Table extends GJDepthFirst<String,Void>
 
         String myType = n.f1.accept(this, null);
         String myName = n.f2.accept(this, null);
-        Insert_Method_to_class_class(myName,"A");
+        if(temp_extended_class == null)
+        {
+            Insert_Method_to_class_class(myName,temp_class);
+        }
+        else
+        {
+            //check for method Override
+
+
+
+        }
        
         //System.out.println(myType + " " + myName + " -- " + argumentList);
         return null;
