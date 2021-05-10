@@ -16,7 +16,7 @@ public class class_class
     }
 
     //more to insert here
-    public void Insert_Method_MethTable(String method_name) throws Exception
+    public void Insert_Method_MethTable(String method_name,String method_type,String argumentList) throws Exception
     {
         if(Methods_Table.get(method_name) != null)
         {
@@ -26,7 +26,7 @@ public class class_class
         {
             //System.out.println("Insert method->" + method_name + " at class " + class_name);
             //create method_class here to instert other declarations later
-            Method_class test = new Method_class(method_name);
+            Method_class test = new Method_class(method_name,method_type,argumentList);
             this.meth_offset = meth_offset+8;
             test.give_offset(meth_offset);
             Methods_Table.put(method_name,test);
@@ -37,7 +37,8 @@ public class class_class
         }
     }
 
-    public void Ex_Insert_Method_MethTable(String method_name,int off) throws Exception
+    //same with the above but does not update offset, it takes it as arg
+    public void Ex_Insert_Method_MethTable(String method_name,String method_type,String argumentList,int off) throws Exception
     {
         if(Methods_Table.get(method_name) != null)
         {
@@ -47,7 +48,7 @@ public class class_class
         {
             //System.out.println("Insert method->" + method_name + " at class " + class_name);
             //create method_class here to instert other declarations later
-            Method_class test = new Method_class(method_name);
+            Method_class test = new Method_class(method_name,method_type,argumentList);
             test.give_offset(off);
             Methods_Table.put(method_name,test);
             //System.out.println( test.method_name);
@@ -62,13 +63,23 @@ public class class_class
         System.out.println(Methods_Table.keySet());
     }
     
-    public boolean Search_for_override_meth(String method_name)
+    public boolean Search_for_override_meth(String method_name,String method_type,String argumenString) throws Exception
     {
         if(Methods_Table.get(method_name) != null)
         {
-            System.out.println("method updated");
-            //Methods_Table.replace(method_name,);
-            return true;
+            //check if type and args are the same
+            Method_class temp = Methods_Table.get(method_name);
+            if((temp.type.equals(method_type)) && temp.args.equals(argumenString))
+            {
+                System.out.println("Found same method");
+            
+                //temp = Methods_Table.get(method_name);
+                temp.print_meth_info();
+                return true;
+                
+            }
+            throw new Exception("Function " + method_name + " has different type or args");
+            
         }
         else
         {

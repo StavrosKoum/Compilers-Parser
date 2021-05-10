@@ -40,14 +40,15 @@ public class Table extends GJDepthFirst<String,Void>
     }
 
     //more to insert here
-    public void Insert_Method_to_class_class(String method_name,String classname) throws Exception
+    public void Insert_Method_to_class_class(String method_name,String method_type,String argumentList,String classname) throws Exception
     {
+        
         class_class temp = Table.get(classname);
         if(method_name != null)
-        temp.Insert_Method_MethTable(method_name);
+        temp.Insert_Method_MethTable(method_name,method_type,argumentList);
 
     }
-    public void Override_Insert_Method_to_class_class(String method_name,String classname,String Ex_classname) throws Exception
+    public void Override_Insert_Method_to_class_class(String method_name,String classname,String Ex_classname,String method_type, String argumentList) throws Exception
     {
 
         //search extended class for this method
@@ -56,7 +57,7 @@ public class Table extends GJDepthFirst<String,Void>
         
        
 
-        if(temp.Search_for_override_meth(method_name))//no need to update offset
+        if(temp.Search_for_override_meth(method_name,method_type,argumentList))//no need to update offset
         {
             //do nothing method updated
         }
@@ -69,7 +70,7 @@ public class Table extends GJDepthFirst<String,Void>
 
             temp = Table.get(classname);
             if(method_name != null) //useless to be sure
-            temp.Ex_Insert_Method_MethTable(method_name,off);
+            temp.Ex_Insert_Method_MethTable(method_name,method_type,argumentList,off);
         }
 
         
@@ -164,14 +165,17 @@ public class Table extends GJDepthFirst<String,Void>
 
         String myType = n.f1.accept(this, null);
         String myName = n.f2.accept(this, null);
+        
         if(temp_extended_class == null)
         {
-            Insert_Method_to_class_class(myName,temp_class);
+            
+            System.out.println( argumentList);
+            Insert_Method_to_class_class(myName,myType,argumentList,temp_class);
         }
         else
         {
             //check for method Override
-            Override_Insert_Method_to_class_class(myName,temp_class,temp_extended_class);
+            Override_Insert_Method_to_class_class(myName,temp_class,temp_extended_class,myType,argumentList);
 
 
         }
