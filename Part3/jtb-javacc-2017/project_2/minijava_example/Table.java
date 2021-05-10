@@ -51,12 +51,31 @@ public class Table extends GJDepthFirst<String,Void>
     {
 
         //search extended class for this method
+        class_class temp = Table.get(Ex_classname);
         //if already exists-update
-        //if not create new at classname
+        
+       
 
-        // class_class temp = Table.get(classname);
-        // if(method_name != null)
-        // temp.Insert_Method_MethTable(method_name);
+        if(temp.Search_for_override_meth(method_name))//no need to update offset
+        {
+            //do nothing method updated
+        }
+        else  //if not create new at classname
+        {
+
+            //update parend class offset here and give number to method
+            int off = temp.give_and_update_meth_offset();
+
+
+            temp = Table.get(classname);
+            if(method_name != null) //useless to be sure
+            temp.Ex_Insert_Method_MethTable(method_name,off);
+        }
+
+        
+       
+
+        
 
     }
 
@@ -152,7 +171,7 @@ public class Table extends GJDepthFirst<String,Void>
         else
         {
             //check for method Override
-
+            Override_Insert_Method_to_class_class(myName,temp_class,temp_extended_class);
 
 
         }

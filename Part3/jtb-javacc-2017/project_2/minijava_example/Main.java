@@ -41,11 +41,6 @@ public class Main {
             
             
             
-            
-            
-            
-            
-            
             MyVisitor eval = new MyVisitor();
             root.accept(eval, null);
         }
