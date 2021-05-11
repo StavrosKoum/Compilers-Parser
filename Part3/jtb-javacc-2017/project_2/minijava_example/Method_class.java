@@ -13,6 +13,7 @@ public class Method_class
     //offset
     private int offset;
     private String[] args_array;
+    private List<String> args_list;
 
     public Method_class(String name,String type,String argumentList)
     {
@@ -21,11 +22,14 @@ public class Method_class
         args = argumentList;
         args_array = args.split(",");
         args_array = args.split(" ");
-        List<String> args_list = new ArrayList<String>(Arrays.asList(args_array));
+        args_list = new ArrayList<String>(Arrays.asList(args_array));
         int l = args_array.length;
         if(l == 1)
-        System.out.println("empty arg list");
-
+        {
+            //System.out.println("empty arg list");
+            l= 0;
+        }
+       
         if(l ==2)
         {
             l=1;
@@ -43,7 +47,7 @@ public class Method_class
         
         for(int i = 0; i <args_list.size(); i ++)
         {
-            System.out.println(args_list.get(i));
+            //System.out.println(args_list.get(i));
         }
        
 

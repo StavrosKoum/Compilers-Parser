@@ -6,7 +6,8 @@ public class class_class
     public String class_name;
     //hashmap methods
     private HashMap <String,Method_class> Methods_Table = new HashMap <String,Method_class>();
-    //hashmap metavlites
+    //hashmap var
+    private HashMap <String,Variable_class> Variables_Table = new HashMap <String,Variable_class>();
     //method offset
     private int meth_offset = -8;
 
@@ -74,6 +75,7 @@ public class class_class
                 System.out.println("Found same method");
             
                 //temp = Methods_Table.get(method_name);
+                System.out.print(class_name +"->");
                 temp.print_meth_info();
                 return true;
                 

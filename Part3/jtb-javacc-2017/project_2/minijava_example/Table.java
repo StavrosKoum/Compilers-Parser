@@ -145,18 +145,31 @@ public class Table extends GJDepthFirst<String,Void>
     public String visit(ClassExtendsDeclaration n, Void argu) throws Exception {
         String classname = n.f1.accept(this, null);
         temp_extended_class = n.f3.accept(this, null);
-        //System.out.println("-----------> " + temp_extended_class);
+        
         
         
         if(classname !=null)
         Insert_Class_Table(classname);
         temp_class = classname;
-        // System.out.println("lol" + temp_class);
+        
         super.visit(n, argu);
 
         System.out.println();
 
         return null;
+    }
+
+    @Override
+    public String visit(VarDeclaration n, Void argu) throws Exception {
+        String type = n.f0.accept(this,argu);
+        String id = n.f1.accept(this,argu);
+
+        System.out.println("-----------> " + type + id);
+
+        super.visit(n, argu);
+        return null;
+
+
     }
 
     @Override
@@ -169,7 +182,7 @@ public class Table extends GJDepthFirst<String,Void>
         if(temp_extended_class == null)
         {
             
-            System.out.println( argumentList);
+            //System.out.println( argumentList);
             Insert_Method_to_class_class(myName,myType,argumentList,temp_class);
         }
         else
@@ -230,6 +243,7 @@ public class Table extends GJDepthFirst<String,Void>
     public String visit(FormalParameter n, Void argu) throws Exception{
         String type = n.f0.accept(this, null);
         String name = n.f1.accept(this, null);
+        //System.out.println("->>>>>>>>" + type + name );
         return type + " " + name;
     }
 
