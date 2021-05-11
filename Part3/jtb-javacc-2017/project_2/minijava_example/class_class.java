@@ -10,6 +10,8 @@ public class class_class
     private HashMap <String,Variable_class> Variables_Table = new HashMap <String,Variable_class>();
     //method offset
     private int meth_offset = -8;
+    private int var_offset = 0;
+
 
     public class_class(String name)
     {
@@ -90,9 +92,74 @@ public class class_class
 
     }
 
+    public  void  Insert_Variable_VarTable(String id,String var_type)
+    {
+        
+        System.out.print(class_name+"-");
+        Variable_class temp = new Variable_class(id,var_type,var_offset);
+        Variables_Table.put(id,temp);
+        
+        if(var_type.equals("int"))
+        {
+            var_offset = var_offset + 4;
+        }
+        else if(var_type.equals("boolean"))
+        {
+            var_offset = var_offset + 1;
+        }
+        else
+        {
+            var_offset = var_offset + 8;
+        }
+    }
+
+
+
+
+    
+    public  void  Ex_Insert_Variable_VarTable(String id,String var_type,int offset)
+    {
+        Variable_class temp = new Variable_class(id,var_type,offset);
+        Variables_Table.put(id,temp);
+    }
+
+    public  int Mother_offset(String var_type)
+    {
+        int ret = var_offset;
+        if(var_type.equals("int"))
+        {
+            var_offset = var_offset + 4;
+        }
+        else if(var_type.equals("boolean"))
+        {
+            var_offset = var_offset + 1;
+        }
+        else
+        {
+            var_offset = var_offset + 8;
+        }
+        return ret;
+
+    }
+
+
+
+
+
+
     public int give_and_update_meth_offset()
     {
         meth_offset = meth_offset + 8;
         return meth_offset;
     }
+
+
+
+
+
+
+
+
+
+
 }

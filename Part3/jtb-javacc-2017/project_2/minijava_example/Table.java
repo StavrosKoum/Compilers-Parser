@@ -80,6 +80,42 @@ public class Table extends GJDepthFirst<String,Void>
 
     }
 
+    public void Insert_Variable_to_class_class(String id,String var_type,String classname) throws Exception
+    {
+        
+        if(temp_extended_class==null)
+        {
+            class_class temp = Table.get(classname);
+            if(!var_type.equals("int") && !var_type.equals("boolean"))
+            {
+                //check if variable is a class
+                if(Table.get(var_type) == null)
+                {
+                    throw new Exception(" I dont know who this type is");
+                }
+                
+
+            }
+        
+            temp.Insert_Variable_VarTable(id,var_type);
+        }
+        else
+        {
+            
+            //take and update offset from mother class
+            class_class temp = Table.get(temp_extended_class);
+            int off = temp.Mother_offset(var_type);
+
+            System.out.print("alalalalalalalalall" + off);
+            temp = Table.get(classname);
+            temp.Ex_Insert_Variable_VarTable(id,var_type,off);
+
+        }
+        
+    
+
+    }
+
     public  void Print_Keys()
     {
         System.out.println(Table.keySet());
@@ -164,7 +200,8 @@ public class Table extends GJDepthFirst<String,Void>
         String type = n.f0.accept(this,argu);
         String id = n.f1.accept(this,argu);
 
-        System.out.println("-----------> " + type + id);
+        //System.out.println("-----------> " + type + id);
+        Insert_Variable_to_class_class(id,type,temp_class);
 
         super.visit(n, argu);
         return null;
