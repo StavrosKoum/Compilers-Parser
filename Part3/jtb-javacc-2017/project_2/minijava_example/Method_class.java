@@ -13,6 +13,9 @@ public class Method_class
     //offset
     private int offset;
     private String[] args_array;
+
+    //use this
+    //it only has types
     private List<String> args_list;
 
     public Method_class(String name,String type,String argumentList)
@@ -65,6 +68,7 @@ public class Method_class
     public void print_meth_info()
     {
         System.out.println(type +" - "+method_name +"."+ offset+"  ("+ args+ ")");
+        
     }
 
     

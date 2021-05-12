@@ -16,5 +16,10 @@ public class Variable_class {
         this.offset = var_offset;
         System.out.println("variable -> "+type+var_name+"."+offset);
     }
+
+    public void print_var_info()
+    {
+        System.out.println(type + " " +var_name+"."+offset );
+    }
     
 }

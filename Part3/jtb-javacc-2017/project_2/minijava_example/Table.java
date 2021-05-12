@@ -106,7 +106,7 @@ public class Table extends GJDepthFirst<String,Void>
             class_class temp = Table.get(temp_extended_class);
             int off = temp.Mother_offset(var_type);
 
-            System.out.print("alalalalalalalalall" + off);
+            //System.out.print("alalalalalalalalall" + off);
             temp = Table.get(classname);
             temp.Ex_Insert_Variable_VarTable(id,var_type,off);
 
@@ -118,7 +118,15 @@ public class Table extends GJDepthFirst<String,Void>
 
     public  void Print_Keys()
     {
-        System.out.println(Table.keySet());
+        //System.out.println(Table.keySet());
+        class_class value= null;
+        for(String key: Table.keySet())
+        {
+            value = Table.get(key);
+            value.print_all();
+            //System.out.println("777777777"+key);
+
+        }
     }
 
 

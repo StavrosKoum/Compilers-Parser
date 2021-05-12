@@ -119,6 +119,7 @@ public class class_class
     
     public  void  Ex_Insert_Variable_VarTable(String id,String var_type,int offset)
     {
+        System.out.print(class_name+"-");
         Variable_class temp = new Variable_class(id,var_type,offset);
         Variables_Table.put(id,temp);
     }
@@ -152,12 +153,32 @@ public class class_class
         meth_offset = meth_offset + 8;
         return meth_offset;
     }
+    
+    public void print_all()
+    {
+        Variable_class var_value= null;
+        
+        Method_class  meth_value = null;
 
+        for(String key: Variables_Table.keySet())
+        {
+            var_value = Variables_Table.get(key);
+            // value.print_all();
+            System.out.print(class_name+".");
+            var_value.print_var_info();
 
+        }
+        for(String key: Methods_Table.keySet())
+        {
+            meth_value = Methods_Table.get(key);
+            // value.print_all();
+            System.out.print(class_name+".");
+            meth_value.print_meth_info();
+            
 
+        }
 
-
-
+    }
 
 
 
