@@ -11,11 +11,15 @@ public class class_class
     //method offset
     private int meth_offset = -8;
     private int var_offset = 0;
+    public int num_id;
+    private int var_count= 0;
+    private int meth_count = 0;
 
 
-    public class_class(String name)
+    public class_class(String name,int counter)
     {
         this.class_name = name;
+        this.num_id = counter;
     }
 
     //more to insert here
@@ -29,10 +33,12 @@ public class class_class
         {
             //System.out.println("Insert method->" + method_name + " at class " + class_name);
             //create method_class here to instert other declarations later
-            Method_class test = new Method_class(method_name,method_type,argumentList);
+            Method_class test = new Method_class(method_name,method_type,argumentList,meth_count);
+            this.meth_count ++;
             this.meth_offset = meth_offset+8;
             test.give_offset(meth_offset);
             Methods_Table.put(method_name,test);
+
             //System.out.println( test.method_name);
             test = Methods_Table.get(method_name);
             test.print_meth_info();
@@ -51,7 +57,8 @@ public class class_class
         {
             //System.out.println("Insert method->" + method_name + " at class " + class_name);
             //create method_class here to instert other declarations later
-            Method_class test = new Method_class(method_name,method_type,argumentList);
+            Method_class test = new Method_class(method_name,method_type,argumentList,meth_count);
+            this.meth_count ++;
             test.give_offset(off);
             Methods_Table.put(method_name,test);
             //System.out.println( test.method_name);
@@ -96,7 +103,8 @@ public class class_class
     {
         
         System.out.print(class_name+"-");
-        Variable_class temp = new Variable_class(id,var_type,var_offset);
+        Variable_class temp = new Variable_class(id,var_type,var_offset,var_count);
+        this.var_count ++;
         Variables_Table.put(id,temp);
         
         if(var_type.equals("int"))
@@ -120,7 +128,8 @@ public class class_class
     public  void  Ex_Insert_Variable_VarTable(String id,String var_type,int offset)
     {
         System.out.print(class_name+"-");
-        Variable_class temp = new Variable_class(id,var_type,offset);
+        Variable_class temp = new Variable_class(id,var_type,offset,var_count);
+        this.var_count ++;
         Variables_Table.put(id,temp);
     }
 
@@ -160,23 +169,45 @@ public class class_class
         
         Method_class  meth_value = null;
 
-        for(String key: Variables_Table.keySet())
-        {
-            var_value = Variables_Table.get(key);
-            // value.print_all();
-            System.out.print(class_name+".");
-            var_value.print_var_info();
+        int num = 0;
 
-        }
-        for(String key: Methods_Table.keySet())
+        while(num < var_count)
         {
-            meth_value = Methods_Table.get(key);
-            // value.print_all();
-            System.out.print(class_name+".");
-            meth_value.print_meth_info();
-            
+            for(String key: Variables_Table.keySet())
+            {
+                var_value = Variables_Table.get(key);
+                // value.print_all();
+                if(var_value.num_id == num)
+                {
+                    System.out.print(class_name+".");
+                    var_value.print_var_info();
+                    num++;
+                }
+                
 
+            }
         }
+        
+        num = 0;
+        while(num < meth_count)
+        {
+            for(String key: Methods_Table.keySet())
+            {
+               
+                meth_value = Methods_Table.get(key);
+                if(meth_value.num_id == num)
+                {
+                    // value.print_all();
+                    System.out.print(class_name+".");
+                    meth_value.print_meth_info();
+                    num++;
+                }
+                
+                
+
+            }
+        }
+        
 
     }
 

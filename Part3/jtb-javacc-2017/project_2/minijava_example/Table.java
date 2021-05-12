@@ -15,6 +15,7 @@ public class Table extends GJDepthFirst<String,Void>
     private HashMap <String,class_class> Table = new HashMap <String,class_class>();
     private String temp_class;
     private String temp_extended_class = null;
+    private int counter = 0;
 
 
     public  void Insert_Class_Table(String class_name) throws Exception
@@ -27,14 +28,16 @@ public class Table extends GJDepthFirst<String,Void>
         }
         else if(class_name.equals("test"))
         {
-            System.out.println("ekanes malakia irthe null class");
+            System.out.println("irthe null class");
         }
         else
         {
-            System.out.println("Insert " + class_name + " and create class_class");
+
+            System.out.println("Insert " + class_name+counter + " and create class_class");
             //create class_class here to instert other declarations later
-            class_class test = new class_class(class_name);
+            class_class test = new class_class(class_name,counter);
             Table.put(test.class_name,test);
+            this.counter++;
         }
        
     }
@@ -118,15 +121,25 @@ public class Table extends GJDepthFirst<String,Void>
 
     public  void Print_Keys()
     {
+        int num = 0;
         //System.out.println(Table.keySet());
         class_class value= null;
-        for(String key: Table.keySet())
+        while(num < this.counter)
         {
-            value = Table.get(key);
-            value.print_all();
-            //System.out.println("777777777"+key);
-
+            for(String key: Table.keySet())
+            {
+                value = Table.get(key);
+                if(value.num_id == num)
+                {
+                    value.print_all();
+                    num++;
+                }
+                
+                //System.out.println("777777777"+key);
+    
+            }
         }
+       
     }
 
 
