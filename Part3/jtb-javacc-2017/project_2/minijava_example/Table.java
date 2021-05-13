@@ -89,16 +89,16 @@ public class Table extends GJDepthFirst<String,Void>
         if(temp_extended_class==null)
         {
             class_class temp = Table.get(classname);
-            if(!var_type.equals("int") && !var_type.equals("boolean"))
-            {
-                //check if variable is a class
-                if(Table.get(var_type) == null)
-                {
-                    throw new Exception(" I dont know who this type is");
-                }
+            // if(!var_type.equals("int") && !var_type.equals("boolean") && !var_type.equals("int[]"))
+            // {
+            //     //check if variable is a class
+            //     if(Table.get(var_type) == null)
+            //     {
+            //         throw new Exception(" I dont know who this type is");
+            //     }
                 
 
-            }
+            // }
         
             temp.Insert_Variable_VarTable(id,var_type);
         }
@@ -114,10 +114,9 @@ public class Table extends GJDepthFirst<String,Void>
             temp.Ex_Insert_Variable_VarTable(id,var_type,off);
 
         }
-        
-    
-
     }
+
+    
 
     public  void Print_Keys()
     {
@@ -142,6 +141,10 @@ public class Table extends GJDepthFirst<String,Void>
        
     }
 
+        public HashMap <String,class_class> give_table()
+        {
+            return this.Table;
+        }
 
 
 
@@ -203,6 +206,10 @@ public class Table extends GJDepthFirst<String,Void>
         String classname = n.f1.accept(this, null);
         temp_extended_class = n.f3.accept(this, null);
         
+        if(Table.get(temp_extended_class) == null)
+        {
+            throw new Exception("There is not any  class " + temp_extended_class);
+        }
         
         
         if(classname !=null)

@@ -1,72 +1,65 @@
-import syntaxtree.*;
-import visitor.*;
 import java.util.HashMap;
+import visitor.GJDepthFirst;
+import visitor.*;
 
-import javax.print.DocFlavor.STRING;
-
+import syntaxtree.*;
+import java.util.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 
-public class Main {
-    public static void main(String[] args) throws Exception {
-        if(args.length != 1){
-            System.err.println("Usage: java Main <inputFile>");
-            System.exit(1);
-        }
 
 
+public class Check_visitor extends GJDepthFirst<String,Void>
+{
+    private HashMap <String,class_class> Table;
+    private String temp_class;
+    private String temp_extended_class = null;
 
-        FileInputStream fis = null;
-        try{
-            fis = new FileInputStream(args[0]);
-            MiniJavaParser parser = new MiniJavaParser(fis);
-
-            Goal root = parser.Goal();
-            System.err.println("Program parsed successfully.");
-
+    public Check_visitor(HashMap <String,class_class> get_table)
+    {
+        this.Table = get_table;
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        // class_class value= null;
+        // for(String key: Table.keySet())
+        // {
+        //     value = Table.get(key);
             
             
-            // HashMap<String,class_class> Table = new HashMap<String,class_class>();
-            //Table test = new Table();
-            //test.Insert_Class_Table("testCLASS");
-            //Table.put(test.class_name,test);
-            Table mine = new Table();
-            //System.out.println(Table);
-            root.accept(mine, null);
-
-            //mine.Print_Keys();
-
-            Check_visitor la_polizia = new Check_visitor(mine.give_table());
-
-            root.accept(la_polizia, null);
-
+        //         value.print_all();
+                
             
-            
-            
-            // MyVisitor eval = new MyVisitor();
-            // root.accept(eval, null);
-        }
-        catch(ParseException ex){
-            System.out.println(ex.getMessage());
-        }
-        catch(FileNotFoundException ex){
-            System.err.println(ex.getMessage());
-        }
-        finally{
-            try{
-                if(fis != null) fis.close();
+        
+        //     //System.out.println("777777777"+key);
+
+        // }
+    }
+
+
+    public void check_types(String var_type) throws Exception
+    {
+        //System.out.println("type ok");
+        if(!var_type.equals("int") && !var_type.equals("boolean") && !var_type.equals("int[]"))
+        {
+            //check if variable is a class
+            if(Table.get(var_type) == null)
+            {
+                throw new Exception(" I dont know who this type is");
             }
-            catch(IOException ex){
-                System.err.println(ex.getMessage());
-            }
+            //System.out.println("type ok");
+            
+
         }
     }
-}
 
 
-class MyVisitor extends GJDepthFirst<String, Void>{
+
+
+
     /**
      * f0 -> "class"
      * f1 -> Identifier()
@@ -90,14 +83,13 @@ class MyVisitor extends GJDepthFirst<String, Void>{
     @Override
     public String visit(MainClass n, Void argu) throws Exception {
         String classname = n.f1.accept(this, null);
-        System.out.println("Class: " + classname);
+        //System.out.println("Class: " + classname);
        
 
         super.visit(n, argu);
         
 
-        //if(true)
-        //throw new Exception("lalalala");
+        
         System.out.println();
 
         return null;
@@ -114,10 +106,17 @@ class MyVisitor extends GJDepthFirst<String, Void>{
     @Override
     public String visit(ClassDeclaration n, Void argu) throws Exception {
         String classname = n.f1.accept(this, null);
-        System.out.println("Classs: " + classname);
+        //System.out.println("Classs: " + classname);
 
+        temp_extended_class = null;
+        temp_class = classname;
+
+
+        
+        
+        
+        
         super.visit(n, argu);
-
         System.out.println();
 
         return null;
@@ -136,13 +135,39 @@ class MyVisitor extends GJDepthFirst<String, Void>{
     @Override
     public String visit(ClassExtendsDeclaration n, Void argu) throws Exception {
         String classname = n.f1.accept(this, null);
-        System.out.println("Class: " + classname);
+        //System.out.println("Class: " + classname);
+        
+        
+        temp_extended_class = n.f3.accept(this, null);
+        temp_class = classname;
 
         super.visit(n, argu);
-
         System.out.println();
 
         return null;
+    }
+
+
+    /**
+     * 
+     * f0 -> Type()
+     * f1 -> Identifier()
+     * f2 -> ";"
+     * 
+     */
+    @Override
+    public String visit(VarDeclaration n, Void argu) throws Exception {
+        String type = n.f0.accept(this,argu);
+        String id = n.f1.accept(this,argu);
+
+        //check if type is ok
+        check_types(type);
+
+
+        super.visit(n, argu);
+        return null;
+
+
     }
 
     /**
@@ -167,7 +192,7 @@ class MyVisitor extends GJDepthFirst<String, Void>{
         String myType = n.f1.accept(this, null);
         String myName = n.f2.accept(this, null);
        
-        System.out.println(myType + " " + myName + " -- " + argumentList);
+        //System.out.println(myType + " " + myName + " -- " + argumentList);
         return null;
     }
 
@@ -237,4 +262,5 @@ class MyVisitor extends GJDepthFirst<String, Void>{
     public String visit(Identifier n, Void argu) {
         return n.f0.toString();
     }
+    
 }

@@ -14,6 +14,7 @@ public class Method_class
     private int offset;
     private String[] args_array;
     public int num_id;
+    private boolean empty_args = false;
 
     //use this
     //it only has types
@@ -33,6 +34,7 @@ public class Method_class
         {
             //System.out.println("empty arg list");
             l= 0;
+            this.empty_args = true;
         }
        
         if(l ==2)
