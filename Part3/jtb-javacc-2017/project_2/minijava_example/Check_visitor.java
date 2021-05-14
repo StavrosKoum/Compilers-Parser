@@ -111,7 +111,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
             {
                 //check if declared arg
                 tmp_var = var_class_tmp.Variables_Table.get(exp1);
-                System.out.println("->"+exp1);
+                //System.out.println("->"+exp1);
                 if(tmp_var == null || !tmp_var.type.equals("int") || !tmp_var.method.equals(temp_method))
                 {
                     //if its not the "class " method
@@ -161,9 +161,55 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         }
         //System.out.println("fuck yes");
 
+
+
+
+
+
+
+
+
+        
+
     }
 
+    public void check_return_type(String ret_type) throws Exception
+    {
+        // System.out.println(temp_class);
+        // System.out.println(temp_method);
 
+        class_class tmp = Table.get(temp_class);
+        Method_class meth = tmp.Methods_Table.get(temp_method);
+
+        if(meth == null)
+        {
+            //check at mother class for the method
+            tmp = Table.get(temp_extended_class);
+            meth = tmp.Methods_Table.get(temp_method);
+            if(meth.type.equals(ret_type))
+            {
+                //all good
+            }
+            else
+            {
+                throw new Exception("return type "+ ret_type+" is not of function type " + meth.type);
+            }
+        }
+        else
+        {
+            if(meth.type.equals(ret_type))
+            {
+                //all good
+            }
+            else
+            {
+                
+                throw new Exception("return type "+ ret_type+" is not of function type " + meth.type);
+                
+            }
+        }
+        
+    }
 
 
 
@@ -383,13 +429,47 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         String myName = n.f2.accept(this, null);
 
         this.temp_method = myName;
+        String ret_type = n.f10.accept(this,null);
 
-        System.out.println(myType);
+
+        //System.out.println(myType);
         check_types(myType);
+        check_return_type(ret_type);
        
         System.out.println("expression is->"+n.f10.accept(this,null));
         return null;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * f0 -> FormalParameter()
@@ -465,7 +545,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     {
         String one = n.f0.accept(this,null);
         String two = n.f2.accept(this,null);
-        System.out.println(one + "+"+ two);
+        //System.out.println(one + "+"+ two);
         check_expressions(one,two);
         return "int";
     }
@@ -481,7 +561,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     {
         String one = n.f0.accept(this,null);
         String two = n.f2.accept(this,null);
-        System.out.println(one + "-"+ two);
+        //System.out.println(one + "-"+ two);
         check_expressions(one,two);
         return "int";
     }
@@ -496,7 +576,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     {
         String one = n.f0.accept(this,null);
         String two = n.f2.accept(this,null);
-        System.out.println(one + "*"+ two);
+        //System.out.println(one + "*"+ two);
         check_expressions(one,two);
         return "int";
     }
@@ -511,7 +591,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     {
         String one = n.f0.accept(this,null);
         String two = n.f2.accept(this,null);
-        System.out.println(one + "<"+ two);
+        //System.out.println(one + "<"+ two);
         check_expressions(one,two);
         return "boolean";
     }
@@ -519,35 +599,35 @@ public class Check_visitor extends GJDepthFirst<String,Void>
 
 
     /**
-    * f0 -> <INTEGER_LITERAL>
+    * f0 -> <INTEGER_LITERAL> okkkkk
     */
     @Override
     public String visit(IntegerLiteral n, Void argu) throws Exception
     {
         System.out.println("0");
-        return n.f0.tokenImage;
+        return "int";
     }
 
    /**
-    * f0 -> "true"
+    * f0 -> "true" okkkkk
     */
     public String visit(TrueLiteral n, Void argu) throws Exception 
     {
         System.out.println("1");
-        return n.f0.tokenImage;
+        return "boolean";
     }
 
     /**
-    * f0 -> "false"
+    * f0 -> "false" okkkk
     */
     public String visit(FalseLiteral n, Void argu) throws Exception 
     {
         System.out.println("2");
-        return n.f0.tokenImage;
+        return "boolean";
     }
     
     /**
-    * f0 -> <IDENTIFIER>
+    * f0 -> <IDENTIFIER> okkkkkk
     */
     public String visit(Identifier n, Void argu) throws Exception 
     {
@@ -555,7 +635,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         return n.f0.tokenImage;
     }
     /**
-     * f0 -> "this"
+     * f0 -> "this" ookkkkkkk
     */
     public String visit(ThisExpression n, Void argu) throws Exception 
     {
@@ -581,40 +661,47 @@ public class Check_visitor extends GJDepthFirst<String,Void>
 
      /**
     * f0 -> "new"
-    * f1 -> Identifier()
+    * f1 -> Identifier() okkkkkk i guess
     * f2 -> "("
     * f3 -> ")"
     */
     public String visit(AllocationExpression n, Void argu) throws Exception 
     {
         
-        n.f1.accept(this, argu);
-        System.out.println("6");
         
-        return "new kati()";
+        System.out.println("6");
+
+        String tmp = n.f1.accept(this, argu);
+        class_class sh = Table.get(tmp);
+        if(sh == null)
+        {
+            throw new Exception("Undefined reference to this boi class " + tmp);
+        }
+        
+        return tmp;
     }
 
     /**
      * f0 -> "!"
-    * f1 -> PrimaryExpression()
+    * f1 -> PrimaryExpression() okkkkkkk
     */
     public String visit(NotExpression n,  Void argu) throws Exception 
     {
         System.out.println("7");
-        n.f1.accept(this, argu);
-        return "!expr";
+        String tmp = n.f1.accept(this, argu);
+        return tmp;
     }
 
     /**
      * f0 -> "("
-    * f1 -> Expression()
+    * f1 -> Expression() ookkkkkkk
     * f2 -> ")"
     */
     public String visit(BracketExpression n,  Void argu) throws Exception 
     {
         System.out.println("8");
-        n.f1.accept(this, argu);
+        String tmp = n.f1.accept(this, argu);
         
-        return "(   )";
+        return tmp;
  }
 }

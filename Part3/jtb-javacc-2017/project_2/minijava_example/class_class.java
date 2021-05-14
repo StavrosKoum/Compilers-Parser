@@ -55,7 +55,7 @@ public class class_class
         }
         else
         {
-            //System.out.println("Insert method->" + method_name + " at class " + class_name);
+            System.out.println("Insert method->" + method_name + " at class " + class_name);
             //create method_class here to instert other declarations later
             Method_class test = new Method_class(method_name,method_type,argumentList,meth_count);
             this.meth_count ++;
