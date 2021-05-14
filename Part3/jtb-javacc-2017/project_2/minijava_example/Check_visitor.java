@@ -16,6 +16,8 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     private HashMap <String,class_class> Table;
     private String temp_class;
     private String temp_extended_class = null;
+    private String temp_method;
+
 
     public Check_visitor(HashMap <String,class_class> get_table)
     {
@@ -55,6 +57,121 @@ public class Check_visitor extends GJDepthFirst<String,Void>
 
         }
     }
+
+    //for plus,minus,compare and times expression
+    public void check_expressions(String exp1,String exp2) throws Exception
+    {
+        if(exp1.equals(exp2) && exp1.equals("int"))
+        {
+            //all ok
+        }
+        else
+        {
+            String myclass = temp_class;
+            if(temp_extended_class!=null)
+            {
+                myclass = temp_extended_class;
+            }
+            class_class tmp;
+            Method_class tmp_meth;
+            tmp= Table.get(myclass);
+
+            //System.out.println("->"+temp_method);
+
+            tmp_meth = tmp.Methods_Table.get(temp_method);
+            
+            //System.out.println(myclass);
+            if(!tmp_meth.args.contains("int "+exp1))
+            {
+                throw new Exception(" Incompatible type " + exp1 +" cannot be converted to int");
+            }
+            if(!tmp_meth.args.contains("int "+ exp2))
+            {
+                throw new Exception(" Incompatible type " + exp2 +" cannot be converted to int");
+            }
+        }
+        //System.out.println("fuck yes");
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -162,6 +279,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
 
         //check if type is ok
         check_types(type);
+        
 
 
         super.visit(n, argu);
@@ -187,12 +305,20 @@ public class Check_visitor extends GJDepthFirst<String,Void>
      */
     @Override
     public String visit(MethodDeclaration n, Void argu) throws Exception {
+
+        
+        
         String argumentList = n.f4.present() ? n.f4.accept(this, null) : "";
 
         String myType = n.f1.accept(this, null);
         String myName = n.f2.accept(this, null);
+
+        this.temp_method = myName;
+
+        System.out.println(myType);
+        check_types(myType);
        
-        //System.out.println(myType + " " + myName + " -- " + argumentList);
+        System.out.println("expression is->"+n.f10.accept(this,null));
         return null;
     }
 
@@ -258,9 +384,168 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         return "int";
     }
 
+    
+
+    /**
+    * f0 -> PrimaryExpression()
+    * f1 -> "+"
+    * f2 -> PrimaryExpression()
+    */
     @Override
-    public String visit(Identifier n, Void argu) {
-        return n.f0.toString();
+    public String visit(PlusExpression n, Void argu) throws Exception
+    {
+        String one = n.f0.accept(this,null);
+        String two = n.f2.accept(this,null);
+        System.out.println(one + "+"+ two);
+        check_expressions(one,two);
+        return "int";
+    }
+
+
+    /**
+    * f0 -> PrimaryExpression()
+    * f1 -> "-"
+    * f2 -> PrimaryExpression()
+    */
+    @Override
+    public String visit(MinusExpression n, Void argu) throws Exception
+    {
+        String one = n.f0.accept(this,null);
+        String two = n.f2.accept(this,null);
+        System.out.println(one + "-"+ two);
+        check_expressions(one,two);
+        return "int";
+    }
+
+     /**
+    * f0 -> PrimaryExpression()
+    * f1 -> "*"
+    * f2 -> PrimaryExpression()
+    */
+    @Override
+    public String visit(TimesExpression n, Void argu) throws Exception
+    {
+        String one = n.f0.accept(this,null);
+        String two = n.f2.accept(this,null);
+        System.out.println(one + "*"+ two);
+        check_expressions(one,two);
+        return "int";
+    }
+
+
+    /**
+    * f0 -> PrimaryExpression()
+    * f1 -> "<"
+    * f2 -> PrimaryExpression()
+    */
+    public String visit(CompareExpression n, Void argu) throws Exception
+    {
+        String one = n.f0.accept(this,null);
+        String two = n.f2.accept(this,null);
+        System.out.println(one + "<"+ two);
+        check_expressions(one,two);
+        return "boolean";
+    }
+
+
+
+    /**
+    * f0 -> <INTEGER_LITERAL>
+    */
+    @Override
+    public String visit(IntegerLiteral n, Void argu) throws Exception
+    {
+        //System.out.println("0");
+        return n.f0.tokenImage;
+    }
+
+   /**
+    * f0 -> "true"
+    */
+    public String visit(TrueLiteral n, Void argu) throws Exception 
+    {
+        System.out.println("1");
+        return n.f0.tokenImage;
+    }
+
+    /**
+    * f0 -> "false"
+    */
+    public String visit(FalseLiteral n, Void argu) throws Exception 
+    {
+        System.out.println("2");
+        return n.f0.tokenImage;
     }
     
+    /**
+    * f0 -> <IDENTIFIER>
+    */
+    public String visit(Identifier n, Void argu) throws Exception 
+    {
+        System.out.println("3");
+        return n.f0.tokenImage;
+    }
+    /**
+     * f0 -> "this"
+    */
+    public String visit(ThisExpression n, Void argu) throws Exception 
+    {
+        System.out.println("4");
+        return n.f0.tokenImage;
+    }
+
+     /**
+    * f0 -> "new"
+    * f1 -> "int"
+    * f2 -> "["
+    * f3 -> Expression()
+    * f4 -> "]"
+    */
+   public String visit(ArrayAllocationExpression n, Void argu) throws Exception 
+    {
+   
+        System.out.println("5");
+        n.f3.accept(this, argu);
+    
+        return "skata";
+    }
+
+     /**
+    * f0 -> "new"
+    * f1 -> Identifier()
+    * f2 -> "("
+    * f3 -> ")"
+    */
+    public String visit(AllocationExpression n, Void argu) throws Exception 
+    {
+        
+        n.f1.accept(this, argu);
+        System.out.println("6");
+        
+        return "new kati()";
+    }
+
+    /**
+     * f0 -> "!"
+    * f1 -> PrimaryExpression()
+    */
+    public String visit(NotExpression n,  Void argu) throws Exception 
+    {
+        System.out.println("7");
+        n.f1.accept(this, argu);
+        return "!expr";
+    }
+
+    /**
+     * f0 -> "("
+    * f1 -> Expression()
+    * f2 -> ")"
+    */
+    public String visit(BracketExpression n,  Void argu) throws Exception 
+    {
+        System.out.println("8");
+        n.f1.accept(this, argu);
+        
+        return "(   )";
+ }
 }

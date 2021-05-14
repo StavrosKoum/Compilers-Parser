@@ -5,9 +5,9 @@ public class class_class
 {
     public String class_name;
     //hashmap methods
-    private HashMap <String,Method_class> Methods_Table = new HashMap <String,Method_class>();
+    public HashMap <String,Method_class> Methods_Table = new HashMap <String,Method_class>();
     //hashmap var
-    private HashMap <String,Variable_class> Variables_Table = new HashMap <String,Variable_class>();
+    public HashMap <String,Variable_class> Variables_Table = new HashMap <String,Variable_class>();
     //method offset
     private int meth_offset = -8;
     private int var_offset = 0;

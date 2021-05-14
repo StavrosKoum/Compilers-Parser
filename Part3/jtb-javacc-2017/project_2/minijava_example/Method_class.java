@@ -57,6 +57,9 @@ public class Method_class
             //System.out.println(args_list.get(i));
         }
        
+        //skip over 1 space
+        args.replaceAll("\\s+"," ");
+        //System.out.println(args+"-----------------------------");
 
 
 

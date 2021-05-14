@@ -3,7 +3,7 @@
 public class Variable_class {
     int offset;
     //name
-    private String var_name;
+    public String var_name;
     //type
     public String type;
     //initialized
