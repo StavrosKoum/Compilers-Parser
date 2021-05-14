@@ -561,9 +561,14 @@ public class Check_visitor extends GJDepthFirst<String,Void>
 
         
         
-        String expr = n.f2.accept(this, argu);
+        String expr = find_id_type(n.f2.accept(this, argu));
+
 
         System.out.println(id+"------------------------>"+expr);
+        if(!id.equals(expr))
+        {
+            throw new Exception("Incompatible assignment types");
+        }
         
 
 

@@ -22,5 +22,5 @@ class B extends A {
     
 
     public int foo(int i, int j) { i = b; return i+j; }
-    public boolean foobar(boolean k){ return true; }
+    public boolean foobar(boolean k){ k = true; return true; }
 }

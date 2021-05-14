@@ -18,6 +18,10 @@ public class Table extends GJDepthFirst<String,Void>
     private String temp_meth;
     private int counter = 0;
 
+    private String type1;
+    private String name1;
+
+
 
 
     public  void Insert_Class_Table(String class_name) throws Exception
@@ -316,9 +320,21 @@ public class Table extends GJDepthFirst<String,Void>
     public String visit(FormalParameter n, Void argu) throws Exception{
         String type = n.f0.accept(this, null);
         String name = n.f1.accept(this, null);
-        //System.out.println("->>>>>>>>" + type + name );
+        System.out.println("->>>>>>>>" + type + name );
         if(!temp_meth.equals("class") && temp_extended_class==null)
         Table.get(temp_class).Methods_Table.get(temp_meth).Args_Table.put(name,type);
+
+        if(temp_extended_class!=null && !temp_meth.equals("class"))
+        {
+            if(Table.get(temp_extended_class).Methods_Table.get(temp_meth) == null)
+            {
+                //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+temp_meth);
+                if(Table.get(temp_class).Methods_Table.get(temp_meth)!=null)
+                Table.get(temp_class).Methods_Table.get(temp_meth).Args_Table.put(name,type);
+            }
+        }
+        this.type1 = type;
+        this.name1 = name;
         return type + " " + name;
     }
 
