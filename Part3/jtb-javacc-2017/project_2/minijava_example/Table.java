@@ -122,6 +122,7 @@ public class Table extends GJDepthFirst<String,Void>
 
     public  void Print_Keys()
     {
+        System.out.print("\n\n\n\n------------------ PRINTING---------------------\n\n\n");
         int num = 0;
         //System.out.println(Table.keySet());
         class_class value= null;
@@ -140,7 +141,7 @@ public class Table extends GJDepthFirst<String,Void>
     
             }
         }
-       
+        System.out.print("\n\n\n\n --------------end PRINTING----------------\n\n\n");
     }
 
         public HashMap <String,class_class> give_table()

@@ -18,7 +18,7 @@ public class Variable_class {
         this.type = type;
         this.offset = var_offset;
         this.method = method;
-        System.out.println("variable -> "+type+var_name+"."+offset);
+        System.out.println("variable -> "+type+var_name+"."+offset+"id-->"+num_id);
     }
 
     public void print_var_info()

@@ -14,9 +14,11 @@ class A {
 }
 
 class B extends A {
-    int i;
+    int b_var_0;
+    
+    
     
 
-    public int foo(int i, int j) { int h; return h*j; }
+    public int foo(int i, int j) { int b_var_0; return b_var_0; }
     public boolean foobar(boolean k){ return true; }
 }

@@ -101,15 +101,17 @@ public class class_class
 
     public  void  Insert_Variable_VarTable(String id,String var_type,String method) throws Exception
     {
+        //System.out.print(class_name+"____________________________________________________________________-");
         Variable_class temp;
-        if(Variables_Table.get(id) != null)
+        temp = Variables_Table.get(id+method);
+        if(temp  != null  )
         {
             throw new Exception("Var " + id + " has already been declared");
         }
         System.out.print(class_name+"-");
         temp = new Variable_class(id,var_type,var_offset,var_count,method);
         this.var_count ++;
-        Variables_Table.put(id,temp);
+        Variables_Table.put(id+method,temp);
         
         if(var_type.equals("int"))
         {
@@ -129,12 +131,19 @@ public class class_class
 
 
     
-    public  void  Ex_Insert_Variable_VarTable(String id,String var_type,int offset,String method)
+    public  void  Ex_Insert_Variable_VarTable(String id,String var_type,int offset,String method) throws Exception
     {
+        Variable_class temp;
+        temp = Variables_Table.get(id+method);
+        if(temp  != null  )
+        {
+            throw new Exception("Var " + id + " has already been declared");
+        }
+
         System.out.print(class_name+"--------------");
-        Variable_class temp = new Variable_class(id,var_type,offset,var_count,method);
+        temp = new Variable_class(id,var_type,offset,var_count,method);
         this.var_count ++;
-        Variables_Table.put(id,temp);
+        Variables_Table.put(id+method,temp);
     }
 
     public  int Mother_offset(String var_type)
@@ -175,11 +184,15 @@ public class class_class
 
         int num = 0;
 
+        
         while(num < var_count)
         {
+            
             for(String key: Variables_Table.keySet())
             {
                 var_value = Variables_Table.get(key);
+                //System.out.print(var_value.num_id);
+                //var_value.print_var_info();
                 // value.print_all();
                 if(var_value.num_id == num)
                 {
@@ -190,6 +203,7 @@ public class class_class
                 
 
             }
+            
         }
         
         num = 0;
@@ -212,7 +226,7 @@ public class class_class
             }
         }
         
-
+        
     }
 
 

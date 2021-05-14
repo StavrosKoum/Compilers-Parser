@@ -1,4 +1,7 @@
 import java.util.HashMap;
+
+
+
 import visitor.GJDepthFirst;
 import visitor.*;
 
@@ -110,7 +113,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
             if(!isArithmetic(exp1))
             {
                 //check if declared arg
-                tmp_var = var_class_tmp.Variables_Table.get(exp1);
+                tmp_var = var_class_tmp.Variables_Table.get(exp1+temp_method);
                 //System.out.println("->"+exp1);
                 if(tmp_var == null || !tmp_var.type.equals("int") || !tmp_var.method.equals(temp_method))
                 {
@@ -138,7 +141,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
             if(!isArithmetic(exp2))
             {
                 //check if declared arg
-                tmp_var = var_class_tmp.Variables_Table.get(exp2);
+                tmp_var = var_class_tmp.Variables_Table.get(exp2+temp_method);
                 if(tmp_var == null || !tmp_var.type.equals("int") || !tmp_var.method.equals(temp_method))
                 {
                     //if its not the "class " method
@@ -176,7 +179,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     public void check_return_type(String ret_type) throws Exception
     {
         // System.out.println(temp_class);
-        // System.out.println(temp_method);
+        //System.out.println("_______________________________"+ret_type);
 
         class_class tmp = Table.get(temp_class);
         Method_class meth = tmp.Methods_Table.get(temp_method);
@@ -213,7 +216,45 @@ public class Check_visitor extends GJDepthFirst<String,Void>
 
 
 
+    public String find_id_type(String id)
+    {
+        class_class tmp_class;
+        Variable_class tmp;
+        
+        
+        //System.out.println(this.temp_class);
+        tmp_class = Table.get(temp_class);
 
+        //System.out.println(tmp_class.class_name);
+        
+        tmp = tmp_class.Variables_Table.get(id+temp_method);
+        if(tmp != null)
+        {
+            return tmp.type;
+        }
+        tmp = tmp_class.Variables_Table.get(id+"class");
+        if(tmp != null)
+        {
+            return tmp.type;
+        }
+
+
+
+        if(temp_extended_class != null)
+        {
+            
+            tmp_class = Table.get(temp_extended_class);
+            tmp = tmp_class.Variables_Table.get(id+"class");
+            if(tmp != null)
+            {
+                return tmp.type;
+            }
+
+        }
+        
+        return id;
+        
+    }
 
 
 
@@ -314,8 +355,12 @@ public class Check_visitor extends GJDepthFirst<String,Void>
      */
     @Override
     public String visit(MainClass n, Void argu) throws Exception {
+        
+        
         String classname = n.f1.accept(this, null);
+        this.temp_class = classname;
         //System.out.println("Class: " + classname);
+       
        
 
         super.visit(n, argu);
@@ -367,12 +412,13 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     @Override
     public String visit(ClassExtendsDeclaration n, Void argu) throws Exception {
         String classname = n.f1.accept(this, null);
+        temp_class = classname;
+
         //System.out.println("Class: " + classname);
         
         
         temp_extended_class = n.f3.accept(this, null);
-        temp_class = classname;
-
+        
         super.visit(n, argu);
         System.out.println();
 
@@ -429,11 +475,14 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         String myName = n.f2.accept(this, null);
 
         this.temp_method = myName;
+        //System.out.println("_______+++++++++++++++++++++++++++++++++++++++++++"+temp_class);
         String ret_type = n.f10.accept(this,null);
 
 
         //System.out.println(myType);
+        
         check_types(myType);
+        ret_type = find_id_type(ret_type);
         check_return_type(ret_type);
        
         System.out.println("expression is->"+n.f10.accept(this,null));
