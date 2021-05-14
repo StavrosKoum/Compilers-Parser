@@ -251,6 +251,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         tmp_class = Table.get(temp_class);
 
         //check if its an argument
+        
         if(!temp_method.equals("class"))
         {
             meth_tmp = tmp_class.Methods_Table.get(temp_method);
@@ -409,6 +410,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         
         String classname = n.f1.accept(this, null);
         this.temp_class = classname;
+        temp_method = "class";
         //System.out.println("Class: " + classname);
        
        
@@ -434,7 +436,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     public String visit(ClassDeclaration n, Void argu) throws Exception {
         String classname = n.f1.accept(this, null);
         //System.out.println("Classs: " + classname);
-
+        temp_method = "class";
         temp_extended_class = null;
         temp_class = classname;
 
@@ -463,7 +465,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     public String visit(ClassExtendsDeclaration n, Void argu) throws Exception {
         String classname = n.f1.accept(this, null);
         temp_class = classname;
-
+        temp_method = "class";
         //System.out.println("Class: " + classname);
         
         
