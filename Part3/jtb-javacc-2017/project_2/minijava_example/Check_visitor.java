@@ -114,21 +114,21 @@ public class Check_visitor extends GJDepthFirst<String,Void>
             {
                 //check if declared arg
                 tmp_var = var_class_tmp.Variables_Table.get(exp1+temp_method);
-                //System.out.println("->"+exp1);
+                //System.out.println("===========->"+tmp_var.var_name);
                 if(tmp_var == null || !tmp_var.type.equals("int") || !tmp_var.method.equals(temp_method))
                 {
                     //if its not the "class " method
                     if(temp_method.equals("class"))
                     {
-                        throw new Exception(" Incompatible type " + exp1 +" cannot be converted to int");
+                        throw new Exception(" Incompatible types " + exp1 +" cannot be converted to int");
                     }
                     else
                     {
                         //ckeck if its int argument
                         if(!tmp_meth.args.contains("int "+exp1))
                         {
-                            
-                            throw new Exception(" Incompatible type " + exp1 +" cannot be converted to int");
+                            System.out.println("===========->"+tmp_meth.method_name);
+                            throw new Exception(" Incompatible typeaa " + exp1 +" cannot be converted to int");
                         }
                     }
                     
@@ -220,10 +220,50 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     {
         class_class tmp_class;
         Variable_class tmp;
+        Method_class meth_tmp;
+
+
+        if(temp_extended_class!=null)
+        {
+            //System.out.println(this.temp_class);
+            tmp_class = Table.get(temp_extended_class);
+
+            //check if its an argument
+            if(!temp_method.equals("class"))
+            {
+                meth_tmp = tmp_class.Methods_Table.get(temp_method);
+                
+                if(meth_tmp!=null)
+                {
+                    //System.out.println("aaaaaaaaaaaaaaaaaaaaaaa "+temp_method);
+                    String type = meth_tmp.Args_Table.get(id);
+                    if(type!=null)
+                    {
+                        return type;
+                    }
+                }
+            }
+        }
+        
         
         
         //System.out.println(this.temp_class);
         tmp_class = Table.get(temp_class);
+
+        //check if its an argument
+        if(!temp_method.equals("class"))
+        {
+            meth_tmp = tmp_class.Methods_Table.get(temp_method);
+
+            if(meth_tmp!=null)
+            {
+                String type = meth_tmp.Args_Table.get(id);
+                if(type!=null)
+                {
+                    return type;
+                }
+            }
+        }
 
         //System.out.println(tmp_class.class_name);
         
@@ -252,9 +292,19 @@ public class Check_visitor extends GJDepthFirst<String,Void>
 
         }
         
+        
         return id;
         
     }
+
+
+    // public void coompare_assign_types(String id_type,String ass_type)
+    // {
+    //     if(id_type.equals("int"))
+    //     {
+    //         if(ass_type)
+    //     }
+    // }
 
 
 
@@ -473,9 +523,14 @@ public class Check_visitor extends GJDepthFirst<String,Void>
 
         String myType = n.f1.accept(this, null);
         String myName = n.f2.accept(this, null);
-
         this.temp_method = myName;
-        //System.out.println("_______+++++++++++++++++++++++++++++++++++++++++++"+temp_class);
+        n.f7.accept(this, argu);
+        n.f8.accept(this, argu);
+
+        
+        //System.out.println("_______+++++++++++++++++++++++++++++++++++++++++++"+temp_method);
+
+
         String ret_type = n.f10.accept(this,null);
 
 
@@ -492,7 +547,28 @@ public class Check_visitor extends GJDepthFirst<String,Void>
 
 
 
+    /**
+    * f0 -> Identifier()
+    * f1 -> "="
+    * f2 -> Expression()
+    * f3 -> ";"
+    */
+    @Override
+    public String visit(AssignmentStatement n, Void argu) throws Exception
+    {
+    
+        String id = find_id_type(n.f0.accept(this, argu));
 
+        
+        
+        String expr = n.f2.accept(this, argu);
+
+        System.out.println(id+"------------------------>"+expr);
+        
+
+
+        return "_ret";
+    }
 
 
 

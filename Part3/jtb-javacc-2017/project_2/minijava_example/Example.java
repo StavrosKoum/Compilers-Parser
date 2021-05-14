@@ -6,6 +6,7 @@ class Example {
 class A {
     int[] i;
     A a;
+    int b;
     
     
 
@@ -18,7 +19,8 @@ class B extends A {
     
     
     
+    
 
-    public int foo(int i, int j) { int b_var_0; return b_var_0; }
+    public int foo(int i, int j) { i = b; return i+j; }
     public boolean foobar(boolean k){ return true; }
 }

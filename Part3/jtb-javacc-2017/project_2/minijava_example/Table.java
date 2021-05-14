@@ -317,6 +317,8 @@ public class Table extends GJDepthFirst<String,Void>
         String type = n.f0.accept(this, null);
         String name = n.f1.accept(this, null);
         //System.out.println("->>>>>>>>" + type + name );
+        if(!temp_meth.equals("class") && temp_extended_class==null)
+        Table.get(temp_class).Methods_Table.get(temp_meth).Args_Table.put(name,type);
         return type + " " + name;
     }
 
