@@ -99,7 +99,7 @@ public class class_class
 
     }
 
-    public  void  Insert_Variable_VarTable(String id,String var_type) throws Exception
+    public  void  Insert_Variable_VarTable(String id,String var_type,String method) throws Exception
     {
         Variable_class temp;
         if(Variables_Table.get(id) != null)
@@ -107,7 +107,7 @@ public class class_class
             throw new Exception("Var " + id + " has already been declared");
         }
         System.out.print(class_name+"-");
-        temp = new Variable_class(id,var_type,var_offset,var_count);
+        temp = new Variable_class(id,var_type,var_offset,var_count,method);
         this.var_count ++;
         Variables_Table.put(id,temp);
         
@@ -129,10 +129,10 @@ public class class_class
 
 
     
-    public  void  Ex_Insert_Variable_VarTable(String id,String var_type,int offset)
+    public  void  Ex_Insert_Variable_VarTable(String id,String var_type,int offset,String method)
     {
-        System.out.print(class_name+"-");
-        Variable_class temp = new Variable_class(id,var_type,offset,var_count);
+        System.out.print(class_name+"--------------");
+        Variable_class temp = new Variable_class(id,var_type,offset,var_count,method);
         this.var_count ++;
         Variables_Table.put(id,temp);
     }

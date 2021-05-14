@@ -17,6 +17,6 @@ class B extends A {
     int i;
     
 
-    public int foo(int i, int j) { return i*j; }
+    public int foo(int i, int j) { int h; return h*j; }
     public int foobar(boolean k){ return 1; }
 }

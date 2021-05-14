@@ -15,7 +15,9 @@ public class Table extends GJDepthFirst<String,Void>
     private HashMap <String,class_class> Table = new HashMap <String,class_class>();
     private String temp_class;
     private String temp_extended_class = null;
+    private String temp_meth;
     private int counter = 0;
+
 
 
     public  void Insert_Class_Table(String class_name) throws Exception
@@ -100,7 +102,7 @@ public class Table extends GJDepthFirst<String,Void>
 
             // }
         
-            temp.Insert_Variable_VarTable(id,var_type);
+            temp.Insert_Variable_VarTable(id,var_type,temp_meth);
         }
         else
         {
@@ -111,7 +113,7 @@ public class Table extends GJDepthFirst<String,Void>
 
             //System.out.print("alalalalalalalalall" + off);
             temp = Table.get(classname);
-            temp.Ex_Insert_Variable_VarTable(id,var_type,off);
+            temp.Ex_Insert_Variable_VarTable(id,var_type,off,temp_meth);
 
         }
     }
@@ -173,6 +175,7 @@ public class Table extends GJDepthFirst<String,Void>
         
         String classname = n.f1.accept(this, null);
         temp_extended_class = null;
+        temp_meth = "class";
         
         if(classname !=null)
         Insert_Class_Table(classname);
@@ -189,6 +192,7 @@ public class Table extends GJDepthFirst<String,Void>
     public String visit(ClassDeclaration n, Void argu) throws Exception {
         String classname = n.f1.accept(this, null);
         temp_extended_class = null;
+        temp_meth = "class";
 
         if(classname !=null)
         Insert_Class_Table(classname);
@@ -205,6 +209,7 @@ public class Table extends GJDepthFirst<String,Void>
     public String visit(ClassExtendsDeclaration n, Void argu) throws Exception {
         String classname = n.f1.accept(this, null);
         temp_extended_class = n.f3.accept(this, null);
+        temp_meth = "class";
         
         if(Table.get(temp_extended_class) == null)
         {
@@ -244,6 +249,7 @@ public class Table extends GJDepthFirst<String,Void>
         String myType = n.f1.accept(this, null);
         String myName = n.f2.accept(this, null);
         
+        temp_meth = myName;
         if(temp_extended_class == null)
         {
             
@@ -259,6 +265,7 @@ public class Table extends GJDepthFirst<String,Void>
         }
        
         //System.out.println(myType + " " + myName + " -- " + argumentList);
+        super.visit(n, argu);
         return null;
     }
 

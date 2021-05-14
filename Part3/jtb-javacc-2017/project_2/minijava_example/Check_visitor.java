@@ -57,6 +57,21 @@ public class Check_visitor extends GJDepthFirst<String,Void>
 
         }
     }
+    public static boolean isArithmetic(String num) 
+    {
+        try 
+        {
+            Integer.parseInt(num);
+            return true;
+        } catch(NumberFormatException e)
+        {  
+            return false; 
+        } catch (NullPointerException e) 
+        {
+            return false; 
+        }
+    }
+
 
     //for plus,minus,compare and times expression
     public void check_expressions(String exp1,String exp2) throws Exception
@@ -75,19 +90,73 @@ public class Check_visitor extends GJDepthFirst<String,Void>
             class_class tmp;
             Method_class tmp_meth;
             tmp= Table.get(myclass);
+            Variable_class tmp_var;
 
             //System.out.println("->"+temp_method);
 
+            
+
+
+            //CAUTION!! ONLY FOR VARIABLE 
+            //bacause extended class vars are stored at their own table with mother offset
+            class_class var_class_tmp = Table.get(temp_class);
+
+
+
             tmp_meth = tmp.Methods_Table.get(temp_method);
             
-            //System.out.println(myclass);
-            if(!tmp_meth.args.contains("int "+exp1))
+
+            //check if arithmetic
+            if(!isArithmetic(exp1))
             {
-                throw new Exception(" Incompatible type " + exp1 +" cannot be converted to int");
+                //check if declared arg
+                tmp_var = var_class_tmp.Variables_Table.get(exp1);
+                System.out.println("->"+exp1);
+                if(tmp_var == null || !tmp_var.type.equals("int") || !tmp_var.method.equals(temp_method))
+                {
+                    //if its not the "class " method
+                    if(temp_method.equals("class"))
+                    {
+                        throw new Exception(" Incompatible type " + exp1 +" cannot be converted to int");
+                    }
+                    else
+                    {
+                        //ckeck if its int argument
+                        if(!tmp_meth.args.contains("int "+exp1))
+                        {
+                            
+                            throw new Exception(" Incompatible type " + exp1 +" cannot be converted to int");
+                        }
+                    }
+                    
+                }
+                
             }
-            if(!tmp_meth.args.contains("int "+ exp2))
+
+            
+            //check if arithmetic
+            if(!isArithmetic(exp2))
             {
-                throw new Exception(" Incompatible type " + exp2 +" cannot be converted to int");
+                //check if declared arg
+                tmp_var = var_class_tmp.Variables_Table.get(exp2);
+                if(tmp_var == null || !tmp_var.type.equals("int") || !tmp_var.method.equals(temp_method))
+                {
+                    //if its not the "class " method
+                    if(temp_method.equals("class"))
+                    {
+                        throw new Exception(" Incompatible type " + exp2 +" cannot be converted to int");
+                    }
+                    else
+                    {
+                        //ckeck if its int argument
+                        if(!tmp_meth.args.contains("int "+exp2))
+                        {
+                            throw new Exception(" Incompatible type " + exp2 +" cannot be converted to int");
+                        }
+                    }
+                    
+                }
+                
             }
         }
         //System.out.println("fuck yes");
@@ -455,7 +524,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     @Override
     public String visit(IntegerLiteral n, Void argu) throws Exception
     {
-        //System.out.println("0");
+        System.out.println("0");
         return n.f0.tokenImage;
     }
 
@@ -482,7 +551,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     */
     public String visit(Identifier n, Void argu) throws Exception 
     {
-        System.out.println("3");
+        //System.out.println("3");
         return n.f0.tokenImage;
     }
     /**
