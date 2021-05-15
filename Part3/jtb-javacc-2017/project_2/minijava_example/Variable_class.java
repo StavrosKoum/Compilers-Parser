@@ -10,6 +10,7 @@ public class Variable_class {
     public boolean init = false;
     public int num_id;
     public String method;
+    
 
     public Variable_class(String name,String type,int var_offset,int count,String method)
     {

@@ -7,6 +7,7 @@ class A {
     int[] i;
     A a;
     int b;
+    int c;
     
     
 
@@ -21,6 +22,6 @@ class B extends A {
     
     
 
-    public int foo(int i, int j) { i = b; return i+j; }
+    public int foo(int i, int j) { c = b; return i+j; }
     public boolean foobar(boolean k){ k = true; return true; }
 }
