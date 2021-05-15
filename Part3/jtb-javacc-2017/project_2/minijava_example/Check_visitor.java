@@ -307,7 +307,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     //     }
     // }
 
-    public void Check_MessageSend(String type_class,String this_meth,String this_args) throws Exception
+    public String Check_MessageSend(String type_class,String this_meth,String this_args) throws Exception
     {
         if(type_class.equals("this"))
         type_class = temp_class;
@@ -324,14 +324,33 @@ public class Check_visitor extends GJDepthFirst<String,Void>
             throw new Exception("Class "+ myClass + " has no method "+ this_meth);
         }
 
-        if(this_args == null && myMeth.empty_args == true)
+        if(MyArgs_list.size() == 0 && myMeth.empty_args == true)
         {
          //do nothing.Its ok   
+         
         }
         else//check arguments
         {
-            System.out.println(this_args);
+            //mymethod list compare with myarglist
+            if(myMeth.args_list.size() != MyArgs_list.size())
+            {
+                System.out.println(myMeth.args_list.size());
+                throw new Exception("Method args too few or too many");
+            }
+            for(int i = 0; i < myMeth.args_list.size(); i++)
+            {
+                String one = myMeth.args_list.get(i);
+                String two = MyArgs_list.get(i);
+                //System.out.println(one+"---" + two);
+                if(!(one.equals(two)))
+                {
+                    if(!two.equals("null"))
+                    throw new Exception("Wrong meth args");
+                }
+            }
+            //System.out.println(this_args);
         }
+        return myMeth.type;
 
     }
 
@@ -606,7 +625,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         String expr = find_id_type(n.f2.accept(this, argu));
 
 
-        System.out.println(id+"------------Ass----\"=\"----between------------>");
+        //System.out.println(id+"------------Ass----\"=\"----between------------>");
         if(!id.equals(expr))
         {
             //check if expr = function call
@@ -949,19 +968,19 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         MyArgs_list.clear();
         //call so the list will fill
         n.f4.accept(this, argu);
-        //chech args from list
-        System.out.println(MyArgs_list);
+        //chech args from list in check_messageSend
+        //System.out.println("liiiiiist"+MyArgs_list);
         
         
 
 
-        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$"+this_class_var+"."+this_meth+"("+this_args+")");
+        //System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$"+this_class_var+"."+this_meth+"(dont mind this)");
         String type_class = find_id_type(this_class_var);
-        Check_MessageSend(type_class,this_meth,this_args);
+        //Check_MessageSend(type_class,this_meth,this_args);
 
         
-        
-        return null;
+        //returns type
+        return Check_MessageSend(type_class,this_meth,this_args);
     }
 
 
@@ -996,7 +1015,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     public String visit(Expression n, Void argu) throws Exception 
     {
         String tmp  = n.f0.accept(this, argu);
-        System.out.println("yyyyyy"+tmp);
+        //System.out.println("yyyyyy"+tmp);
         give_to_arg_list(tmp);
         return tmp;
     }

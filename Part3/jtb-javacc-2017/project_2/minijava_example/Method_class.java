@@ -22,7 +22,7 @@ public class Method_class
 
     //use this
     //it only has types
-    private List<String> args_list;
+    public List<String> args_list;
 
     public Method_class(String name,String type,String argumentList,int count)
     {
@@ -48,14 +48,16 @@ public class Method_class
         }
         else
         {
-            l = l/4;
+            l = l/2;
             for(int i = 0; i <l; i ++)
             {
-                args_list.remove(args_list.size()-1);
-                args_list.remove(args_list.size()-2);
+                //System.out.println("a");
+                args_list.remove(args_list.size()-(i+1));
+                //args_list.remove(args_list.size()-2);
             }
         }
         
+        //System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``"+method_name);
         for(int i = 0; i <args_list.size(); i ++)
         {
             //System.out.println(args_list.get(i));

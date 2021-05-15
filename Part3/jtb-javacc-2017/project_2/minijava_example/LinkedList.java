@@ -80,7 +80,12 @@ class List{
     public boolean Init(){
 	end = true ;
 	return true ;
-    }
+	}
+	
+	public boolean test(int u,int a,int f)
+	{
+		return true;
+	}
 
     // Initialize the values of a new node
     public boolean InitNew(Element v_elem, List v_next, boolean v_end){
@@ -268,7 +273,8 @@ class LL{
 
 	
 	head = head.Delete(el01);
-	aux01 = head.Print(i,d,j);
+	aux01 = head.test(i,1,2);
+
 	//System.out.println(44440000);
 	
 	return 0 ;
