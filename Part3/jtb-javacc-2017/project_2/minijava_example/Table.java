@@ -39,7 +39,7 @@ public class Table extends GJDepthFirst<String,Void>
         else
         {
 
-            System.out.println("Insert " + class_name+counter + " and create class_class");
+            //System.out.println("Insert " + class_name+counter + " and create class_class");
             //create class_class here to instert other declarations later
             class_class test = new class_class(class_name,counter);
             Table.put(test.class_name,test);
@@ -320,7 +320,7 @@ public class Table extends GJDepthFirst<String,Void>
     public String visit(FormalParameter n, Void argu) throws Exception{
         String type = n.f0.accept(this, null);
         String name = n.f1.accept(this, null);
-        System.out.println("->>>>>>>>" + type + name );
+        //System.out.println("->>>>>>>>" + type + name );
         if(!temp_meth.equals("class") && temp_extended_class==null)
         Table.get(temp_class).Methods_Table.get(temp_meth).Args_Table.put(name,type);
 

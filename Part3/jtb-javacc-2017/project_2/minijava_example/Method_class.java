@@ -80,7 +80,8 @@ public class Method_class
 
     public void print_meth_info()
     {
-        System.out.println(type +" - "+method_name +"."+ offset+"  ("+ args+ ")");
+        //System.out.println(type +" - "+method_name +"."+ offset+"  ("+ args+ ")");
+        System.out.println(method_name +" :"+ offset);
 
     }
 

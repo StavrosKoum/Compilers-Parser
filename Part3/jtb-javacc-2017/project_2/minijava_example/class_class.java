@@ -41,7 +41,7 @@ public class class_class
 
             //System.out.println( test.method_name);
             test = Methods_Table.get(method_name);
-            test.print_meth_info();
+            //test.print_meth_info();
             
         }
     }
@@ -55,7 +55,7 @@ public class class_class
         }
         else
         {
-            System.out.println("Insert method->" + method_name + " at class " + class_name);
+            //System.out.println("Insert method->" + method_name + " at class " + class_name);
             //create method_class here to instert other declarations later
             Method_class test = new Method_class(method_name,method_type,argumentList,meth_count);
             this.meth_count ++;
@@ -63,14 +63,14 @@ public class class_class
             Methods_Table.put(method_name,test);
             //System.out.println( test.method_name);
             test = Methods_Table.get(method_name);
-            test.print_meth_info();
+            //test.print_meth_info();
             
         }
     }
 
     public  void Print_MethKeys()
     {
-        System.out.println(Methods_Table.keySet());
+        //System.out.println(Methods_Table.keySet());
     }
     
     public boolean Search_for_override_meth(String method_name,String method_type,String argumenString) throws Exception
@@ -81,11 +81,11 @@ public class class_class
             Method_class temp = Methods_Table.get(method_name);
             if((temp.type.equals(method_type)) && temp.args.equals(argumenString))
             {
-                System.out.println("Found same method");
+                //System.out.println("Found same method");
             
                 //temp = Methods_Table.get(method_name);
-                System.out.print(class_name +"->");
-                temp.print_meth_info();
+                //System.out.print(class_name +"->");
+                //temp.print_meth_info();
                 return true;
                 
             }
@@ -108,8 +108,12 @@ public class class_class
         {
             throw new Exception("Var " + id + " has already been declared");
         }
-        System.out.print(class_name+"-");
-        temp = new Variable_class(id,var_type,var_offset,var_count,method);
+        //System.out.print(class_name+"-");
+
+        boolean prnt = false;
+        if(method.equals("class"))
+        prnt = true;
+        temp = new Variable_class(id,var_type,var_offset,var_count,method,prnt);
         this.var_count ++;
         Variables_Table.put(id+method,temp);
         
@@ -140,8 +144,12 @@ public class class_class
             throw new Exception("Var " + id + " has already been declared");
         }
 
-        System.out.print(class_name+"--------------");
-        temp = new Variable_class(id,var_type,offset,var_count,method);
+        //System.out.print(class_name+"--------------");
+
+        boolean prnt = false;
+        if(method.equals("class"))
+        prnt = true;
+        temp = new Variable_class(id,var_type,offset,var_count,method,prnt);
         this.var_count ++;
         Variables_Table.put(id+method,temp);
     }
@@ -196,6 +204,7 @@ public class class_class
                 // value.print_all();
                 if(var_value.num_id == num)
                 {
+                    if(var_value.to_be_printed)
                     System.out.print(class_name+".");
                     var_value.print_var_info();
                     num++;
