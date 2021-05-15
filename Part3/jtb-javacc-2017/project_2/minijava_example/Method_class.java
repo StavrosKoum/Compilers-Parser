@@ -14,11 +14,11 @@ public class Method_class
     private int offset;
     private String[] args_array;
     public int num_id;
-    private boolean empty_args = false;
+    public boolean empty_args = false;
 
     //hashmap methods
     public HashMap <String,String> Args_Table = new HashMap <String,String>();
-    
+
 
     //use this
     //it only has types

@@ -1,7 +1,3 @@
-import java.util.HashMap;
-
-
-
 import visitor.GJDepthFirst;
 import visitor.*;
 
@@ -10,6 +6,7 @@ import java.util.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 
 
@@ -20,6 +17,8 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     private String temp_class;
     private String temp_extended_class = null;
     private String temp_method;
+
+    private List<String> MyArgs_list = new ArrayList<String>();
 
 
     public Check_visitor(HashMap <String,class_class> get_table)
@@ -85,6 +84,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         }
         else
         {
+           
             String myclass = temp_class;
             if(temp_extended_class!=null)
             {
@@ -110,7 +110,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
             
 
             //check if arithmetic
-            if(!isArithmetic(exp1))
+            if(!isArithmetic(exp1) && !exp1.equals("int"))
             {
                 //check if declared arg
                 tmp_var = var_class_tmp.Variables_Table.get(exp1+temp_method);
@@ -127,8 +127,8 @@ public class Check_visitor extends GJDepthFirst<String,Void>
                         //ckeck if its int argument
                         if(!tmp_meth.args.contains("int "+exp1))
                         {
-                            System.out.println("===========->"+tmp_meth.method_name);
-                            throw new Exception(" Incompatible typeaa " + exp1 +" cannot be converted to int");
+                            //System.out.println("===========->"+tmp_meth.method_name);
+                            throw new Exception(" Incompatible type " + exp1 +" cannot be converted to int");
                         }
                     }
                     
@@ -138,7 +138,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
 
             
             //check if arithmetic
-            if(!isArithmetic(exp2))
+            if(!isArithmetic(exp2)&& !exp2.equals("int"))
             {
                 //check if declared arg
                 tmp_var = var_class_tmp.Variables_Table.get(exp2+temp_method);
@@ -307,6 +307,44 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     //     }
     // }
 
+    public void Check_MessageSend(String type_class,String this_meth,String this_args) throws Exception
+    {
+        if(type_class.equals("this"))
+        type_class = temp_class;
+
+        class_class myClass = Table.get(type_class);
+        if(myClass == null )
+        {
+            throw new Exception("How the hell did this happen.It should have been an error at varDecl");
+        }
+
+        Method_class myMeth = myClass.Methods_Table.get(this_meth);
+        if(myMeth == null)
+        {
+            throw new Exception("Class "+ myClass + " has no method "+ this_meth);
+        }
+
+        if(this_args == null && myMeth.empty_args == true)
+        {
+         //do nothing.Its ok   
+        }
+        else//check arguments
+        {
+            System.out.println(this_args);
+        }
+
+    }
+
+    public void give_to_arg_list(String arg)
+    {
+        //must check if initialised here
+
+        //take type
+        String tmp = find_id_type(arg);
+        MyArgs_list.add(tmp);
+
+
+    }
 
 
 
@@ -542,7 +580,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         ret_type = find_id_type(ret_type);
         check_return_type(ret_type);
        
-        System.out.println("expression is->"+n.f10.accept(this,null));
+        //System.out.println("expression is->"+n.f10.accept(this,null));
         return null;
     }
 
@@ -568,13 +606,16 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         String expr = find_id_type(n.f2.accept(this, argu));
 
 
-        System.out.println(id+"------------Ass----\"=\"----between------------>"+expr);
+        System.out.println(id+"------------Ass----\"=\"----between------------>");
         if(!id.equals(expr))
         {
-            throw new Exception("Incompatible assignment types");
+            //check if expr = function call
+            if(expr != null && !expr.equals("this"))
+            throw new Exception("Incompatible assignment types"+expr);
         }
 
 
+        //above its to update initialised boolean
         //if var is argument we dont have to initialise
         if(Table.get(temp_class).Methods_Table.get(temp_method)!=null)
         {
@@ -592,12 +633,6 @@ public class Check_visitor extends GJDepthFirst<String,Void>
                 return null;
             }
         }
-        
-        
-        
-        
-        
-        
         
         //update init
         if( Table.get(temp_class).Variables_Table.get(name+temp_method)!=null)
@@ -628,11 +663,6 @@ public class Check_visitor extends GJDepthFirst<String,Void>
                 return null;
             }
         }
-
-        
-        
-        
-
 
         return null;
     }
@@ -768,7 +798,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     {
         String one = n.f0.accept(this,null);
         String two = n.f2.accept(this,null);
-        //System.out.println(one + "*"+ two);
+        System.out.println(one + "*"+ two);
         check_expressions(one,two);
         return "int";
     }
@@ -783,7 +813,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     {
         String one = n.f0.accept(this,null);
         String two = n.f2.accept(this,null);
-        //System.out.println(one + "<"+ two);
+        System.out.println(one + "<"+ two);
         check_expressions(one,two);
         return "boolean";
     }
@@ -796,7 +826,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     @Override
     public String visit(IntegerLiteral n, Void argu) throws Exception
     {
-        System.out.println("0");
+        //System.out.println("0");
         return "int";
     }
 
@@ -805,7 +835,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     */
     public String visit(TrueLiteral n, Void argu) throws Exception 
     {
-        System.out.println("1");
+        //System.out.println("1");
         return "boolean";
     }
 
@@ -814,7 +844,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     */
     public String visit(FalseLiteral n, Void argu) throws Exception 
     {
-        System.out.println("2");
+        //System.out.println("2");
         return "boolean";
     }
     
@@ -831,7 +861,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     */
     public String visit(ThisExpression n, Void argu) throws Exception 
     {
-        System.out.println("4");
+        //System.out.println("4");
         return n.f0.tokenImage;
     }
 
@@ -845,7 +875,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
    public String visit(ArrayAllocationExpression n, Void argu) throws Exception 
     {
    
-        System.out.println("5");
+        //System.out.println("5");
         n.f3.accept(this, argu);
     
         return "skata";
@@ -861,7 +891,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     {
         
         
-        System.out.println("6");
+        //System.out.println("6");
 
         String tmp = n.f1.accept(this, argu);
         class_class sh = Table.get(tmp);
@@ -879,7 +909,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     */
     public String visit(NotExpression n,  Void argu) throws Exception 
     {
-        System.out.println("7");
+        //System.out.println("7");
         String tmp = n.f1.accept(this, argu);
         return tmp;
     }
@@ -891,9 +921,83 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     */
     public String visit(BracketExpression n,  Void argu) throws Exception 
     {
-        System.out.println("8");
+        //System.out.println("8");
         String tmp = n.f1.accept(this, argu);
         
         return tmp;
+    }
+
+
+    /**
+    * f0 -> PrimaryExpression()
+    * f1 -> "."
+    * f2 -> Identifier()
+    * f3 -> "("
+    * f4 -> ( ExpressionList() )?
+    * f5 -> ")"
+    */
+    public String visit(MessageSend n,  Void argu) throws Exception {
+        String _ret=null;
+        String this_class_var = n.f0.accept(this, argu);
+        n.f1.accept(this, argu);
+        String this_meth =  n.f2.accept(this, argu);
+        n.f3.accept(this, argu);
+
+        String this_args = null;
+
+        //empty list
+        MyArgs_list.clear();
+        //call so the list will fill
+        n.f4.accept(this, argu);
+        //chech args from list
+        System.out.println(MyArgs_list);
+        
+        
+
+
+        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$"+this_class_var+"."+this_meth+"("+this_args+")");
+        String type_class = find_id_type(this_class_var);
+        Check_MessageSend(type_class,this_meth,this_args);
+
+        
+        
+        return null;
+    }
+
+
+
+
+    /**
+    * f0 -> Expression()
+    * f1 -> ExpressionTail()
+    */
+   public String visit(ExpressionList n, Void argu ) throws Exception 
+   {
+    String _ret=null;
+    n.f0.accept(this, argu);
+    n.f1.accept(this, argu);
+    return _ret;
  }
+
+
+
+
+    /**
+    * f0 -> AndExpression()
+    *       | CompareExpression()
+    *       | PlusExpression()
+    *       | MinusExpression()
+    *       | TimesExpression()
+    *       | ArrayLookup()
+    *       | ArrayLength()
+    *       | MessageSend()
+    *       | PrimaryExpression()
+    */
+    public String visit(Expression n, Void argu) throws Exception 
+    {
+        String tmp  = n.f0.accept(this, argu);
+        System.out.println("yyyyyy"+tmp);
+        give_to_arg_list(tmp);
+        return tmp;
+    }
 }
