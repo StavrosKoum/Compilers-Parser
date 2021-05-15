@@ -42,6 +42,7 @@ public class Table extends GJDepthFirst<String,Void>
             //System.out.println("Insert " + class_name+counter + " and create class_class");
             //create class_class here to instert other declarations later
             class_class test = new class_class(class_name,counter);
+            test.ex_class = temp_extended_class;
             Table.put(test.class_name,test);
             this.counter++;
         }
@@ -137,11 +138,12 @@ public class Table extends GJDepthFirst<String,Void>
                 value = Table.get(key);
                 if(value.num_id == num)
                 {
+                    System.out.println("-----"+value.class_name+"-----");
                     value.print_all();
                     num++;
                 }
                 
-                //System.out.println("777777777"+key);
+                
     
             }
         }

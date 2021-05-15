@@ -27,7 +27,7 @@ public class Variable_class {
     public void print_var_info()
     {
         if(to_be_printed)
-        System.out.println(type + " " +var_name+"."+offset );
+        System.out.println(var_name+"."+offset );
     }
     
 }

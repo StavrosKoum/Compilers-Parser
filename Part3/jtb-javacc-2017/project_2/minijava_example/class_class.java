@@ -14,6 +14,7 @@ public class class_class
     public int num_id;
     private int var_count= 0;
     private int meth_count = 0;
+    public String ex_class;
 
 
     public class_class(String name,int counter)

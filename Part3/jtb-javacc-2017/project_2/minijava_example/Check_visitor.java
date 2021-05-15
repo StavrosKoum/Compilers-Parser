@@ -331,6 +331,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         }
         else//check arguments
         {
+            class_class checker;
             //mymethod list compare with myarglist
             if(myMeth.args_list.size() != MyArgs_list.size())
             {
@@ -345,7 +346,17 @@ public class Check_visitor extends GJDepthFirst<String,Void>
                 if(!(one.equals(two)))
                 {
                     if(!two.equals("null"))
-                    throw new Exception("Wrong meth args");
+                    {
+                        //check for parent class
+                        checker = Table.get(two);
+                        if(checker != null)
+                        {
+                            if(!(one.equals(checker.ex_class)))
+                            throw new Exception("Wrong meth args");
+                        }
+                       
+                    }
+                    
                 }
             }
             //System.out.println(this_args);
@@ -630,7 +641,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         {
             //check if expr = function call
             if(expr != null && !expr.equals("this"))
-            throw new Exception("Incompatible assignment types"+expr);
+            throw new Exception("assignment Error "+id+" ="+ expr);
         }
 
 
@@ -787,6 +798,8 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         String one = n.f0.accept(this,null);
         String two = n.f2.accept(this,null);
         //System.out.println(one + "+"+ two);
+        one = find_id_type(one);
+        two = find_id_type(two);
         check_expressions(one,two);
         return "int";
     }
@@ -803,6 +816,8 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         String one = n.f0.accept(this,null);
         String two = n.f2.accept(this,null);
         //System.out.println(one + "-"+ two);
+        one = find_id_type(one);
+        two = find_id_type(two);
         check_expressions(one,two);
         return "int";
     }
@@ -817,7 +832,9 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     {
         String one = n.f0.accept(this,null);
         String two = n.f2.accept(this,null);
-        System.out.println(one + "*"+ two);
+        //System.out.println(one + "*"+ two);
+        one = find_id_type(one);
+        two = find_id_type(two);
         check_expressions(one,two);
         return "int";
     }
@@ -832,7 +849,9 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     {
         String one = n.f0.accept(this,null);
         String two = n.f2.accept(this,null);
-        System.out.println(one + "<"+ two);
+        //System.out.println(one + "<"+ two);
+        one = find_id_type(one);
+        two = find_id_type(two);
         check_expressions(one,two);
         return "boolean";
     }
@@ -897,7 +916,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         //System.out.println("5");
         n.f3.accept(this, argu);
     
-        return "skata";
+        return "int[]";
     }
 
      /**
