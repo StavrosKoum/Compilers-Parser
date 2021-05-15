@@ -24,10 +24,10 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     public Check_visitor(HashMap <String,class_class> get_table)
     {
         this.Table = get_table;
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
+        // System.out.println();
+        // System.out.println();
+        // System.out.println();
+        // System.out.println();
         // class_class value= null;
         // for(String key: Table.keySet())
         // {
@@ -335,7 +335,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
             //mymethod list compare with myarglist
             if(myMeth.args_list.size() != MyArgs_list.size())
             {
-                System.out.println(myMeth.args_list.size());
+                //System.out.println(myMeth.args_list.size());
                 throw new Exception("Method args too few or too many");
             }
             for(int i = 0; i < myMeth.args_list.size(); i++)
@@ -487,7 +487,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         
 
         
-        System.out.println();
+        //System.out.println();
 
         return null;
     }
@@ -514,7 +514,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         
         
         super.visit(n, argu);
-        System.out.println();
+        //System.out.println();
 
         return null;
     }
@@ -639,7 +639,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         //System.out.println(id+"------------Ass----\"=\"----between------------>");
         if(!id.equals(expr))
         {
-            //check if expr = function call
+            
             if(expr != null && !expr.equals("this"))
             throw new Exception("assignment Error "+id+" ="+ expr);
         }
@@ -651,7 +651,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         {
             if(Table.get(temp_class).Methods_Table.get(temp_method).Args_Table.get(name)!=null)
             {
-                System.out.println("Argument reinitialised");
+                //System.out.println("Argument reinitialised");
                 return null;
             }
         }
@@ -659,7 +659,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         {
             if(Table.get(temp_extended_class).Methods_Table.get(temp_method).Args_Table.get(name)!=null)
             {
-                System.out.println("Argument reinitialised");
+                //System.out.println("Argument reinitialised");
                 return null;
             }
         }
@@ -667,13 +667,13 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         //update init
         if( Table.get(temp_class).Variables_Table.get(name+temp_method)!=null)
         {
-            System.out.println("-----------11------------");
+            //System.out.println("-----------11------------");
             Table.get(temp_class).Variables_Table.get(name+temp_method).init = true;
             return null;
         }
         else if(Table.get(temp_class).Variables_Table.get(name+"class")!=null)
         {
-            System.out.println("-----------12------------");
+            //System.out.println("-----------12------------");
             Table.get(temp_class).Variables_Table.get(name+"class").init = true;
             return null;
         }
@@ -682,13 +682,13 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         {   
             if(Table.get(temp_extended_class).Variables_Table.get(name+temp_method)!=null)
             {   
-                System.out.println("-----------13------------");
+                //System.out.println("-----------13------------");
                 Table.get(temp_extended_class).Variables_Table.get(name+temp_method).init = true;
                 return null;
             }
             else if(Table.get(temp_extended_class).Variables_Table.get(name+"class")!=null)
             {
-                System.out.println("-----------14------------");
+                //System.out.println("-----------14------------");
                 Table.get(temp_extended_class).Variables_Table.get(name+"class").init = true;
                 return null;
             }
@@ -900,7 +900,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
     public String visit(ThisExpression n, Void argu) throws Exception 
     {
         //System.out.println("4");
-        return n.f0.tokenImage;
+        return temp_class;
     }
 
      /**
@@ -1037,5 +1037,96 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         //System.out.println("yyyyyy"+tmp);
         give_to_arg_list(tmp);
         return tmp;
+    }
+
+
+
+
+
+
+
+    /**
+    * f0 -> "if"
+    * f1 -> "("
+    * f2 -> Expression()
+    * f3 -> ")"
+    * f4 -> Statement()
+    * f5 -> "else"
+    * f6 -> Statement()
+    */
+   public String visit(IfStatement n,Void argu) throws Exception {
+    String _ret=null;
+    n.f0.accept(this, argu);
+    n.f1.accept(this, argu);
+    String a = n.f2.accept(this, argu);
+    a = find_id_type(a);
+    //System.out.println(a);
+    if(a!=null)
+    {
+        if(!a.equals("boolean") )
+        {
+            
+            throw new Exception("If statement must be type boolean");
+        }
+    }
+    
+    n.f3.accept(this, argu);
+    n.f4.accept(this, argu);
+    n.f5.accept(this, argu);
+    n.f6.accept(this, argu);
+    return _ret;
+ }
+
+    /**
+    * f0 -> "while"
+    * f1 -> "("
+    * f2 -> Expression()
+    * f3 -> ")"
+    * f4 -> Statement()
+    */
+    public String visit(WhileStatement n, Void argu) throws Exception {
+        String _ret=null;
+        n.f0.accept(this, argu);
+        n.f1.accept(this, argu);
+        String a = n.f2.accept(this, argu);
+        a = find_id_type(a);
+        //System.out.println(a);
+        if(a!=null)
+        {
+            if(!a.equals("boolean") )
+            {
+                
+                throw new Exception("While statement must be type boolean");
+            }
+        }
+        n.f3.accept(this, argu);
+        n.f4.accept(this, argu);
+        return _ret;
+     }
+
+     /**
+    * f0 -> "System.out.println"
+    * f1 -> "("
+    * f2 -> Expression()
+    * f3 -> ")"
+    * f4 -> ";"
+    */
+    public String visit(PrintStatement n, Void argu) throws Exception {
+        String _ret=null;
+        n.f0.accept(this, argu);
+        n.f1.accept(this, argu);
+        String a = n.f2.accept(this, argu);
+        a = find_id_type(a);
+        if(a!=null)
+        {
+            if(!a.equals("int") )
+            {
+                
+                throw new Exception("Print statement must have type int");
+            }
+        }
+        n.f3.accept(this, argu);
+        n.f4.accept(this, argu);
+        return _ret;
     }
 }

@@ -36,13 +36,13 @@ public class Main {
             //System.out.println(Table);
             root.accept(mine, null);
 
-            mine.Print_Keys();
+            
 
             Check_visitor la_polizia = new Check_visitor(mine.give_table());
 
             root.accept(la_polizia, null);
 
-            
+            mine.Print_Keys();
             
             
             // MyVisitor eval = new MyVisitor();

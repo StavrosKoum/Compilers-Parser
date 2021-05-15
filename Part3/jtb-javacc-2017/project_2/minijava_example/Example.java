@@ -23,6 +23,14 @@ class B extends A {
     int b_var_0;
     
 
-    public int foo(int i, int j) { c = b; return i+j; }
+    public int foo(int i, int j) 
+    { 
+        c = b;
+        while(1)
+        {
+
+        }
+         return i+j; 
+    }
     public boolean foobar(boolean k){int  ak = this.foo(1,3); return true; }
 }
