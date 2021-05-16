@@ -321,7 +321,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         Method_class myMeth = myClass.Methods_Table.get(this_meth);
         if(myMeth == null)
         {
-            throw new Exception("Class "+ myClass + " has no method "+ this_meth);
+            throw new Exception("Class "+ myClass.class_name + " has no method "+ this_meth);
         }
 
         if(MyArgs_list.size() == 0 && myMeth.empty_args == true)
@@ -647,52 +647,52 @@ public class Check_visitor extends GJDepthFirst<String,Void>
 
         //above its to update initialised boolean
         //if var is argument we dont have to initialise
-        if(Table.get(temp_class).Methods_Table.get(temp_method)!=null)
-        {
-            if(Table.get(temp_class).Methods_Table.get(temp_method).Args_Table.get(name)!=null)
-            {
-                //System.out.println("Argument reinitialised");
-                return null;
-            }
-        }
-        else if(Table.get(temp_extended_class).Methods_Table.get(temp_method)!=null)
-        {
-            if(Table.get(temp_extended_class).Methods_Table.get(temp_method).Args_Table.get(name)!=null)
-            {
-                //System.out.println("Argument reinitialised");
-                return null;
-            }
-        }
+        // if(Table.get(temp_class).Methods_Table.get(temp_method)!=null)
+        // {
+        //     if(Table.get(temp_class).Methods_Table.get(temp_method).Args_Table.get(name)!=null)
+        //     {
+        //         //System.out.println("Argument reinitialised");
+        //         return null;
+        //     }
+        // }
+        // else if(Table.get(temp_extended_class).Methods_Table.get(temp_method)!=null)
+        // {
+        //     if(Table.get(temp_extended_class).Methods_Table.get(temp_method).Args_Table.get(name)!=null)
+        //     {
+        //         //System.out.println("Argument reinitialised");
+        //         return null;
+        //     }
+        // }
         
-        //update init
-        if( Table.get(temp_class).Variables_Table.get(name+temp_method)!=null)
-        {
-            //System.out.println("-----------11------------");
-            Table.get(temp_class).Variables_Table.get(name+temp_method).init = true;
-            return null;
-        }
-        else if(Table.get(temp_class).Variables_Table.get(name+"class")!=null)
-        {
-            //System.out.println("-----------12------------");
-            Table.get(temp_class).Variables_Table.get(name+"class").init = true;
-            return null;
-        }
-        //search extended class
-        if(temp_extended_class!=null)
-        {   
-            if(Table.get(temp_extended_class).Variables_Table.get(name+temp_method)!=null)
-            {   
-                //System.out.println("-----------13------------");
-                Table.get(temp_extended_class).Variables_Table.get(name+temp_method).init = true;
-                return null;
-            }
-            else if(Table.get(temp_extended_class).Variables_Table.get(name+"class")!=null)
-            {
-                //System.out.println("-----------14------------");
-                Table.get(temp_extended_class).Variables_Table.get(name+"class").init = true;
-                return null;
-            }
-        }
+        // //update init
+        // if( Table.get(temp_class).Variables_Table.get(name+temp_method)!=null)
+        // {
+        //     //System.out.println("-----------11------------");
+        //     Table.get(temp_class).Variables_Table.get(name+temp_method).init = true;
+        //     return null;
+        // }
+        // else if(Table.get(temp_class).Variables_Table.get(name+"class")!=null)
+        // {
+        //     //System.out.println("-----------12------------");
+        //     Table.get(temp_class).Variables_Table.get(name+"class").init = true;
+        //     return null;
+        // }
+        // //search extended class
+        // if(temp_extended_class!=null)
+        // {   
+        //     if(Table.get(temp_extended_class).Variables_Table.get(name+temp_method)!=null)
+        //     {   
+        //         //System.out.println("-----------13------------");
+        //         Table.get(temp_extended_class).Variables_Table.get(name+temp_method).init = true;
+        //         return null;
+        //     }
+        //     else if(Table.get(temp_extended_class).Variables_Table.get(name+"class")!=null)
+        //     {
+        //         //System.out.println("-----------14------------");
+        //         Table.get(temp_extended_class).Variables_Table.get(name+"class").init = true;
+        //         return null;
+        //     }
+        // }
 
         return null;
     }

@@ -25,11 +25,7 @@ class B extends A {
 
     public int foo(int i, int j) 
     { 
-        c = b;
-        while(1)
-        {
-
-        }
+      
          return i+j; 
     }
     public boolean foobar(boolean k){int  ak = this.foo(1,3); return true; }
