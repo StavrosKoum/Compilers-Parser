@@ -4,10 +4,14 @@ import java.util.HashMap;
 
 import javax.print.DocFlavor.STRING;
 
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.ParseException;
+import java.io.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -43,7 +47,19 @@ public class Main {
             root.accept(la_polizia, null);
 
             mine.Print_Keys();
-            
+
+            System.out.println("\n\n------------------------------------------------\n");
+
+           
+            //PART 2////////////////////
+            //create a file
+            String file_name = args[0].replace(".java", ".ll");
+            Writer wr = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file_name),"utf-8"));
+
+            //create VTable
+            LLVM_Gen llvm = new LLVM_Gen(mine.give_table(),wr,mine.counter);
+            llvm.create_vt();
+            wr.close();
             
             // MyVisitor eval = new MyVisitor();
             // root.accept(eval, null);

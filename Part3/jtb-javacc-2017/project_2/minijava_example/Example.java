@@ -28,5 +28,5 @@ class B extends A {
       
          return i+j; 
     }
-    public boolean foobar(boolean k){int  ak = this.foo(1,3); return true; }
+    public boolean foobar(boolean k){return true; }
 }

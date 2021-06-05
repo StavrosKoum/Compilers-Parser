@@ -16,7 +16,7 @@ public class Table extends GJDepthFirst<String,Void>
     private String temp_class;
     private String temp_extended_class = null;
     private String temp_meth;
-    private int counter = 0;
+    public int counter = 0;
 
     private String type1;
     private String name1;
