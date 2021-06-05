@@ -27,9 +27,8 @@ public class LLVM_Gen
     public void create_vt() throws Exception
     {
         int num = 1;
-        //System.out.println(Table.keySet());
         class_class value= null;
-        while(num < this.class_counter)
+        while(num < this.class_counter) ///class while
         {
             for(String key: Table.keySet())
             {
@@ -38,7 +37,54 @@ public class LLVM_Gen
                 {
                     System.out.println("-----"+value.class_name+"-----");
                     emit(value.class_name+"\n");
-                    
+
+
+
+
+                    //methods here++++++++++++++++++++++++++++++++++++++++++++++
+                    Method_class  meth_value = null;
+                    int meth_num = 0;
+                    while(meth_num < value.meth_count)
+                    {
+                        for(String key1: value.Methods_Table.keySet())
+                        {
+                        
+                            meth_value = value.Methods_Table.get(key1);
+                            if(meth_value.num_id == meth_num)
+                            {
+                                // value.print_all();
+                                System.out.println(meth_value.method_name);
+                                emit("name->"+meth_value.method_name+"\n");
+                                //take meth info here
+                                emit("type->"+meth_value.type+"\n");
+                                //meth args++++++++++++++++++++++++++++++++++++++=
+                                for(int i = 0; i <meth_value.args_list.size(); i ++)
+                                {
+                                    if(i == 0)
+                                    emit(meth_value.args_list.get(i));
+                                    else
+                                    emit(","+meth_value.args_list.get(i));
+                                }
+                                emit("\n");
+                               
+
+
+                                meth_num++;
+                            }
+                            
+                            
+
+                        }
+                    }
+
+
+
+
+
+
+
+
+
                     num++;
                 }
                 

@@ -13,7 +13,7 @@ public class class_class
     private int var_offset = 0;
     public int num_id;
     private int var_count= 0;
-    private int meth_count = 0;
+    public int meth_count = 0;
     public String ex_class;
 
 
