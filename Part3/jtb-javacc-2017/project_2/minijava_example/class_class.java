@@ -87,6 +87,7 @@ public class class_class
                 //temp = Methods_Table.get(method_name);
                 //System.out.print(class_name +"->");
                 //temp.print_meth_info();
+                temp.redefined = true;
                 return true;
                 
             }

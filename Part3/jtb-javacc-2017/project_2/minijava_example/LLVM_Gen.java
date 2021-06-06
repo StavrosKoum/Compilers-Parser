@@ -45,16 +45,16 @@ public class LLVM_Gen
                     int total_methods = ex_meths_count + value.meth_count;
                     //emit("class has this many methods-> "+total_methods+"\n");
                     if(total_methods != 0)
-                        emit("\n@."+value.class_name+"_vtable = global ["+total_methods+" x i8*]");
+                        emit("\n@."+value.class_name+"_vtable = global ["+total_methods+" x i8*] ");
                     else
-                        emit("\n@."+value.class_name+"_vtable = global ["+total_methods+" x i8*] []");
+                        emit("\n@."+value.class_name+"_vtable = global ["+total_methods+" x i8*] ");
 
                     
                     emit("[");
                     if(value.ex_class != null)
                     {
                         
-                        emit_extended_class_meth(value.ex_class);
+                        emit_extended_class_meth(value.ex_class,value.class_name);
                     }
                     
                     //methods here++++++++++++++++++++++++++++++++++++++++++++++
@@ -72,15 +72,15 @@ public class LLVM_Gen
 
                                 ///////////////////////////////////
                                 //////////////////////////////////
-                                if(meth_num == 0)
+                                if(meth_num == 0 && value.ex_class == null )
                                 {
-                                    emit_str = "i8* bitcast (" + give_types(meth_value.type) + " (" + give_args_types(meth_value.args_list) + ")* @" + value.class_name+"."+meth_value.method_name 
-                                    +" to i8*";
+                                    emit_str = "i8* bitcast (" + give_types(meth_value.type) + " (" + give_args_types(meth_value.args_list,meth_value.empty_args) + ")* @" + value.class_name+"."+meth_value.method_name 
+                                    +" to i8*)";
                                 }
                                 else
                                 {
-                                    emit_str = ",i8* bitcast (" + give_types(meth_value.type) + " (" + give_args_types(meth_value.args_list) + ")* @" + value.class_name+"."+meth_value.method_name 
-                                    +" to i8*";
+                                    emit_str = ", i8* bitcast (" + give_types(meth_value.type) + " (" + give_args_types(meth_value.args_list,meth_value.empty_args) + ")* @" + value.class_name+"."+meth_value.method_name 
+                                    +" to i8*)";
                                 }
                                 //////////////////////////////////
                                 //////////////////////////////////
@@ -100,7 +100,7 @@ public class LLVM_Gen
                                 //     else
                                 //     emit(","+meth_value.args_list.get(i));
                                 // }
-                                emit(emit_str);
+                                
                                
 
 
@@ -135,7 +135,7 @@ public class LLVM_Gen
 
 
 
-public int emit_extended_class_meth(String ex_class) throws Exception
+public int emit_extended_class_meth(String ex_class,String child_name) throws Exception
 {
     class_class value= null;
     value = Table.get(ex_class);
@@ -143,7 +143,7 @@ public int emit_extended_class_meth(String ex_class) throws Exception
     //methods here++++++++++++++++++++++++++++++++++++++++++++++
     Method_class  meth_value = null;
     int meth_num = 0;
-    String emit_str;
+    String emit_str,name;
     while(meth_num < value.meth_count)
     {
         for(String key1: value.Methods_Table.keySet())
@@ -154,7 +154,13 @@ public int emit_extended_class_meth(String ex_class) throws Exception
             {
 
 
-
+                if(meth_value.redefined)
+                {
+                    name = child_name;
+                }
+                else{
+                    name = value.class_name;
+                }
 
 
 
@@ -162,13 +168,13 @@ public int emit_extended_class_meth(String ex_class) throws Exception
                 //////////////////////////////////
                 if(meth_num == 0)
                 {
-                    emit_str = "i8* bitcast (" + give_types(meth_value.type) + " (" + give_args_types(meth_value.args_list) + ")* @" + value.class_name+"."+meth_value.method_name 
-                    +" to i8*";
+                    emit_str = "i8* bitcast (" + give_types(meth_value.type) + " (" + give_args_types(meth_value.args_list,meth_value.empty_args) + ")* @" + name+"."+meth_value.method_name 
+                    +" to i8*)";
                 }
                 else
                 {
-                    emit_str = ",i8* bitcast (" + give_types(meth_value.type) + " (" + give_args_types(meth_value.args_list) + ")* @" + value.class_name+"."+meth_value.method_name 
-                    +" to i8*";
+                    emit_str = ",i8* bitcast (" + give_types(meth_value.type) + " (" + give_args_types(meth_value.args_list,meth_value.empty_args) + ")* @" + name+"."+meth_value.method_name 
+                    +" to i8*)";
                 }
                 //////////////////////////////////
                 //////////////////////////////////
@@ -186,7 +192,7 @@ public int emit_extended_class_meth(String ex_class) throws Exception
                 //     else
                 //     emit(","+meth_value.args_list.get(i));
                 // }
-                emit("\n");
+                //emit("\n");
 
 
                 meth_num++;
@@ -215,9 +221,12 @@ public String give_types(String type)
     
 }
 
-public String give_args_types(List<String> arguments)
+public String give_args_types(List<String> arguments,boolean empty_args)
 {
+    
     String a = "i8*";
+    if(empty_args)
+    return a;
     for (int i = 0; i < arguments.size(); i++ )
     {
         a = a + "," + give_types(arguments.get(i));

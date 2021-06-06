@@ -15,6 +15,7 @@ public class Method_class
     private String[] args_array;
     public int num_id;
     public boolean empty_args = false;
+    public boolean redefined = false;
 
     //hashmap methods
     public HashMap <String,String> Args_Table = new HashMap <String,String>();
@@ -26,6 +27,7 @@ public class Method_class
 
     public Method_class(String name,String type,String argumentList,int count)
     {
+
         this.num_id = count;
         this.method_name = name;
         this.type = type;
