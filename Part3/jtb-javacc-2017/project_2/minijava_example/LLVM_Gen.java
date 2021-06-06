@@ -6,7 +6,7 @@ import javax.print.DocFlavor.STRING;
 import java.io.*;
 
 
-public class LLVM_Gen 
+public class LLVM_Gen extends GJDepthFirst<String,Void>
 {
     private HashMap <String,class_class> Table;
     private Writer writer;
@@ -132,7 +132,25 @@ public class LLVM_Gen
         
     }
     
-
+    public void define_util() throws Exception
+    {
+        emit(
+            "\n\ndeclare i8* @calloc(i32, i32)\n" +
+            "declare i32 @printf(i8*, ...)\n" +
+            "declare void @exit(i32)\n\n@_cint = constant [4 x i8] c\"%d\\0a\\00\"\n" +
+            "@_cOOB = constant [15 x i8] c\"Out of bounds\\0a\\00\"\n" +
+            "define void @print_int(i32 %i) {\n" + 
+            "    %_str = bitcast [4 x i8]* @_cint to i8*\n" +
+            "    call i32 (i8*, ...) @printf(i8* %_str, i32 %i)\n" +
+            "    ret void\n" + 
+            "}\n\n" +
+            "define void @throw_oob() {\n" +
+            "    %_str = bitcast [15 x i8]* @_cOOB to i8*\n" +
+            "    call i32 (i8*, ...) @printf(i8* %_str)\n" +
+            "    call void @exit(i32 1)\n" +
+            "    ret void\n}\n"
+            );
+    }
 
 
 public int emit_extended_class_meth(String ex_class,String child_name) throws Exception
@@ -173,7 +191,7 @@ public int emit_extended_class_meth(String ex_class,String child_name) throws Ex
                 }
                 else
                 {
-                    emit_str = ",i8* bitcast (" + give_types(meth_value.type) + " (" + give_args_types(meth_value.args_list,meth_value.empty_args) + ")* @" + name+"."+meth_value.method_name 
+                    emit_str = ",i8* bitcast (" + give_types(meth_value.type) + " (" + give_args_types(meth_value.args_list,meth_value.empty_args) + ")* @" + value.class_name+"."+meth_value.method_name 
                     +" to i8*)";
                 }
                 //////////////////////////////////
@@ -235,7 +253,45 @@ public String give_args_types(List<String> arguments,boolean empty_args)
 }
 
 
+/**
+     * f0 -> "class"
+     * f1 -> Identifier()
+     * f2 -> "{"
+     * f3 -> "public"
+     * f4 -> "static"
+     * f5 -> "void"
+     * f6 -> "main"
+     * f7 -> "("
+     * f8 -> "String"
+     * f9 -> "["
+     * f10 -> "]"
+     * f11 -> Identifier()
+     * f12 -> ")"
+     * f13 -> "{"
+     * f14 -> ( VarDeclaration() )*
+     * f15 -> ( Statement() )*
+     * f16 -> "}"
+     * f17 -> "}"
+     */
+    @Override
+    public String visit(MainClass n, Void argu) throws Exception {
+        
+        
+        String classname = n.f1.accept(this, null);
+        emit("define i32 @main(){");
+        
+        //System.out.println("Class: " + classname);
+       
+       
 
+        super.visit(n, argu);
+        emit("\n\tret i32 0\n}\n");
+
+        
+        //System.out.println();
+
+        return null;
+    }
 
 
 

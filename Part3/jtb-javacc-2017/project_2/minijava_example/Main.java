@@ -59,10 +59,13 @@ public class Main {
             //create VTable
             LLVM_Gen llvm = new LLVM_Gen(mine.give_table(),wr,mine.counter);
             llvm.create_vt();
+            llvm.define_util();
+
+            root.accept(llvm, null);
             wr.close();
             
             // MyVisitor eval = new MyVisitor();
-            // root.accept(eval, null);
+           
         }
         catch(ParseException ex){
             System.out.println(ex.getMessage());
