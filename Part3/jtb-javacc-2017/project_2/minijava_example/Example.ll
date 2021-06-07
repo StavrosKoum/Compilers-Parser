@@ -24,3 +24,7 @@ define void @throw_oob() {
 define i32 @main(){
 	ret i32 0
 }
+	%num = alloca i32
+	store i32 %.num, i32* %num	%num_aux = alloca i32
+	%num = alloca i32
+	store i32 %.num, i32* %num

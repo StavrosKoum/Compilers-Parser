@@ -281,9 +281,7 @@ public String give_args_types(List<String> arguments,boolean empty_args)
         emit("define i32 @main(){");
         
         //System.out.println("Class: " + classname);
-       
-       
-
+         
         super.visit(n, argu);
         emit("\n\tret i32 0\n}\n");
 
@@ -294,8 +292,75 @@ public String give_args_types(List<String> arguments,boolean empty_args)
     }
 
 
+    /**
+     * 
+     * f0 -> Type()
+     * f1 -> Identifier()
+     * f2 -> ";"
+     * 
+     */
+    @Override
+    public String visit(VarDeclaration n, Void argu) throws Exception {
+        String type = n.f0.accept(this,argu);
+        String id = n.f1.accept(this,argu);
+
+        // System.out.println(type);
+        type = give_types(type);
+        emit("\t%"+id+" = alloca "+ type+"\n");
+        
 
 
+        super.visit(n, argu);
+        return null;
+
+
+    }
+
+     /**
+     * f0 -> Type()
+     * f1 -> Identifier()
+     */
+    @Override
+    public String visit(FormalParameter n, Void argu) throws Exception{
+        String type = n.f0.accept(this, null);
+        String name = n.f1.accept(this, null);
+        type = give_types(type);
+        emit("\t%"+name+" = alloca "+ type+"\n");
+        emit("\tstore "+ type+ " %." + name + ", "+ type+"* %"+name+"\n");
+
+
+
+        return type + " " + name;
+    }
+
+
+
+
+
+
+
+    @Override
+    public String visit(ArrayType n, Void argu) {
+        return "int[]";
+    }
+
+    public String visit(BooleanType n, Void argu) {
+        return "boolean";
+    }
+
+    public String visit(IntegerType n, Void argu) {
+        return "int";
+    }
+
+
+    /**
+    * f0 -> <IDENTIFIER> okkkkkk
+    */
+    public String visit(Identifier n, Void argu) throws Exception 
+    {
+        //System.out.println("3");
+        return n.f0.tokenImage;
+    }
 
 
 
