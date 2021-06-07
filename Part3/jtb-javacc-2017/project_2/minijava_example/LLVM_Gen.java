@@ -11,6 +11,10 @@ public class LLVM_Gen extends GJDepthFirst<String,Void>
     private HashMap <String,class_class> Table;
     private Writer writer;
     private int class_counter;
+    //Lists to temporary store param type and name
+    public List<String> name_list= new ArrayList<String>();
+    public List<String> type_list= new ArrayList<String>();
+    String tmp_class;
 
     public LLVM_Gen(HashMap <String,class_class> MyTable,Writer wr,int class_count)
     {
@@ -278,6 +282,7 @@ public String give_args_types(List<String> arguments,boolean empty_args)
         
         
         String classname = n.f1.accept(this, null);
+        this.tmp_class = classname;
         emit("define i32 @main(){");
         
         //System.out.println("Class: " + classname);
@@ -291,6 +296,102 @@ public String give_args_types(List<String> arguments,boolean empty_args)
         return null;
     }
 
+    /**
+     * f0 -> "class"
+     * f1 -> Identifier()
+     * f2 -> "{"
+     * f3 -> ( VarDeclaration() )*
+     * f4 -> ( MethodDeclaration() )*
+     * f5 -> "}"
+     */
+    @Override
+    public String visit(ClassDeclaration n, Void argu) throws Exception {
+        String classname = n.f1.accept(this, null);
+        //System.out.println("Classs: " + classname);
+        // temp_method = "class";
+        // temp_extended_class = null;
+        tmp_class = classname;
+        super.visit(n, argu);
+        //System.out.println();
+        return null;
+    }
+
+    /**
+     * f0 -> "class"
+     * f1 -> Identifier()
+     * f2 -> "extends"
+     * f3 -> Identifier()
+     * f4 -> "{"
+     * f5 -> ( VarDeclaration() )*
+     * f6 -> ( MethodDeclaration() )*
+     * f7 -> "}"
+     */
+    @Override
+    public String visit(ClassExtendsDeclaration n, Void argu) throws Exception {
+        String classname = n.f1.accept(this, null);
+        tmp_class = classname;
+        // temp_method = "class";
+        // //System.out.println("Class: " + classname);
+        // temp_extended_class = n.f3.accept(this, null);
+        super.visit(n, argu);
+        //System.out.println();
+        return null;
+    }
+
+    /**
+     * f0 -> "public"
+     * f1 -> Type()
+     * f2 -> Identifier()
+     * f3 -> "("
+     * f4 -> ( FormalParameterList() )?
+     * f5 -> ")"
+     * f6 -> "{"
+     * f7 -> ( VarDeclaration() )*
+     * f8 -> ( Statement() )*
+     * f9 -> "return"
+     * f10 -> Expression()
+     * f11 -> ";"
+     * f12 -> "}"
+     */
+    @Override
+    public String visit(MethodDeclaration n, Void argu) throws Exception {
+
+        
+        
+        String argumentList = n.f4.present() ? n.f4.accept(this, null) : "";
+        String type;
+        String myType = n.f1.accept(this, null);
+        String myName = n.f2.accept(this, null);
+        String parameters = "i8 %this";
+
+        for(int i=0; i < name_list.size(); i++)
+        {
+            parameters += ", "+ give_types(type_list.get(i)) + " %." + name_list.get(i);
+        }
+
+        emit("define "+ give_types(myType)+" @"+this.tmp_class+"."+myName + "(" +parameters+")\n");
+
+        for(int i=0; i < name_list.size(); i++)
+        {
+            type = give_types(type_list.get(i));
+            emit("\t%"+name_list.get(i)+" = alloca "+ type+"\n");
+            emit("\tstore "+ type+ " %." + name_list.get(i) + ", "+ type+"* %"+name_list.get(i)+"\n");
+        }
+        
+
+        n.f7.accept(this, argu);
+        n.f8.accept(this, argu);
+
+      
+
+
+
+
+        //clear the lists so other methods can use them
+        this.name_list.clear();
+        this.type_list.clear();
+        return null;
+    }
 
     /**
      * 
@@ -324,10 +425,17 @@ public String give_args_types(List<String> arguments,boolean empty_args)
     public String visit(FormalParameter n, Void argu) throws Exception{
         String type = n.f0.accept(this, null);
         String name = n.f1.accept(this, null);
-        type = give_types(type);
-        emit("\t%"+name+" = alloca "+ type+"\n");
-        emit("\tstore "+ type+ " %." + name + ", "+ type+"* %"+name+"\n");
+        // type = give_types(type);
+        // emit("\t%"+name+" = alloca "+ type+"\n");
+        // emit("\tstore "+ type+ " %." + name + ", "+ type+"* %"+name+"\n");
 
+        if(name!=null)
+        {
+            
+            this.name_list.add(name);
+            this.type_list.add(type);
+        }
+        
 
 
         return type + " " + name;

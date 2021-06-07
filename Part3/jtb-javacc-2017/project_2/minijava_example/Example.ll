@@ -24,7 +24,12 @@ define void @throw_oob() {
 define i32 @main(){
 	ret i32 0
 }
+define i32 @Fac.ComputeFac(i8 %this, i32 %.num)
 	%num = alloca i32
-	store i32 %.num, i32* %num	%num_aux = alloca i32
+	store i32 %.num, i32* %num
+	%num_aux = alloca i32
+define i32 @Fac.testfun(i8 %this)
+define i1 @B.foobar(i8 %this)
+define i32 @B.ComputeFac(i8 %this, i32 %.num)
 	%num = alloca i32
 	store i32 %.num, i32* %num
