@@ -588,12 +588,14 @@ public String find_id_type(String id)
     {
         
         String my_expr  = n.f0.accept(this,null);
+        //System.out.println("----------11>"+my_expr);
         if(my_expr!= null && my_expr.contains(" "))
         {
             //its ready
            
             return my_expr;
         }
+        
         //search for the variable
         //first at paraeters
         String type;
@@ -604,10 +606,29 @@ public String find_id_type(String id)
                 type = type_list.get(i);
                 type = give_types(type);
                 emit("\t%_" +register_num+" =load " + type+", "+type+"* %"+my_expr +"\n");
+                
+                String ret = type + " " + "%_" +register_num;
+                 
                 register_num++;
+                return ret;
+
             }
         }
-
+        //System.out.println("---------->"+tmp_class);
+        //search if local variable
+        if(tmp_class!= null && !tmp_class.equals("class"))
+        {
+            Variable_class scouter = Table.get(tmp_class).Variables_Table.get(my_expr+tmp_method);
+            //System.out.println("----------22>"+my_expr);
+            if(scouter!=null)
+            {
+                String scouterman = scouter.var_name;
+                System.out.println(scouterman);
+            }
+            
+        }
+        
+      
 
 
 
@@ -643,13 +664,67 @@ public String find_id_type(String id)
 
 
     
+    /**
+    * f0 -> Identifier()
+    * f1 -> "="
+    * f2 -> Expression()
+    * f3 -> ";"
+    */
+    @Override
+    public String visit(AssignmentStatement n, Void argu) throws Exception
+    {
+        String ret = null;
+        String name = n.f0.accept(this, argu);
+        String expr = n.f2.accept(this, argu);
+        
+        //String id = find_id_type(name);
+
+        
+        
+        //String expr = find_id_type(n.f2.accept(this, argu));
+        //search for the variable
+        //first at paraeters
+        String type;
+        for(int i=0; i < name_list.size(); i++)
+        {
+            if(name_list.get(i).equals(name))
+            {
+                type = type_list.get(i);
+                type = give_types(type);
+                emit("\n\tstore"+expr+", "+ type+"* %"+name+"\n");
+                
+                
+                 
+                
+                return ret;
+
+            }
+        }
+        //System.out.println("---------->"+tmp_class);
+        //search if local variable
+        if(tmp_class!= null && !tmp_class.equals("class"))
+        {
+            Variable_class scouter = Table.get(tmp_class).Variables_Table.get(name+tmp_method);
+            //System.out.println("----------22>"+my_expr);
+            if(scouter!=null)
+            {
+                String scouterman = scouter.var_name;
+                //System.out.println(scouterman+"^^^^^^^^^^^^66");
+                scouterman = give_types(scouter.type);
+                emit("\n\tstore "+expr+", "+ scouterman+"* %"+name+"\n");
+                //System.out.println(scouterman+"~~~~~~~~~~~~~~~");
+                return ret;
+            }
+            
+        }
+
+        //MORE TODOOOOOOO
+
+        return ret;
 
 
 
-
-
-
-
+    }
 
 
 
@@ -680,7 +755,7 @@ public String find_id_type(String id)
     */
     public String visit(Identifier n, Void argu) throws Exception 
     {
-        //System.out.println("3");
+        
         return n.f0.tokenImage;
     }
 

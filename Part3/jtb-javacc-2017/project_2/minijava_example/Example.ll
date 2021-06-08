@@ -30,15 +30,19 @@ define i32 @Fac.ComputeFac(i8 %this, i32 %.num)
 	%num_aux = alloca i32
 	%_0 =load i32, i32* %num
 
-	%_1 =icmp slt skataa, 1
+	%_1 =icmp slt i32 %_0, 1
     br  i1 %_1, label %if0, label %if1
 
-if0:
+if0:	
+store i32 1, i32* %num_aux
+
     br label %if2
 
 if1:
 	%_2 =load i32, i32* %num
 	%_3 =load i32, i32* %num
+	
+store null, i32* %num_aux
 
     br label %if2
 
