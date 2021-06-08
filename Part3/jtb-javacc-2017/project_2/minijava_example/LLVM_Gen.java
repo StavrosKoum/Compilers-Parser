@@ -15,6 +15,7 @@ public class LLVM_Gen extends GJDepthFirst<String,Void>
     public List<String> name_list= new ArrayList<String>();
     public List<String> type_list= new ArrayList<String>();
     String tmp_class;
+    private int if_num = 0;
 
     public LLVM_Gen(HashMap <String,class_class> MyTable,Writer wr,int class_count)
     {
@@ -443,8 +444,41 @@ public String give_args_types(List<String> arguments,boolean empty_args)
 
 
 
+    /**
+    * f0 -> "if"
+    * f1 -> "("
+    * f2 -> Expression()
+    * f3 -> ")"
+    * f4 -> Statement()
+    * f5 -> "else"
+    * f6 -> Statement()
+    */
+    public String visit(IfStatement n,Void argu) throws Exception {
+        String _ret=null;
+        n.f0.accept(this, argu);
+        n.f1.accept(this, argu);
+        String label1 = "if" + if_num;
+        if_num+=1;
+        String label2 = "if" + if_num;
+        if_num+=1;
 
+        String expr = n.f2.accept(this, argu);
+        emit("\n    br i1 " + expr + ", label %" + label1 + ", label %" + label2);
+        emit("\n\n" + label1 + ":");
 
+        
+        n.f3.accept(this, argu);
+        n.f4.accept(this, argu);
+        emit("\n    br label %if" + if_num);
+        n.f5.accept(this, argu);
+        emit("\n\n" + label2 + ":");
+        n.f6.accept(this, argu);
+        emit("\n    br label %if" + if_num);
+        emit("\n\nif" + if_num + ":");
+        if_num+=1;
+        return _ret;
+    }
+    
 
 
     @Override

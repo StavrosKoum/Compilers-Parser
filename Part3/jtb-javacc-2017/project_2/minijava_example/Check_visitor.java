@@ -319,9 +319,30 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         }
 
         Method_class myMeth = myClass.Methods_Table.get(this_meth);
+        boolean flag = true;
         if(myMeth == null)
         {
+            while(myClass.ex_class!= null)
+            {
+               
+                myClass = Table.get(myClass.ex_class);
+                
+                myMeth = myClass.Methods_Table.get(this_meth);
+                if(myMeth != null)
+                {
+                    flag = false;
+                    break;
+                }
+               
+               
+
+            }
+            
+            myClass = Table.get(type_class);
+            if(flag)
             throw new Exception("Class "+ myClass.class_name + " has no method "+ this_meth);
+            
+            
         }
 
         if(MyArgs_list.size() == 0 && myMeth.empty_args == true)
