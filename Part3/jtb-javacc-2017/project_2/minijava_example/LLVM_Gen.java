@@ -19,7 +19,7 @@ public class LLVM_Gen extends GJDepthFirst<String,Void>
     public List<String> type_list= new ArrayList<String>();
     String tmp_class,tmp_method,temp_extended_class;
     private int if_num = 0;
-    private int register_num = 0;
+    private int register_num = -1;
 
 
     public LLVM_Gen(HashMap <String,class_class> MyTable,Writer wr,int class_count)
@@ -605,11 +605,12 @@ public String find_id_type(String id)
             {
                 type = type_list.get(i);
                 type = give_types(type);
+                register_num++;
                 emit("\t%_" +register_num+" =load " + type+", "+type+"* %"+my_expr +"\n");
                 
                 String ret = type + " " + "%_" +register_num;
                  
-                register_num++;
+               
                 return ret;
 
             }
@@ -727,6 +728,41 @@ public String find_id_type(String id)
     }
 
 
+    /**
+    * f0 -> PrimaryExpression()
+    * f1 -> "*"
+    * f2 -> PrimaryExpression()
+    */
+    @Override
+    public String visit(TimesExpression n, Void argu) throws Exception
+    {
+        String one = n.f0.accept(this,null);
+        String two = n.f2.accept(this,null);
+        //System.out.println(one + "*"+ two);
+
+        // String tmp_array[];
+        // tmp_array = two.split(" ");
+        // two = tmp_array[1];
+        register_num++;
+        emit("\n\t%_" + register_num+ " = mul "+ one+", "+two);
+
+        
+        return "i32 %_" + register_num;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -809,8 +845,9 @@ public String find_id_type(String id)
         String tmp_array[];
         tmp_array = e2.split(" ");
         e2 = tmp_array[1];
-        String reg = "%_"+ register_num;
         register_num++;
+        String reg = "%_"+ register_num;
+        
         emit("\n\t"+ reg+" =icmp slt "+e1+", "+e2);
         
         return "i1 "+ reg;
