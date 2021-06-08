@@ -554,7 +554,7 @@ public String find_id_type(String id)
         if_num+=1;
 
         String expr = n.f2.accept(this, argu);
-        emit("\n    br i1 " + expr + ", label %" + label1 + ", label %" + label2);
+        emit("\n    br  " + expr + ", label %" + label1 + ", label %" + label2);
         emit("\n\n" + label1 + ":");
 
         
@@ -562,10 +562,10 @@ public String find_id_type(String id)
         n.f4.accept(this, argu);
         emit("\n    br label %if" + if_num);
         n.f5.accept(this, argu);
-        emit("\n\n" + label2 + ":");
+        emit("\n\n" + label2 + ":\n");
         n.f6.accept(this, argu);
         emit("\n    br label %if" + if_num);
-        emit("\n\nif" + if_num + ":");
+        emit("\n\nif" + if_num + ":\n");
         if_num+=1;
         
         return _ret;
@@ -583,11 +583,12 @@ public String find_id_type(String id)
     *       | NotExpression()
     *       | BracketExpression()
     */
-   public String visit(PrimaryExpression n) throws Exception 
+    @Override
+    public String visit(PrimaryExpression n,Void argu) throws Exception 
     {
-        //System.out.println("--------------------------55555-----------");
+        
         String my_expr  = n.f0.accept(this,null);
-        if(my_expr.contains(" "))
+        if(my_expr!= null && my_expr.contains(" "))
         {
             //its ready
            
@@ -602,7 +603,8 @@ public String find_id_type(String id)
             {
                 type = type_list.get(i);
                 type = give_types(type);
-                emit("\t%_" +register_num+" =load " + type+", "+type+"* %"+my_expr );
+                emit("\t%_" +register_num+" =load " + type+", "+type+"* %"+my_expr +"\n");
+                register_num++;
             }
         }
 
@@ -734,7 +736,7 @@ public String find_id_type(String id)
         e2 = tmp_array[1];
         String reg = "%_"+ register_num;
         register_num++;
-        emit("\t"+ reg+" =icmp slt "+e1+", "+e2);
+        emit("\n\t"+ reg+" =icmp slt "+e1+", "+e2);
         
         return "i1 "+ reg;
     }

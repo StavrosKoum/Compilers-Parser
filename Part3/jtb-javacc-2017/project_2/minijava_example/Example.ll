@@ -28,16 +28,22 @@ define i32 @Fac.ComputeFac(i8 %this, i32 %.num)
 	%num = alloca i32
 	store i32 %.num, i32* %num
 	%num_aux = alloca i32
-	%_0 =icmp slt num, 1
-    br i1 i1 %_0, label %if0, label %if1
+	%_0 =load i32, i32* %num
+
+	%_1 =icmp slt skataa, 1
+    br  i1 %_1, label %if0, label %if1
 
 if0:
     br label %if2
 
 if1:
+	%_2 =load i32, i32* %num
+	%_3 =load i32, i32* %num
+
     br label %if2
 
-if2:define i32 @Fac.testfun(i8 %this)
+if2:
+define i32 @Fac.testfun(i8 %this)
 define i1 @B.foobar(i8 %this)
 define i32 @B.ComputeFac(i8 %this, i32 %.num)
 	%num = alloca i32
