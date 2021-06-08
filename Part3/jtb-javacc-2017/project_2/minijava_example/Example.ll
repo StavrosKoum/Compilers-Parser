@@ -28,8 +28,8 @@ define i32 @Fac.ComputeFac(i8 %this, i32 %.num)
 	%num = alloca i32
 	store i32 %.num, i32* %num
 	%num_aux = alloca i32
-
-    br i1 null, label %if0, label %if1
+	%_0 =icmp slt num, 1
+    br i1 i1 %_0, label %if0, label %if1
 
 if0:
     br label %if2

@@ -222,13 +222,14 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         Variable_class tmp;
         Method_class meth_tmp;
 
-
-        if(temp_extended_class!=null)
+        String ex_class = temp_extended_class;
+        //change to while and update ex_class at the end with new
+        if(ex_class!=null)
         {
             //System.out.println(this.temp_class);
-            tmp_class = Table.get(temp_extended_class);
+            tmp_class = Table.get(ex_class);
 
-            //check if its an argument
+            
             if(!temp_method.equals("class"))
             {
                 meth_tmp = tmp_class.Methods_Table.get(temp_method);
@@ -243,6 +244,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
                     }
                 }
             }
+            ex_class = tmp_class.ex_class;
         }
         
         
@@ -267,7 +269,7 @@ public class Check_visitor extends GJDepthFirst<String,Void>
         }
 
         //System.out.println(tmp_class.class_name);
-        
+        //search for variables now .not method types
         tmp = tmp_class.Variables_Table.get(id+temp_method);
         if(tmp != null)
         {

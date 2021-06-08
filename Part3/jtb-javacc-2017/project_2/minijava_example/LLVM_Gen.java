@@ -3,6 +3,9 @@ import visitor.*;
 import java.util.HashMap;
 import java.util.*;
 import javax.print.DocFlavor.STRING;
+
+
+
 import java.io.*;
 
 
@@ -14,8 +17,10 @@ public class LLVM_Gen extends GJDepthFirst<String,Void>
     //Lists to temporary store param type and name
     public List<String> name_list= new ArrayList<String>();
     public List<String> type_list= new ArrayList<String>();
-    String tmp_class;
+    String tmp_class,tmp_method,temp_extended_class;
     private int if_num = 0;
+    private int register_num = 0;
+
 
     public LLVM_Gen(HashMap <String,class_class> MyTable,Writer wr,int class_count)
     {
@@ -257,6 +262,91 @@ public String give_args_types(List<String> arguments,boolean empty_args)
     return a;
 }
 
+public String find_id_type(String id)
+    {
+        class_class tmp_class;
+        Variable_class tmp;
+        Method_class meth_tmp;
+
+        String ex_class = temp_extended_class;
+        //change to while and update ex_class at the end with new
+        if(ex_class!=null)
+        {
+            //System.out.println(this.temp_class);
+            tmp_class = Table.get(ex_class);
+
+            
+            if(!tmp_method.equals("class"))
+            {
+                meth_tmp = tmp_class.Methods_Table.get(tmp_method);
+                
+                if(meth_tmp!=null)
+                {
+                    //System.out.println("aaaaaaaaaaaaaaaaaaaaaaa "+temp_method);
+                    String type = meth_tmp.Args_Table.get(id);
+                    if(type!=null)
+                    {
+                        return type;
+                    }
+                }
+            }
+            ex_class = tmp_class.ex_class;
+        }
+        
+        
+        
+        //System.out.println(this.temp_class);
+        tmp_class = Table.get(this.tmp_class);
+
+        //check if its an argument
+        
+        if(!tmp_method.equals("class"))
+        {
+            meth_tmp = tmp_class.Methods_Table.get(tmp_method);
+
+            if(meth_tmp!=null)
+            {
+                String type = meth_tmp.Args_Table.get(id);
+                if(type!=null)
+                {
+                    return type;
+                }
+            }
+        }
+
+        //System.out.println(tmp_class.class_name);
+        //search for variables now .not method types
+        tmp = tmp_class.Variables_Table.get(id+tmp_method);
+        if(tmp != null)
+        {
+            return tmp.type;
+        }
+        tmp = tmp_class.Variables_Table.get(id+"class");
+        if(tmp != null)
+        {
+            return tmp.type;
+        }
+
+
+
+        if(temp_extended_class != null)
+        {
+            
+            tmp_class = Table.get(temp_extended_class);
+            tmp = tmp_class.Variables_Table.get(id+"class");
+            if(tmp != null)
+            {
+                return tmp.type;
+            }
+
+        }
+        
+        
+        return id;
+        
+    }
+
+
 
 /**
      * f0 -> "class"
@@ -333,7 +423,7 @@ public String give_args_types(List<String> arguments,boolean empty_args)
         tmp_class = classname;
         // temp_method = "class";
         // //System.out.println("Class: " + classname);
-        // temp_extended_class = n.f3.accept(this, null);
+        temp_extended_class = n.f3.accept(this, null);
         super.visit(n, argu);
         //System.out.println();
         return null;
@@ -364,6 +454,7 @@ public String give_args_types(List<String> arguments,boolean empty_args)
         String myType = n.f1.accept(this, null);
         String myName = n.f2.accept(this, null);
         String parameters = "i8 %this";
+        tmp_method = myName;
 
         for(int i=0; i < name_list.size(); i++)
         {
@@ -476,9 +567,96 @@ public String give_args_types(List<String> arguments,boolean empty_args)
         emit("\n    br label %if" + if_num);
         emit("\n\nif" + if_num + ":");
         if_num+=1;
+        
         return _ret;
     }
+
+
+    /**
+    * f0 -> IntegerLiteral()
+    *       | TrueLiteral()
+    *       | FalseLiteral()
+    *       | Identifier()
+    *       | ThisExpression()
+    *       | ArrayAllocationExpression()
+    *       | AllocationExpression()
+    *       | NotExpression()
+    *       | BracketExpression()
+    */
+   public String visit(PrimaryExpression n) throws Exception 
+    {
+        //System.out.println("--------------------------55555-----------");
+        String my_expr  = n.f0.accept(this,null);
+        if(my_expr.contains(" "))
+        {
+            //its ready
+           
+            return my_expr;
+        }
+        //search for the variable
+        //first at paraeters
+        String type;
+        for(int i=0; i < name_list.size(); i++)
+        {
+            if(name_list.get(i).equals(my_expr))
+            {
+                type = type_list.get(i);
+                type = give_types(type);
+                emit("\t%_" +register_num+" =load " + type+", "+type+"* %"+my_expr );
+            }
+        }
+
+
+
+
+
+        return "skataa";
+        
+    }
     
+    // public String Find_meth_var_type(String Myname) throws Exception 
+    // {
+    //     //search parameters
+    //     for(int i=0; i < name_list.size(); i++)
+    //     {
+    //         if(name_list.get(i).equals(my_expr))
+    //         {
+    //             type = type_list.get(i);
+    //             type = give_types(type);
+    //             return type;
+                
+    //         }
+    //     }
+       
+    //     //search method
+    //     Method_class = meth;
+    //     meth = tmp_class.Methods_Table.get(tmp_method);
+    //     if(meth !=null)
+    //     {
+
+    //     }
+    //     //search class and inheritence
+    // }
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     @Override
@@ -504,10 +682,95 @@ public String give_args_types(List<String> arguments,boolean empty_args)
         return n.f0.tokenImage;
     }
 
+    /**
+    * f0 -> <INTEGER_LITERAL> okkkkk
+    */
+    @Override
+    public String visit(IntegerLiteral n, Void argu) throws Exception
+    {
+        //System.out.println("0");
+        return "i32 " + n.f0.toString();
+    }
+
+    /**
+    * f0 -> "true" okkkkk
+    */
+    public String visit(TrueLiteral n, Void argu) throws Exception 
+    {
+        //System.out.println("1");
+        return "i1 1";
+    }
+
+    /**
+    * f0 -> "false" okkkk
+    */
+    public String visit(FalseLiteral n, Void argu) throws Exception 
+    {
+        //System.out.println("2");
+        return "i1 0";
+    }
+
+    /**
+     * f0 -> "this" ookkkkkkk
+    */
+    public String visit(ThisExpression n, Void argu) throws Exception 
+    {
+        //System.out.println("4");
+        return "i8* %this";
+    }
+
+    /**
+    * f0 -> PrimaryExpression()
+    * f1 -> "<"
+    * f2 -> PrimaryExpression()
+    */
+    public String visit(CompareExpression n, Void argu) throws Exception 
+    {
+        String e1 = n.f0.accept(this,null);
+        n.f1.accept(this,null);
+        String e2 = n.f2.accept(this,null);
+        String tmp_array[];
+        tmp_array = e2.split(" ");
+        e2 = tmp_array[1];
+        String reg = "%_"+ register_num;
+        register_num++;
+        emit("\t"+ reg+" =icmp slt "+e1+", "+e2);
+        
+        return "i1 "+ reg;
+    }
 
 
 
+    /**
+    * f0 -> Expression()
+    * f1 -> ExpressionTail()
+    */
+    public String visit(ExpressionList n, Void argu ) throws Exception 
+    {
+        String _ret=null;
+        n.f0.accept(this, argu);
+        n.f1.accept(this, argu);
+        return _ret;
+    }
 
+        /**
+    * f0 -> AndExpression()
+    *       | CompareExpression()
+    *       | PlusExpression()
+    *       | MinusExpression()
+    *       | TimesExpression()
+    *       | ArrayLookup()
+    *       | ArrayLength()
+    *       | MessageSend()
+    *       | PrimaryExpression()
+    */
+    @Override
+    public String visit(Expression n, Void argu) throws Exception 
+    {
+        String tmp  = n.f0.accept(this, argu);
+       
+        return tmp;
+    }
 
 
 
