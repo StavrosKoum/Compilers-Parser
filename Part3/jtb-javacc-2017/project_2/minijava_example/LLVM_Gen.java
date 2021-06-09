@@ -478,7 +478,12 @@ public String find_id_type(String id)
 
 
 
+        String ret =  n.f10.accept(this, argu);
+        emit("\n\tret "+ ret+"\n}\n");
 
+        //clear counters
+        if_num =0;
+        register_num = -1;
         //clear the lists so other methods can use them
         this.name_list.clear();
         this.type_list.clear();
@@ -624,7 +629,13 @@ public String find_id_type(String id)
             if(scouter!=null)
             {
                 String scouterman = scouter.var_name;
-                System.out.println(scouterman);
+                
+                type = give_types(scouter.type);
+                register_num++;
+                emit("\t%_" +register_num+" =load " + type+", "+type+"* %"+my_expr +"\n");
+                String ret = type + " " + "%_" +register_num;
+                return ret;
+
             }
             
         }
