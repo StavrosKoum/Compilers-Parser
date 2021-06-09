@@ -346,7 +346,29 @@ public String find_id_type(String id)
         
     }
 
-
+public int get_meth_offset(String method)
+{
+    //first search at the class we are in
+    Method_class scout_meth;
+    scout_meth = Table.get(tmp_class).Methods_Table.get(method);
+    if(scout_meth!=null)
+    {
+        return scout_meth.offset;
+    }
+    //search other extended classes for this method
+    class_class myClass = Table.get(tmp_class);
+    while(myClass.ex_class!=null)
+    {
+        myClass = Table.get(myClass.ex_class);
+        scout_meth = myClass.Methods_Table.get(method);
+        if(scout_meth!=null)
+        {
+            return scout_meth.offset;
+        }
+    }
+    System.out.println("MALAKIA---DEN-VRIKE-METHOD");
+    return 0;
+}
 
 /**
      * f0 -> "class"
