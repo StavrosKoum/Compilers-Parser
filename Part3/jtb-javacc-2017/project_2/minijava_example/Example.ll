@@ -40,16 +40,17 @@ if0:
 
 if1:
 	%_2 =load i32, i32* %num
+	%_3 =load i32, i32* %num
 
-	%_3 = mul i32 %_2, i32 40
-	store i32 %_3, i32* %num_aux
+	%_4 = mul i32 %_2, skataa
+	store i32 %_4, i32* %num_aux
 
     br label %if2
 
 if2:
-	%_4 =load i32, i32* %num_aux
+	%_5 =load i32, i32* %num_aux
 
-	ret i32 %_4
+	ret i32 %_5
 }
 define i32 @Fac.testfun(i8 %this)
 

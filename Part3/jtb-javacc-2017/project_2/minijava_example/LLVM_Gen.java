@@ -20,6 +20,8 @@ public class LLVM_Gen extends GJDepthFirst<String,Void>
     String tmp_class,tmp_method,temp_extended_class;
     private int if_num = 0;
     private int register_num = -1;
+    private boolean messageSend_flag = false;
+    private String class_variable=null;
 
 
     public LLVM_Gen(HashMap <String,class_class> MyTable,Writer wr,int class_count)
@@ -613,8 +615,16 @@ public int get_meth_offset(String method)
     @Override
     public String visit(PrimaryExpression n,Void argu) throws Exception 
     {
+
         
+       
+
+
         String my_expr  = n.f0.accept(this,null);
+        if(this.messageSend_flag)
+        {
+            this.class_variable = my_expr;
+        }
         //System.out.println("----------11>"+my_expr);
         if(my_expr!= null && my_expr.contains(" "))
         {
@@ -784,7 +794,43 @@ public int get_meth_offset(String method)
     }
 
 
+    /**
+    * f0 -> PrimaryExpression()
+    * f1 -> "."
+    * f2 -> Identifier()
+    * f3 -> "("
+    * f4 -> ( ExpressionList() )?
+    * f5 -> ")"
+    */
+    public String visit(MessageSend n,  Void argu) throws Exception {
+        String _ret=null;
 
+        //flag so primary expr will return a string with the var name
+        this.messageSend_flag = true;
+        String pr_expr = n.f0.accept(this, argu);
+        this.messageSend_flag = false;
+        String type_class = find_id_type(this.class_variable);
+        if(type_class.equals("i8* %this"))
+        type_class = tmp_class;
+        //now we have the class we have to search for the method
+        System.out.println("------------>"+type_class);
+
+
+
+
+        n.f1.accept(this, argu);
+        String this_meth =  n.f2.accept(this, argu);
+        n.f3.accept(this, argu);
+
+        String this_args = null;
+
+        
+        n.f4.accept(this, argu);
+        
+        
+        //returns type
+        return _ret;
+    }
 
 
 

@@ -11,7 +11,7 @@ public class Method_class
     public String args;
     //etc
     //offset
-    private int offset;
+    public int offset;
     private String[] args_array;
     public int num_id;
     public boolean empty_args = false;

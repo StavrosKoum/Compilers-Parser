@@ -46,8 +46,8 @@ class Fac {
         if (num < 1)
             num_aux = 1 ;
         else
-            //num_aux = num * (this.ComputeFac(num-1)) ;
-            num_aux = num * 40 ;
+            num_aux = num * (this.ComputeFac(num-1)) ;
+            //num_aux = num * 40 ;
         return num_aux ;
     }
     public int testfun()
