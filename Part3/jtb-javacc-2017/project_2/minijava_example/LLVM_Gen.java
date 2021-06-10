@@ -308,7 +308,7 @@ public String find_id_type(String id)
 
         //check if its an argument
         
-        if(!tmp_method.equals("class"))
+        if(tmp_method!=null && !tmp_method.equals("class"))
         {
             meth_tmp = tmp_class.Methods_Table.get(tmp_method);
 
@@ -483,7 +483,7 @@ public int get_meth_offset(String method,String myclass)
         String type;
         String myType = n.f1.accept(this, null);
         String myName = n.f2.accept(this, null);
-        String parameters = "i8 %this";
+        String parameters = "i8* %this";
         tmp_method = myName;
 
         for(int i=0; i < name_list.size(); i++)
@@ -491,7 +491,7 @@ public int get_meth_offset(String method,String myclass)
             parameters += ", "+ give_types(type_list.get(i)) + " %." + name_list.get(i);
         }
 
-        emit("define "+ give_types(myType)+" @"+this.tmp_class+"."+myName + "(" +parameters+")\n");
+        emit("define "+ give_types(myType)+" @"+this.tmp_class+"."+myName + "(" +parameters+")\n{");
 
         for(int i=0; i < name_list.size(); i++)
         {
@@ -626,6 +626,7 @@ public int get_meth_offset(String method,String myclass)
         String my_expr  = n.f0.accept(this,null);
         if(this.messageSend_flag)
         {
+            //System.out.println("11>");
             this.class_variable = my_expr;
         }
         //System.out.println("----------11>"+my_expr);
@@ -646,7 +647,7 @@ public int get_meth_offset(String method,String myclass)
                 type = type_list.get(i);
                 type = give_types(type);
                 register_num++;
-                emit("\n\t%_" +register_num+" =load " + type+", "+type+"* %"+my_expr +"\n");
+                emit("\n\t%_" +register_num+" = load " + type+", "+type+"* %"+my_expr +"\n");
                 
                 String ret = type + " " + "%_" +register_num;
                  
@@ -667,7 +668,7 @@ public int get_meth_offset(String method,String myclass)
                 
                 type = give_types(scouter.type);
                 register_num++;
-                emit("\n\t%_" +register_num+" =load " + type+", "+type+"* %"+my_expr +"\n");
+                emit("\n\t%_" +register_num+" = load " + type+", "+type+"* %"+my_expr +"\n");
                 String ret = type + " " + "%_" +register_num;
                 return ret;
 
@@ -822,7 +823,7 @@ public int get_meth_offset(String method,String myclass)
         register_num++;
         String reg1 = "%_" + register_num;
         emit("\n\t"+ reg+ " = bitcast " + pr_expr + " to i8***");
-        emit("\n\t"+reg1+" load i8**,i8*** "+reg);
+        emit("\n\t"+reg1+" = load i8**,i8*** "+reg);
         register_num++;
         reg = "%_" + register_num;   
         emit("\n\t"+reg+" = getelementptr i8*,i8** "+ reg1+", i32 "+ offset);
@@ -908,14 +909,14 @@ public int get_meth_offset(String method,String myclass)
 
         register_num++;
         register = "%_" + register_num;
-        emit("\n\t" + register+" = call i8* @calloc(i32 1, i32 " + last_val_off+")");
+        emit("\n\t" + register+" = call i8* @calloc(i32 1, i32 " + (last_val_off+8)+")");
         register_num++;
         register1 = "%_" + register_num;
         emit("\n\t"+register1+ " = bitcast i8* "+ register+ " to i8***");
         register_num++;
         register2 = "%_" + register_num;
         emit("\n\t"+register2+" = getelementptr ["+methods_count+" x i8*], ["+methods_count
-        + " xi8*]* @."+tmp+"_vtable, i32 0, i32 0");
+        + " x i8*]* @."+tmp+"_vtable, i32 0, i32 0");
         emit("\n\tstore i8** "+ register2+", i8*** "+register1);
 
         return "i8* " + register;
@@ -1113,9 +1114,9 @@ public int get_meth_offset(String method,String myclass)
         String two = n.f2.accept(this,null);
         //System.out.println(one + "*"+ two);
 
-        // String tmp_array[];
-        // tmp_array = two.split(" ");
-        // two = tmp_array[1];
+        String tmp_array[];
+        tmp_array = two.split(" ");
+        two = tmp_array[1];
         register_num++;
         emit("\n\t%_" + register_num+ " = mul "+ one+", "+two);
 

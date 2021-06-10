@@ -5,14 +5,15 @@ class Factorial{
 }
 
 class Fac {
-public int ComputeFac1(int num){return 1;}
-public int ComputeFac2(int num){return 1;}
+// public int ComputeFac1(int num){return 1;}
+//public int ComputeFac2(int num){return 1;}
         // int num_aux1 ;
         // int num_aux2 ;
         // int num_aux3 ;
         // boolean an;
     public int ComputeFac(int num){
         int num_aux ;
+        
         if (num < 1)
             num_aux = 1 ;
         else
@@ -24,6 +25,7 @@ public int ComputeFac2(int num){return 1;}
     {
         return 1;
     }
+    
 }
 
 class B extends Fac {
