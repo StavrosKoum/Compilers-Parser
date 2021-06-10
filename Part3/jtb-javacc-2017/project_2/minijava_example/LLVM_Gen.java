@@ -904,7 +904,21 @@ public int get_meth_offset(String method,String myclass)
         System.out.println(last_methOff);
         System.out.println("******************-"+methods_count+"-*************************");
         
-        return tmp;
+        String register,register1,register2;
+
+        register_num++;
+        register = "%_" + register_num;
+        emit("\n\t" + register+" = call i8* @calloc(i32 1, i32 " + last_val_off+")");
+        register_num++;
+        register1 = "%_" + register_num;
+        emit("\n\t"+register1+ " = bitcast i8* "+ register+ " to i8***");
+        register_num++;
+        register2 = "%_" + register_num;
+        emit("\n\t"+register2+" = getelementptr ["+methods_count+" x i8*], ["+methods_count
+        + " xi8*]* @."+tmp+"_vtable, i32 0, i32 0");
+        emit("\n\tstore i8** "+ register2+", i8*** "+register1);
+
+        return "i8* " + register;
     }
 
 
