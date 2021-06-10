@@ -50,16 +50,18 @@ if1:
 	%_7 = bitcast i8* %_6 to i32 (i8*,i32)*
 	%_8 =load i32, i32* %num
 
-	%_9 = mul i32 %_2, skataa
-	store i32 %_9, i32* %num_aux
+	%_9 = sub i32 %_8, 1
+	%_10 = call i32 %_7(i8* %this, i32 %_9)
+	%_11 = mul i32 %_2, i32 %_10
+	store i32 %_11, i32* %num_aux
 
     br label %if2
 
 if2:
 
-	%_10 =load i32, i32* %num_aux
+	%_12 =load i32, i32* %num_aux
 
-	ret i32 %_10
+	ret i32 %_12
 }
 define i32 @Fac.testfun(i8 %this)
 

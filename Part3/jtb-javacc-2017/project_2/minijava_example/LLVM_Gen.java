@@ -617,9 +617,6 @@ public int get_meth_offset(String method,String myclass)
     {
 
         
-       
-
-
         String my_expr  = n.f0.accept(this,null);
         if(this.messageSend_flag)
         {
@@ -771,27 +768,7 @@ public int get_meth_offset(String method,String myclass)
     }
 
 
-    /**
-    * f0 -> PrimaryExpression()
-    * f1 -> "*"
-    * f2 -> PrimaryExpression()
-    */
-    @Override
-    public String visit(TimesExpression n, Void argu) throws Exception
-    {
-        String one = n.f0.accept(this,null);
-        String two = n.f2.accept(this,null);
-        //System.out.println(one + "*"+ two);
-
-        // String tmp_array[];
-        // tmp_array = two.split(" ");
-        // two = tmp_array[1];
-        register_num++;
-        emit("\n\t%_" + register_num+ " = mul "+ one+", "+two);
-
-        
-        return "i32 %_" + register_num;
-    }
+   
 
 
     /**
@@ -841,24 +818,13 @@ public int get_meth_offset(String method,String myclass)
         register_num++;
         reg1 = "%_" + register_num;   
         emit("\n\t"+reg1+ " = load i8*, i8** "+reg);
-
         //take method type and args
         Method_class meth_value = Table.get(type_class).Methods_Table.get(this_meth);
         String meth_type = meth_value.type;
-
         register_num++;
         reg = "%_" + register_num;
         emit("\n\t"+ reg+" = bitcast i8* "+reg1+" to "+ give_types(meth_type)+ " (i8*");
         
-
-
-
-
-        
-        
-
-
-
         //now emit method param
         for(int i = 0; i <meth_value.args_list.size(); i ++)
         {
@@ -866,10 +832,19 @@ public int get_meth_offset(String method,String myclass)
         }
         emit(")*");
 
+        //time to take arguments and call function
 
-        n.f4.accept(this, argu);
-        
-        return _ret;
+        String arguments = pr_expr;
+        if(n.f4.present())
+        arguments += n.f4.accept(this, argu);
+
+        register_num++;
+        reg1 = "%_" + register_num; 
+        emit("\n\t"+reg1+" = call "+give_types(meth_type)+" "+reg+"("+arguments+")");
+
+
+        //TODOOOOO
+        return give_types(meth_type)+" "+reg1;
     }
 
 
@@ -903,9 +878,18 @@ public int get_meth_offset(String method,String myclass)
 
 
 
-
-
-
+    /**
+     * f0 -> "("
+    * f1 -> Expression() ookkkkkkk
+    * f2 -> ")"
+    */
+    public String visit(BracketExpression n,  Void argu) throws Exception 
+    {
+        //System.out.println("8");
+        String tmp = n.f1.accept(this, argu);
+        
+        return tmp;
+    }
 
 
     @Override
@@ -997,8 +981,8 @@ public int get_meth_offset(String method,String myclass)
     */
     public String visit(ExpressionList n, Void argu ) throws Exception 
     {
-        String _ret=null;
-        n.f0.accept(this, argu);
+        String _ret=", "+n.f0.accept(this, argu);
+
         n.f1.accept(this, argu);
         return _ret;
     }
@@ -1006,7 +990,7 @@ public int get_meth_offset(String method,String myclass)
         /**
     * f0 -> AndExpression()
     *       | CompareExpression()
-    *       | PlusExpression()
+    *       | PlusExpression()TODOO
     *       | MinusExpression()
     *       | TimesExpression()
     *       | ArrayLookup()
@@ -1022,18 +1006,78 @@ public int get_meth_offset(String method,String myclass)
         return tmp;
     }
 
+     /**
+    * f0 -> PrimaryExpression()
+    * f1 -> "-"
+    * f2 -> PrimaryExpression()
+    */
+    @Override
+    public String visit(MinusExpression n, Void argu) throws Exception
+    {
+        String one = n.f0.accept(this,null);
+        String two = n.f2.accept(this,null);
+        //System.out.println(one + "*"+ two);
+
+        String tmp_array[];
+        tmp_array = two.split(" ");
+        two = tmp_array[1];
+        register_num++;
+        emit("\n\t%_" + register_num+ " = sub "+ one+", "+two);
+
+        
+        return "i32 %_" + register_num;
+    }
+
+
+     /**
+    * f0 -> PrimaryExpression()
+    * f1 -> "*"
+    * f2 -> PrimaryExpression()
+    */
+    @Override
+    public String visit(TimesExpression n, Void argu) throws Exception
+    {
+        String one = n.f0.accept(this,null);
+        String two = n.f2.accept(this,null);
+        //System.out.println(one + "*"+ two);
+
+        // String tmp_array[];
+        // tmp_array = two.split(" ");
+        // two = tmp_array[1];
+        register_num++;
+        emit("\n\t%_" + register_num+ " = mul "+ one+", "+two);
+
+        
+        return "i32 %_" + register_num;
+    }
 
 
 
+    /**
+    * f0 -> PrimaryExpression()
+    * f1 -> "+"
+    * f2 -> PrimaryExpression()
+    */
+    @Override
+    public String visit(PlusExpression n, Void argu) throws Exception
+    {
+        String one = n.f0.accept(this,null);
+        String two = n.f2.accept(this,null);
+        //System.out.println(one + "*"+ two);
+
+        String tmp_array[];
+        tmp_array = two.split(" ");
+        two = tmp_array[1];
+        register_num++;
+        emit("\n\t%_" + register_num+ " = add "+ one+", "+two);
+
+        
+        return "i32 %_" + register_num;
+    }
 
 
 
-
-
-
-
-
-
+   
 
 
 
