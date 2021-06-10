@@ -348,24 +348,24 @@ public String find_id_type(String id)
         
     }
 
-public int get_meth_offset(String method)
+public int get_meth_offset(String method,String myclass)
 {
     //first search at the class we are in
     Method_class scout_meth;
-    scout_meth = Table.get(tmp_class).Methods_Table.get(method);
+    scout_meth = Table.get(myclass).Methods_Table.get(method);
     if(scout_meth!=null)
     {
-        return scout_meth.offset;
+        return scout_meth.offset/8;
     }
     //search other extended classes for this method
-    class_class myClass = Table.get(tmp_class);
+    class_class myClass = Table.get(myclass);
     while(myClass.ex_class!=null)
     {
         myClass = Table.get(myClass.ex_class);
         scout_meth = myClass.Methods_Table.get(method);
         if(scout_meth!=null)
         {
-            return scout_meth.offset;
+            return scout_meth.offset/8;
         }
     }
     System.out.println("MALAKIA---DEN-VRIKE-METHOD");
@@ -643,7 +643,7 @@ public int get_meth_offset(String method)
                 type = type_list.get(i);
                 type = give_types(type);
                 register_num++;
-                emit("\t%_" +register_num+" =load " + type+", "+type+"* %"+my_expr +"\n");
+                emit("\n\t%_" +register_num+" =load " + type+", "+type+"* %"+my_expr +"\n");
                 
                 String ret = type + " " + "%_" +register_num;
                  
@@ -664,7 +664,7 @@ public int get_meth_offset(String method)
                 
                 type = give_types(scouter.type);
                 register_num++;
-                emit("\t%_" +register_num+" =load " + type+", "+type+"* %"+my_expr +"\n");
+                emit("\n\t%_" +register_num+" =load " + type+", "+type+"* %"+my_expr +"\n");
                 String ret = type + " " + "%_" +register_num;
                 return ret;
 
@@ -809,28 +809,85 @@ public int get_meth_offset(String method)
         this.messageSend_flag = true;
         String pr_expr = n.f0.accept(this, argu);
         this.messageSend_flag = false;
+        //class_variable.method()
         String type_class = find_id_type(this.class_variable);
+
+        //give the class we are in 
         if(type_class.equals("i8* %this"))
         type_class = tmp_class;
         //now we have the class we have to search for the method
-        System.out.println("------------>"+type_class);
+        System.out.println("------------>"+class_variable);
 
 
 
 
         n.f1.accept(this, argu);
         String this_meth =  n.f2.accept(this, argu);
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+this_meth);
         n.f3.accept(this, argu);
 
+        int offset = get_meth_offset(this_meth, type_class);
         String this_args = null;
 
+        register_num++;
+        String reg = "%_" + register_num;
+        register_num++;
+        String reg1 = "%_" + register_num;
+        emit("\n\t"+ reg+ " = bitcast " + pr_expr + " to i8***");
+        emit("\n\t"+reg1+" load i8**,i8*** "+reg);
+        register_num++;
+        reg = "%_" + register_num;   
+        emit("\n\t"+reg+" = getelementptr i8*,i8** "+ reg1+", i32 "+ offset);
+        register_num++;
+        reg1 = "%_" + register_num;   
+        emit("\n\t"+reg1+ " = load i8*, i8** "+reg);
+
+        //take method type and args
+        Method_class meth_value = Table.get(type_class).Methods_Table.get(this_meth);
+        String meth_type = meth_value.type;
+
+        register_num++;
+        reg = "%_" + register_num;
+        emit("\n\t"+ reg+" = bitcast i8* "+reg1+" to "+ give_types(meth_type)+ " (i8*");
         
+
+
+
+
+        
+        
+
+
+
+        //now emit method param
+        for(int i = 0; i <meth_value.args_list.size(); i ++)
+        {
+            emit(","+give_types(meth_value.args_list.get(i)));
+        }
+        emit(")*");
+
+
         n.f4.accept(this, argu);
         
-        
-        //returns type
         return _ret;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
