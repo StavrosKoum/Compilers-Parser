@@ -22,6 +22,7 @@ public class LLVM_Gen extends GJDepthFirst<String,Void>
     private int register_num = -1;
     private boolean messageSend_flag = false;
     private String class_variable=null;
+    private String alloca_expre_type = null;
 
 
     public LLVM_Gen(HashMap <String,class_class> MyTable,Writer wr,int class_count)
@@ -266,6 +267,11 @@ public String give_args_types(List<String> arguments,boolean empty_args)
 
 public String find_id_type(String id)
     {
+        if(id==null)
+        {
+            System.out.println("problem at find_id_type()");
+            return id;
+        }
         class_class tmp_class;
         Variable_class tmp;
         Method_class meth_tmp;
@@ -787,7 +793,12 @@ public int get_meth_offset(String method,String myclass)
         String pr_expr = n.f0.accept(this, argu);
         this.messageSend_flag = false;
         //class_variable.method()
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+this.class_variable);
         String type_class = find_id_type(this.class_variable);
+        if(this.alloca_expre_type!=null)//means there was a allocationExpression
+        type_class = this.alloca_expre_type;
+        this.alloca_expre_type = null;
+
 
         //give the class we are in 
         if(type_class.equals("i8* %this"))
