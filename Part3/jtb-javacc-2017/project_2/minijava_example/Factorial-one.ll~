@@ -1,5 +1,5 @@
 
-@.Example_vtable = global [0 x i8*] []
+@.Factorial_vtable = global [0 x i8*] []
 @.Fac_vtable = global [2 x i8*] [i8* bitcast (i32 (i8*,i32)* @Fac.ComputeFac to i8*), i8* bitcast (i32 (i8*)* @Fac.testfun to i8*)]
 @.B_vtable = global [3 x i8*] [i8* bitcast (i32 (i8*,i32)* @B.ComputeFac to i8*),i8* bitcast (i32 (i8*)* @Fac.testfun to i8*), i8* bitcast (i1 (i8*)* @B.foobar to i8*)]
 
@@ -52,7 +52,7 @@ if1:
 
 	%_9 = sub i32 %_8, 1
 	%_10 = call i32 %_7(i8* %this, i32 %_9)
-	%_11 = mul i32 %_2, skataa
+	%_11 = mul i32 %_2, i32 %_10
 	store i32 %_11, i32* %num_aux
 
     br label %if2

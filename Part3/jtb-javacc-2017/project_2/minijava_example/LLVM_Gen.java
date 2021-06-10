@@ -787,7 +787,7 @@ public int get_meth_offset(String method,String myclass)
     */
     public String visit(MessageSend n,  Void argu) throws Exception {
         String _ret=null;
-
+        this.alloca_expre_type = null;//just to be sure
         //flag so primary expr will return a string with the var name
         this.messageSend_flag = true;
         String pr_expr = n.f0.accept(this, argu);
@@ -854,11 +854,58 @@ public int get_meth_offset(String method,String myclass)
         emit("\n\t"+reg1+" = call "+give_types(meth_type)+" "+reg+"("+arguments+")");
 
 
-        //TODOOOOO
+        //TODOOOOO maybe no
         return give_types(meth_type)+" "+reg1;
     }
 
+    /**
+    * f0 -> "new"
+    * f1 -> Identifier() okkkkkk i guess
+    * f2 -> "("
+    * f3 -> ")"
+    */
+    public String visit(AllocationExpression n, Void argu) throws Exception 
+    {
+        
+        
+        //System.out.println("6");
 
+        String tmp = n.f1.accept(this, argu);
+        this.alloca_expre_type  = tmp;
+        class_class alloc_class = Table.get(tmp);
+        Variable_class  var_class;
+        Method_class meth_class;
+
+        //take last var offset
+        int last_val_off = 0;
+        for(String key: alloc_class.Variables_Table.keySet())
+        {
+            var_class = alloc_class.Variables_Table.get(key);
+            if(last_val_off < var_class.offset)
+            last_val_off = var_class.offset;
+        }
+        //System.out.println("******************-"+last_val_off+"-*************************");
+        
+        //take total methods count
+        int last_methOff = -8;
+        for(String key1: alloc_class.Methods_Table.keySet())
+        {
+            meth_class = alloc_class.Methods_Table.get(key1);
+            if(last_methOff<meth_class.offset)
+            {
+                last_methOff = meth_class.offset;
+            }
+        }
+        int methods_count;
+        if(last_methOff==-8)
+        methods_count =0;
+        else
+        methods_count = (last_methOff/8) + 1;
+        System.out.println(last_methOff);
+        System.out.println("******************-"+methods_count+"-*************************");
+        
+        return tmp;
+    }
 
 
 
