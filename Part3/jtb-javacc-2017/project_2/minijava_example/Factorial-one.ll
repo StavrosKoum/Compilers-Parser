@@ -33,46 +33,62 @@ define i32 @main(){
 	%_7 = bitcast i8* %_6 to i32 (i8*,i32)*
 	%_8 = call i32 %_7(i8* %_0, i32 10)
 	call void (i32) @print_int(i32 %_8)
+
 	ret i32 0
 }
 define i32 @Fac.ComputeFac(i8* %this, i32 %.num)
 {	%num = alloca i32
 	store i32 %.num, i32* %num
 	%num_aux = alloca i32
-
-	%_9 = load i32, i32* %num
-
-	%_10 =icmp slt i32 %_9, 1
-    br  i1 %_10, label %if0, label %if1
+	%_9= xor i1 1, 1
+    br  i1 %_9, label %if0, label %if1
 
 if0:
-	store i32 1, i32* %num_aux
+	call void (i32) @print_int(i32 666)
 
     br label %if2
 
 if1:
 
-	%_11 = load i32, i32* %num
-
-	%_12 = bitcast i8* %this to i8***
-	%_13 = load i8**,i8*** %_12
-	%_14 = getelementptr i8*,i8** %_13, i32 0
-	%_15 = load i8*, i8** %_14
-	%_16 = bitcast i8* %_15 to i32 (i8*,i32)*
-	%_17 = load i32, i32* %num
-
-	%_18 = sub i32 %_17, 1
-	%_19 = call i32 %_16(i8* %this, i32 %_18)
-	%_20 = mul i32 %_11, %_19
-	store i32 %_20, i32* %num_aux
+	call void (i32) @print_int(i32 666)
 
     br label %if2
 
 if2:
 
-	%_21 = load i32, i32* %num_aux
+	%_10 = load i32, i32* %num
 
-	ret i32 %_21
+	%_11 =icmp slt i32 %_10, 1
+    br  i1 %_11, label %if3, label %if4
+
+if3:
+	store i32 1, i32* %num_aux
+
+    br label %if5
+
+if4:
+
+	%_12 = load i32, i32* %num
+
+	%_13 = bitcast i8* %this to i8***
+	%_14 = load i8**,i8*** %_13
+	%_15 = getelementptr i8*,i8** %_14, i32 0
+	%_16 = load i8*, i8** %_15
+	%_17 = bitcast i8* %_16 to i32 (i8*,i32)*
+	%_18 = load i32, i32* %num
+
+	%_19 = sub i32 %_18, 1
+	%_20 = call i32 %_17(i8* %this, i32 %_19)
+	%_21 = mul i32 %_12, %_20
+	store i32 %_21, i32* %num_aux
+
+    br label %if5
+
+if5:
+
+	%_22 = load i32, i32* %num_aux
+
+	ret i32 %_22
 }
 define i32 @Fac.testfun(i8* %this)
 {

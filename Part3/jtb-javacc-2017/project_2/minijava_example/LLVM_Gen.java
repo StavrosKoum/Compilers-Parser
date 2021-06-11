@@ -2,7 +2,7 @@ import syntaxtree.*;
 import visitor.*;
 import java.util.HashMap;
 import java.util.*;
-import javax.print.DocFlavor.STRING;
+
 
 
 
@@ -20,6 +20,8 @@ public class LLVM_Gen extends GJDepthFirst<String,Void>
     String tmp_class,tmp_method,temp_extended_class;
     private int if_num = 0;
     private int register_num = -1;
+    private int not_register_num = -1;
+
     private boolean messageSend_flag = false;
     private String class_variable=null;
     private String alloca_expre_type = null;
@@ -1149,10 +1151,42 @@ public int get_meth_offset(String method,String myclass)
     }
 
 
-
+    /**
+    * f0 -> "System.out.println"
+    * f1 -> "("
+    * f2 -> Expression()
+    * f3 -> ")"
+    * f4 -> ";"
+    */
+    public String visit(PrintStatement n, Void argu) throws Exception {
+        String _ret=null;
+        n.f0.accept(this, argu);
+        n.f1.accept(this, argu);
+        String a = n.f2.accept(this, argu);
+        emit("\n\tcall void (i32) @print_int("+a+")\n");
+        n.f3.accept(this, argu);
+        n.f4.accept(this, argu);
+        return _ret;
+    }
    
 
+    /**
+    * f0 -> "!"
+    * f1 -> PrimaryExpression()
+    */
+    public String visit(NotExpression n,Void argu) throws Exception 
+    {
+        String two = n.f1.accept(this,null);
+        
 
+        String tmp_array[];
+        tmp_array = two.split(" ");
+        two = tmp_array[1];
+        this.register_num++;
+        emit("\t%_"+ register_num+ "= xor i1 1, "+two);
+        return "i1 %_" + register_num;
+
+    }
 
 
 
