@@ -41,24 +41,32 @@ define i32 @Fac.ComputeFac(i8* %this, i32 %.num)
 	store i32 %.num, i32* %num
 	%num_aux = alloca i32
 
-	%_9 = load i32, i32* %num
+	%_9 = getelementptr i8, i8* %this, i32 8
+	%_10 = bitcast i8* %_9 to i32*
+	store i32 1, i32* %_10
 
-	%_10 =icmp slt i32 %_9, 1
+	%_11 = getelementptr i8, i8* %this, i32 8
+	%_12 = bitcast i8* %_11 to i32*
+	store i32 787, i32* %_12
+
+	%_13 = load i32, i32* %num
+
+	%_14 =icmp slt i32 %_13, 1
 	br label %andexpre1
 
 andexpre1:
-	br i1 %_10, label %andexpre2, label %andexpre4
+	br i1 %_14, label %andexpre2, label %andexpre4
 
 andexpre2:
-	%_11 =icmp slt i32 1, 4
+	%_15 =icmp slt i32 1, 4
 	br label %andexpre3
 
 andexpre3:
 	br label %andexpre4
 
 andexpre4:
-	%_12 = phi i1 [0, %andexpre1], [ %_11, %andexpre3 ]
-    br  i1%_12, label %if0, label %if1
+	%_16 = phi i1 [0, %andexpre1], [ %_15, %andexpre3 ]
+    br  i1%_16, label %if0, label %if1
 
 if0:
 	store i32 1, i32* %num_aux
@@ -67,27 +75,27 @@ if0:
 
 if1:
 
-	%_13 = load i32, i32* %num
+	%_17 = load i32, i32* %num
 
-	%_14 = bitcast i8* %this to i8***
-	%_15 = load i8**,i8*** %_14
-	%_16 = getelementptr i8*,i8** %_15, i32 0
-	%_17 = load i8*, i8** %_16
-	%_18 = bitcast i8* %_17 to i32 (i8*,i32)*
-	%_19 = load i32, i32* %num
+	%_18 = bitcast i8* %this to i8***
+	%_19 = load i8**,i8*** %_18
+	%_20 = getelementptr i8*,i8** %_19, i32 0
+	%_21 = load i8*, i8** %_20
+	%_22 = bitcast i8* %_21 to i32 (i8*,i32)*
+	%_23 = load i32, i32* %num
 
-	%_20 = sub i32 %_19, 1
-	%_21 = call i32 %_18(i8* %this, i32 %_20)
-	%_22 = mul i32 %_13, %_21
-	store i32 %_22, i32* %num_aux
+	%_24 = sub i32 %_23, 1
+	%_25 = call i32 %_22(i8* %this, i32 %_24)
+	%_26 = mul i32 %_17, %_25
+	store i32 %_26, i32* %num_aux
 
     br label %if2
 
 if2:
 
-	%_23 = load i32, i32* %num_aux
+	%_27 = load i32, i32* %num_aux
 
-	ret i32 %_23
+	ret i32 %_27
 }
 define i32 @Fac.testfun(i8* %this)
 {

@@ -13,7 +13,7 @@ class Fac {
         // boolean an;
     public int ComputeFac(int num){
         int num_aux ;
-        // num_aux = 1;
+        num_aux1 = 1;
         // 
         // if(!true)
         // System.out.println(666);
