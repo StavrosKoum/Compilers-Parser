@@ -22,7 +22,7 @@ define void @throw_oob() {
     ret void
 }
 define i32 @main(){
-	%_0 = call i8* @calloc(i32 1, i32 8)
+	%_0 = call i8* @calloc(i32 1, i32 12)
 	%_1 = bitcast i8* %_0 to i8***
 	%_2 = getelementptr [2 x i8*], [2 x i8*]* @.Fac_vtable, i32 0, i32 0
 	store i8** %_2, i8*** %_1

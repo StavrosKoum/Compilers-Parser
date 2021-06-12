@@ -7,7 +7,7 @@ class Factorial{
 class Fac {
 // public int ComputeFac1(int num){return 1;}
 //public int ComputeFac2(int num){return 1;}
-        // int num_aux1 ;
+        int num_aux1 ;
         // int num_aux2 ;
         // int num_aux3 ;
         // boolean an;
@@ -26,7 +26,7 @@ class Fac {
         //     num_aux = 3;
         //     
         // }
-        
+        num_aux1 = 787 ; 
         if ((num < 1) && (1<4))
             num_aux = 1 ;
         else

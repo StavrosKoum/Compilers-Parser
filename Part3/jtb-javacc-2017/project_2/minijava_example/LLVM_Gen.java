@@ -440,7 +440,7 @@ public int get_meth_offset(String method,String myclass)
         // temp_method = "class";
         // temp_extended_class = null;
         tmp_class = classname;
-        super.visit(n, argu);
+        n.f4.accept(this, null);
         //System.out.println();
         return null;
     }
@@ -462,7 +462,7 @@ public int get_meth_offset(String method,String myclass)
         // temp_method = "class";
         // //System.out.println("Class: " + classname);
         temp_extended_class = n.f3.accept(this, null);
-        super.visit(n, argu);
+        n.f6.accept(this, null);
         //System.out.println();
         return null;
     }
@@ -773,8 +773,9 @@ public int get_meth_offset(String method,String myclass)
             }
             
         }
-
+        System.out.println("^^^^^^ASSIGMENTS^^^^^^");
         //MORE TODOOOOOOO
+
 
         return ret;
 
@@ -802,7 +803,7 @@ public int get_meth_offset(String method,String myclass)
         String pr_expr = n.f0.accept(this, argu);
         this.messageSend_flag = false;
         //class_variable.method()
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+this.class_variable);
+        //System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+this.class_variable);
         String type_class = find_id_type(this.class_variable);
         if(this.alloca_expre_type!=null)//means there was a allocationExpression
         type_class = this.alloca_expre_type;
@@ -813,14 +814,14 @@ public int get_meth_offset(String method,String myclass)
         if(type_class.equals("i8* %this"))
         type_class = tmp_class;
         //now we have the class we have to search for the method
-        System.out.println("------------>"+class_variable);
+        //System.out.println("------------>"+class_variable);
 
 
 
 
         n.f1.accept(this, argu);
         String this_meth =  n.f2.accept(this, argu);
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+this_meth);
+        //System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+this_meth);
         n.f3.accept(this, argu);
 
         int offset = get_meth_offset(this_meth, type_class);
@@ -910,8 +911,8 @@ public int get_meth_offset(String method,String myclass)
         methods_count =0;
         else
         methods_count = (last_methOff/8) + 1;
-        System.out.println(last_methOff);
-        System.out.println("******************-"+methods_count+"-*************************");
+        //System.out.println(last_methOff);
+        //System.out.println("******************-"+methods_count+"-*************************");
         
         String register,register1,register2;
 
