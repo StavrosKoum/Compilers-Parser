@@ -17,7 +17,10 @@ public class LLVM_Gen extends GJDepthFirst<String,Void>
     //Lists to temporary store param type and name
     public List<String> name_list= new ArrayList<String>();
     public List<String> type_list= new ArrayList<String>();
+
+    //register nums
     String tmp_class,tmp_method,temp_extended_class;
+    private int loop_num = 0;
     private int if_num = 0;
     private int register_num = -1;
     private int not_register_num = -1;
@@ -514,8 +517,9 @@ public int get_meth_offset(String method,String myclass)
         emit("\n\tret "+ ret+"\n}\n");
 
         //clear counters
-        if_num =0;
-        register_num = -1;
+        this.if_num =0;
+        this.register_num = -1;
+        this.loop_num = 0;
         //clear the lists so other methods can use them
         this.name_list.clear();
         this.type_list.clear();
@@ -1190,7 +1194,41 @@ public int get_meth_offset(String method,String myclass)
 
 
 
+    /**
+    * f0 -> "while"
+    * f1 -> "("
+    * f2 -> Expression()
+    * f3 -> ")"
+    * f4 -> Statement()
+    */
+    public String visit(WhileStatement n, Void argu) throws Exception {
+        String _ret=null;
+        n.f0.accept(this, argu);
+        n.f1.accept(this, argu);
+        
+        String label1,label2,label3;
 
+        loop_num++;
+        label1 = "loop"+loop_num;
+        loop_num++;
+        label2 = "loop"+loop_num;
+        loop_num++;
+        label3 = "loop"+loop_num;
+        emit("\n\tbr label %"+label1+"\n");
+        emit("\n"+label1+ ":");
+
+        String Expr = n.f2.accept(this, argu);
+
+        emit("\n\t br "+Expr+", label %"+ label2+", label %" + label3+"\n");
+        emit("\n"+label2+":");
+        n.f4.accept(this, argu);
+        emit("\n\tbr label %"+label1+"\n\n"+label3+":");
+        
+
+
+        
+        return _ret;
+     }
 
 
 
