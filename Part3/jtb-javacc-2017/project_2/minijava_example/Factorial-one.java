@@ -13,21 +13,21 @@ class Fac {
         // boolean an;
     public int ComputeFac(int num){
         int num_aux ;
-        num_aux = 1;
+        // num_aux = 1;
+        // 
+        // if(!true)
+        // System.out.println(666);
+        // else
+        // System.out.println(666);
+        // 
+        // while(num_aux<2)
+        // {
+        //     System.out.println(777);
+        //     num_aux = 3;
+        //     
+        // }
         
-        if(!true)
-        System.out.println(666);
-        else
-        System.out.println(666);
-        
-        while(num_aux<2)
-        {
-            System.out.println(777);
-            num_aux = 3;
-            
-        }
-        
-        if (num < 1)
+        if ((num < 1) && (1<4))
             num_aux = 1 ;
         else
            num_aux = num * (this.ComputeFac(num-1)) ;

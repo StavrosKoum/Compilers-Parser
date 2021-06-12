@@ -41,72 +41,53 @@ define i32 @Fac.ComputeFac(i8* %this, i32 %.num)
 	store i32 %.num, i32* %num
 	%num_aux = alloca i32
 
-	store i32 1, i32* %num_aux
-	%_9= xor i1 1, 1
-    br  i1 %_9, label %if0, label %if1
+	%_9 = load i32, i32* %num
+
+	%_10 =icmp slt i32 %_9, 1
+	br label %andexpre1
+
+andexpre1:
+	br i1 %_10, label %andexpre2, label %andexpre4
+
+andexpre2:
+	%_11 =icmp slt i32 1, 4
+	br label %andexpre3
+
+andexpre3:
+	br label %andexpre4
+
+andexpre4:
+	%_12 = phi i1 [0, %andexpre1], [ %_11, %andexpre3 ]
+    br  i1%_12, label %if0, label %if1
 
 if0:
-	call void (i32) @print_int(i32 666)
+	store i32 1, i32* %num_aux
 
     br label %if2
 
 if1:
 
-	call void (i32) @print_int(i32 666)
+	%_13 = load i32, i32* %num
+
+	%_14 = bitcast i8* %this to i8***
+	%_15 = load i8**,i8*** %_14
+	%_16 = getelementptr i8*,i8** %_15, i32 0
+	%_17 = load i8*, i8** %_16
+	%_18 = bitcast i8* %_17 to i32 (i8*,i32)*
+	%_19 = load i32, i32* %num
+
+	%_20 = sub i32 %_19, 1
+	%_21 = call i32 %_18(i8* %this, i32 %_20)
+	%_22 = mul i32 %_13, %_21
+	store i32 %_22, i32* %num_aux
 
     br label %if2
 
 if2:
 
-	br label %loop1
+	%_23 = load i32, i32* %num_aux
 
-loop1:
-	%_10 = load i32, i32* %num_aux
-
-	%_11 =icmp slt i32 %_10, 2
-	 br i1 %_11, label %loop2, label %loop3
-
-loop2:
-	call void (i32) @print_int(i32 777)
-
-	store i32 3, i32* %num_aux
-
-	br label %loop1
-
-loop3:
-	%_12 = load i32, i32* %num
-
-	%_13 =icmp slt i32 %_12, 1
-    br  i1 %_13, label %if3, label %if4
-
-if3:
-	store i32 1, i32* %num_aux
-
-    br label %if5
-
-if4:
-
-	%_14 = load i32, i32* %num
-
-	%_15 = bitcast i8* %this to i8***
-	%_16 = load i8**,i8*** %_15
-	%_17 = getelementptr i8*,i8** %_16, i32 0
-	%_18 = load i8*, i8** %_17
-	%_19 = bitcast i8* %_18 to i32 (i8*,i32)*
-	%_20 = load i32, i32* %num
-
-	%_21 = sub i32 %_20, 1
-	%_22 = call i32 %_19(i8* %this, i32 %_21)
-	%_23 = mul i32 %_14, %_22
-	store i32 %_23, i32* %num_aux
-
-    br label %if5
-
-if5:
-
-	%_24 = load i32, i32* %num_aux
-
-	ret i32 %_24
+	ret i32 %_23
 }
 define i32 @Fac.testfun(i8* %this)
 {

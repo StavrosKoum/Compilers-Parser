@@ -22,12 +22,15 @@ public class LLVM_Gen extends GJDepthFirst<String,Void>
     String tmp_class,tmp_method,temp_extended_class;
     private int loop_num = 0;
     private int if_num = 0;
+    private int and_num = 0;
+
     private int register_num = -1;
     private int not_register_num = -1;
 
     private boolean messageSend_flag = false;
     private String class_variable=null;
     private String alloca_expre_type = null;
+
 
 
     public LLVM_Gen(HashMap <String,class_class> MyTable,Writer wr,int class_count)
@@ -517,6 +520,7 @@ public int get_meth_offset(String method,String myclass)
         emit("\n\tret "+ ret+"\n}\n");
 
         //clear counters
+        this.and_num = 0;
         this.if_num =0;
         this.register_num = -1;
         this.loop_num = 0;
@@ -558,9 +562,7 @@ public int get_meth_offset(String method,String myclass)
     public String visit(FormalParameter n, Void argu) throws Exception{
         String type = n.f0.accept(this, null);
         String name = n.f1.accept(this, null);
-        // type = give_types(type);
-        // emit("\t%"+name+" = alloca "+ type+"\n");
-        // emit("\tstore "+ type+ " %." + name + ", "+ type+"* %"+name+"\n");
+       
 
         if(name!=null)
         {
@@ -1066,7 +1068,19 @@ public int get_meth_offset(String method,String myclass)
         return _ret;
     }
 
-        /**
+    // /**
+    // * f0 -> ","
+    // * f1 -> Expression()
+    // */
+    // public String visit(ExpressionTerm n, Void argu ) throws Exception 
+    // {
+    //     String _ret=", "+n.f1.accept(this);
+    //     n.f0.accept(this);
+    //     n.f1.accept(this);
+    //     return _ret;
+    // }
+
+    /**
     * f0 -> AndExpression()
     *       | CompareExpression()
     *       | PlusExpression()TODOO
@@ -1233,7 +1247,48 @@ public int get_meth_offset(String method,String myclass)
 
 
 
+    /**
+    * f0 -> PrimaryExpression()
+    * f1 -> "&&"
+    * f2 -> PrimaryExpression()
+    */
+    public String visit(AndExpression n, Void argu) throws Exception 
+    {
+        String ret= null;
+        String pr_expr1 = n.f0.accept(this,null);
+        String label1,label2,label3,label4;
+        this.and_num++;
+        label1 = "andexpre" + this.and_num;
+        this.and_num++;
+        label2 = "andexpre" + this.and_num;
+        this.and_num++;
+        label3 = "andexpre" + this.and_num;
+        this.and_num++;
+        label4 = "andexpre" + this.and_num;
 
+        emit("\n\tbr label %"+label1);
+        emit("\n\n"+label1+":");
+        emit("\n\tbr "+pr_expr1+", label %"+label2+", label %"+label4);
+        //&&
+        emit("\n\n"+label2+":");
+        String pr_expr2 = n.f2.accept(this,null);
+        emit("\n\tbr label %"+label3);
+        emit("\n\n"+label3+":");
+        emit("\n\tbr label %"+label4+"\n\n"+label4+":");
+        this.register_num++;
+        String reg = "%_"+this.register_num;
+        String tmp[];
+        tmp = pr_expr2.split(" ");
+        pr_expr2 = tmp[1];
+        emit("\n\t"+reg+" = phi i1 [0, %"+label1+"], [ "+pr_expr2+", %"+label3+" ]");
+
+
+
+
+        
+        
+        return "i1"+ reg;
+    }
 
 
 
