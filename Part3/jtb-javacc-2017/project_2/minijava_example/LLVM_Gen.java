@@ -686,13 +686,40 @@ public int get_meth_offset(String method,String myclass)
             }
             
         }
+
+        //search if it is a variable declared in a class or superclass
+        class_class myclass = Table.get(tmp_class);
+        Variable_class myVar = myclass.Variables_Table.get(my_expr+"class");
+        //search the above classes
+        while(myVar == null)
+        {
+            
+            myclass = Table.get(myclass.ex_class);
+            myVar = myclass.Variables_Table.get(my_expr+"class"); 
+            System.out.println("ohh_loop");
+        }
+
+        //We have the variable now
+        int offstet = myVar.offset;
+        type = myVar.type;
+        type = give_types(type);
+
+        register_num++;
+        String reg = "%_"+this.register_num;
+        emit("\n\t"+reg+" = getelementptr i8, i8* %this, i32 "+(offstet+8));
+        register_num++;
+        String reg2 = "%_"+this.register_num;
+        emit("\n\t"+ reg2+" = bitcast i8* "+reg+" to "+type+"*");
+        register_num++;
+        reg = "%_"+this.register_num;
+        emit("\n\t"+reg+" = load " +type+", "+ type+"* "+ reg2 +"\n");
         
       
 
 
 
 
-        return "skataa";
+        return type+" "+reg ;
         
     }
     
@@ -785,7 +812,7 @@ public int get_meth_offset(String method,String myclass)
         {
             
             myclass = Table.get(myclass.ex_class);
-            myVar = myclass.Variables_Table.get(name); 
+            myVar = myclass.Variables_Table.get(name+"class"); 
             System.out.println("ohh_loop");
         }
 

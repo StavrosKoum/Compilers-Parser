@@ -8,12 +8,14 @@ class Fac {
 // public int ComputeFac1(int num){return 1;}
 //public int ComputeFac2(int num){return 1;}
         int num_aux1 ;
+        
         // int num_aux2 ;
         // int num_aux3 ;
         // boolean an;
     public int ComputeFac(int num){
         int num_aux ;
-        num_aux1 = 1;
+        num_aux1 = 2;
+        num_aux = num_aux1;
         // 
         // if(!true)
         // System.out.println(666);
@@ -27,7 +29,7 @@ class Fac {
         //     
         // }
         num_aux1 = 787 ; 
-        if ((num < 1) && (1<4))
+        if ((num < 1) && (num_aux<4))
             num_aux = 1 ;
         else
            num_aux = num * (this.ComputeFac(num-1)) ;

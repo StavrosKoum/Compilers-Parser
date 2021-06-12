@@ -43,30 +43,38 @@ define i32 @Fac.ComputeFac(i8* %this, i32 %.num)
 
 	%_9 = getelementptr i8, i8* %this, i32 8
 	%_10 = bitcast i8* %_9 to i32*
-	store i32 1, i32* %_10
+	store i32 2, i32* %_10
 
 	%_11 = getelementptr i8, i8* %this, i32 8
 	%_12 = bitcast i8* %_11 to i32*
-	store i32 787, i32* %_12
+	%_13 = load i32, i32* %_12
 
-	%_13 = load i32, i32* %num
+	store i32 %_13, i32* %num_aux
 
-	%_14 =icmp slt i32 %_13, 1
+	%_14 = getelementptr i8, i8* %this, i32 8
+	%_15 = bitcast i8* %_14 to i32*
+	store i32 787, i32* %_15
+
+	%_16 = load i32, i32* %num
+
+	%_17 =icmp slt i32 %_16, 1
 	br label %andexpre1
 
 andexpre1:
-	br i1 %_14, label %andexpre2, label %andexpre4
+	br i1 %_17, label %andexpre2, label %andexpre4
 
 andexpre2:
-	%_15 =icmp slt i32 1, 4
+	%_18 = load i32, i32* %num_aux
+
+	%_19 =icmp slt i32 %_18, 4
 	br label %andexpre3
 
 andexpre3:
 	br label %andexpre4
 
 andexpre4:
-	%_16 = phi i1 [0, %andexpre1], [ %_15, %andexpre3 ]
-    br  i1%_16, label %if0, label %if1
+	%_20 = phi i1 [0, %andexpre1], [ %_19, %andexpre3 ]
+    br  i1%_20, label %if0, label %if1
 
 if0:
 	store i32 1, i32* %num_aux
@@ -75,27 +83,27 @@ if0:
 
 if1:
 
-	%_17 = load i32, i32* %num
+	%_21 = load i32, i32* %num
 
-	%_18 = bitcast i8* %this to i8***
-	%_19 = load i8**,i8*** %_18
-	%_20 = getelementptr i8*,i8** %_19, i32 0
-	%_21 = load i8*, i8** %_20
-	%_22 = bitcast i8* %_21 to i32 (i8*,i32)*
-	%_23 = load i32, i32* %num
+	%_22 = bitcast i8* %this to i8***
+	%_23 = load i8**,i8*** %_22
+	%_24 = getelementptr i8*,i8** %_23, i32 0
+	%_25 = load i8*, i8** %_24
+	%_26 = bitcast i8* %_25 to i32 (i8*,i32)*
+	%_27 = load i32, i32* %num
 
-	%_24 = sub i32 %_23, 1
-	%_25 = call i32 %_22(i8* %this, i32 %_24)
-	%_26 = mul i32 %_17, %_25
-	store i32 %_26, i32* %num_aux
+	%_28 = sub i32 %_27, 1
+	%_29 = call i32 %_26(i8* %this, i32 %_28)
+	%_30 = mul i32 %_21, %_29
+	store i32 %_30, i32* %num_aux
 
     br label %if2
 
 if2:
 
-	%_27 = load i32, i32* %num_aux
+	%_31 = load i32, i32* %num_aux
 
-	ret i32 %_27
+	ret i32 %_31
 }
 define i32 @Fac.testfun(i8* %this)
 {
