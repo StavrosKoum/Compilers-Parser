@@ -606,13 +606,18 @@ public int get_meth_offset(String method,String myclass)
         
         n.f3.accept(this, argu);
         n.f4.accept(this, argu);
-        emit("\n    br label %if" + if_num);
+        label1  = "if" + if_num;
+        if_num+=1;
+        emit("\n    br label %" + label1);
+        
         n.f5.accept(this, argu);
+
         emit("\n\n" + label2 + ":\n");
         n.f6.accept(this, argu);
-        emit("\n    br label %if" + if_num);
-        emit("\n\nif" + if_num + ":\n");
-        if_num+=1;
+
+        emit("\n    br label %" + label1);
+        emit("\n\n" + label1 + ":\n");
+        
         
         return _ret;
     }
@@ -777,7 +782,7 @@ public int get_meth_offset(String method,String myclass)
             {
                 type = type_list.get(i);
                 type = give_types(type);
-                emit("\n\tstore"+expr+", "+ type+"* %"+name+"\n");
+                emit("\n\tstore "+expr+", "+ type+"* %"+name+"\n");
                 
                 
                  
@@ -904,6 +909,10 @@ public int get_meth_offset(String method,String myclass)
         //now emit method param
         for(int i = 0; i <meth_value.args_list.size(); i ++)
         {
+            // if(register_num==66)
+            // System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+meth_value.method_name);
+            if(meth_value.empty_args)
+            break;
             emit(","+give_types(meth_value.args_list.get(i)));
         }
         emit(")*");
@@ -911,9 +920,13 @@ public int get_meth_offset(String method,String myclass)
         //time to take arguments and call function
 
         String arguments = pr_expr;
+
+        
         if(n.f4.present())
         arguments += n.f4.accept(this, argu);
 
+        if(register_num==68)
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+arguments);
         register_num++;
         reg1 = "%_" + register_num; 
         emit("\n\t"+reg1+" = call "+give_types(meth_type)+" "+reg+"("+arguments+")");
@@ -1120,21 +1133,37 @@ public int get_meth_offset(String method,String myclass)
     {
         String _ret=", "+n.f0.accept(this, argu);
 
-        n.f1.accept(this, argu);
+        String msy = n.f1.accept(this, argu);
+        
+        if(register_num==68)
+        System.out.println("$$$$$$>"+_ret+msy);
+        if(msy!=null)
+            return _ret+msy;
+        else
+            return _ret;
+    }
+
+    /**
+    * f0 -> ","
+    * f1 -> Expression()
+    */
+    public String visit(ExpressionTerm n, Void argu ) throws Exception 
+    {
+        String _ret=", "+n.f1.accept(this,null);
+        if(register_num==68)
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+_ret);
+        // n.f0.accept(this);
+        // n.f1.accept(this);
         return _ret;
     }
 
-    // /**
-    // * f0 -> ","
-    // * f1 -> Expression()
-    // */
-    // public String visit(ExpressionTerm n, Void argu ) throws Exception 
-    // {
-    //     String _ret=", "+n.f1.accept(this);
-    //     n.f0.accept(this);
-    //     n.f1.accept(this);
-    //     return _ret;
-    // }
+    /**
+    * f0 -> ( ExpressionTerm() )*
+    */
+   public String visit(ExpressionTail n, Void argu ) throws Exception 
+   {
+            return n.f0.accept(this,null);
+    }
 
     /**
     * f0 -> AndExpression()

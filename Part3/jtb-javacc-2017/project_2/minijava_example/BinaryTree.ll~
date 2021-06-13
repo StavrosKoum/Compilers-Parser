@@ -99,8 +99,6 @@ define i32 @BT.Start(i8* %this)
 	%_46 = call i1 %_45(i8* %_40, i32 24)
 	store i1 %_46, i1* %ntb
 
-	call void (i32) @print_int(i32 3333333)
-
 	%_47 = load i8*, i8** %root
 
 	%_48 = bitcast i8* %_47 to i8***
@@ -397,24 +395,24 @@ if1:
 	%_6 = load i32, i32* %nti
 
 	%_7 =icmp slt i32 %_5, %_6	%_8= xor i1 1, %_7
-    br  i1 %_8, label %if3, label %if4
+    br  i1 %_8, label %if2, label %if3
 
-if3:
+if2:
 	store i1 0, i1* %ntb
 
-    br label %if5
+    br label %if4
 
-if4:
+if3:
 
 	store i1 1, i1* %ntb
+
+    br label %if4
+
+if4:
 
     br label %if5
 
 if5:
-
-    br label %if2
-
-if2:
 
 	%_9 = load i1, i1* %ntb
 
@@ -450,8 +448,6 @@ define i1 @Tree.Insert(i8* %this, i32 %.v_key)
 	store i8* %this, i8** %current_node
 
 	store i1 1, i1* %cont
-
-	call void (i32) @print_int(i32 111111)
 
 	br label %loop1
 
@@ -490,8 +486,6 @@ if0:
     br  i1 %_28, label %if2, label %if3
 
 if2:
-	call void (i32) @print_int(i32 2222222)
-
 	%_29 = load i8*, i8** %current_node
 
 	%_30 = bitcast i8* %_29 to i8***
@@ -546,9 +540,9 @@ if1:
 	%_55 = load i8*, i8** %_54
 	%_56 = bitcast i8* %_55 to i1 (i8*)*
 	%_57 = call i1 %_56(i8* %_51)
-    br  i1 %_57, label %if6, label %if7
+    br  i1 %_57, label %if5, label %if6
 
-if6:
+if5:
 	%_58 = load i8*, i8** %current_node
 
 	%_59 = bitcast i8* %_58 to i8***
@@ -559,9 +553,9 @@ if6:
 	%_64 = call i8* %_63(i8* %_58)
 	store i8* %_64, i8** %current_node
 
-    br label %if8
+    br label %if7
 
-if7:
+if6:
 
 	store i1 0, i1* %cont
 
@@ -587,19 +581,17 @@ if7:
 	%_79 = call i1 %_77(i8* %_72, i8* %_78)
 	store i1 %_79, i1* %ntb
 
+    br label %if7
+
+if7:
+
     br label %if8
 
 if8:
 
-    br label %if5
-
-if5:
-
 	br label %loop1
 
 loop3:
-	call void (i32) @print_int(i32 2222222)
-
 	ret i1 1
 }
 define i1 @Tree.Delete(i8* %this, i32 %.v_key)
@@ -693,9 +685,9 @@ if1:
 	%_27 = load i32, i32* %v_key
 
 	%_28 =icmp slt i32 %_26, %_27
-    br  i1 %_28, label %if6, label %if7
+    br  i1 %_28, label %if5, label %if6
 
-if6:
+if5:
 	%_29 = load i8*, i8** %current_node
 
 	%_30 = bitcast i8* %_29 to i8***
@@ -704,9 +696,9 @@ if6:
 	%_33 = load i8*, i8** %_32
 	%_34 = bitcast i8* %_33 to i1 (i8*)*
 	%_35 = call i1 %_34(i8* %_29)
-    br  i1 %_35, label %if8, label %if9
+    br  i1 %_35, label %if7, label %if8
 
-if8:
+if7:
 	%_36 = load i8*, i8** %current_node
 
 	store i8* %_36, i8** %parent_node
@@ -721,25 +713,25 @@ if8:
 	%_43 = call i8* %_42(i8* %_37)
 	store i8* %_43, i8** %current_node
 
-    br label %if10
+    br label %if9
 
-if9:
+if8:
 
 	store i1 0, i1* %cont
 
+    br label %if9
+
+if9:
+
     br label %if10
 
-if10:
-
-    br label %if11
-
-if7:
+if6:
 
 	%_44 = load i1, i1* %is_root
 
-    br  i1 %_44, label %if12, label %if13
+    br  i1 %_44, label %if10, label %if11
 
-if12:
+if10:
 	%_45 = load i8*, i8** %current_node
 
 	%_46 = bitcast i8* %_45 to i8***
@@ -769,14 +761,14 @@ andexpre3:
 
 andexpre4:
 	%_61 = phi i1 [0, %andexpre1], [ %_60, %andexpre3 ]
-    br  i1%_61, label %if14, label %if15
+    br  i1%_61, label %if12, label %if13
 
-if14:
+if12:
 	store i1 1, i1* %ntb
 
-    br label %if16
+    br label %if14
 
-if15:
+if13:
 
 	%_62 = bitcast i8* %this to i8***
 	%_63 = load i8**,i8*** %_62
@@ -787,16 +779,16 @@ if15:
 
 	%_68 = load i8*, i8** %current_node
 
-	%_69 = call i1 %_66(i8* %this, i8* %_67, i8* %_68)
+	%_69 = call i1 %_66(i8* %this, i8* %_67)
 	store i1 %_69, i1* %ntb
 
-    br label %if16
+    br label %if14
 
-if16:
+if14:
 
-    br label %if17
+    br label %if15
 
-if13:
+if11:
 
 	%_70 = bitcast i8* %this to i8***
 	%_71 = load i8**,i8*** %_70
@@ -807,24 +799,24 @@ if13:
 
 	%_76 = load i8*, i8** %current_node
 
-	%_77 = call i1 %_74(i8* %this, i8* %_75, i8* %_76)
+	%_77 = call i1 %_74(i8* %this, i8* %_75)
 	store i1 %_77, i1* %ntb
 
-    br label %if17
+    br label %if15
 
-if17:
+if15:
 
 	store i1 1, i1* %found
 
 	store i1 0, i1* %cont
 
-    br label %if11
+    br label %if16
 
-if11:
+if16:
 
-    br label %if5
+    br label %if17
 
-if5:
+if17:
 
 	store i1 0, i1* %is_root
 
@@ -864,7 +856,7 @@ if0:
 
 	%_13 = load i8*, i8** %c_node
 
-	%_14 = call i1 %_11(i8* %this, i8* %_12, i8* %_13)
+	%_14 = call i1 %_11(i8* %this, i8* %_12)
 	store i1 %_14, i1* %ntb
 
     br label %if2
@@ -879,9 +871,9 @@ if1:
 	%_19 = load i8*, i8** %_18
 	%_20 = bitcast i8* %_19 to i1 (i8*)*
 	%_21 = call i1 %_20(i8* %_15)
-    br  i1 %_21, label %if3, label %if4
+    br  i1 %_21, label %if2, label %if3
 
-if3:
+if2:
 	%_22 = bitcast i8* %this to i8***
 	%_23 = load i8**,i8*** %_22
 	%_24 = getelementptr i8*,i8** %_23, i32 15
@@ -891,12 +883,12 @@ if3:
 
 	%_28 = load i8*, i8** %c_node
 
-	%_29 = call i1 %_26(i8* %this, i8* %_27, i8* %_28)
+	%_29 = call i1 %_26(i8* %this, i8* %_27)
 	store i1 %_29, i1* %ntb
 
-    br label %if5
+    br label %if4
 
-if4:
+if3:
 
 	%_30 = load i8*, i8** %c_node
 
@@ -933,10 +925,10 @@ if4:
 
 	%_56 = load i32, i32* %auxkey2
 
-	%_57 = call i1 %_54(i8* %this, i32 %_55, i32 %_56)
-    br  i1 %_57, label %if6, label %if7
+	%_57 = call i1 %_54(i8* %this, i32 %_55)
+    br  i1 %_57, label %if4, label %if5
 
-if6:
+if4:
 	%_58 = load i8*, i8** %p_node
 
 	%_59 = bitcast i8* %_58 to i8***
@@ -961,9 +953,9 @@ if6:
 	%_74 = call i1 %_73(i8* %_68, i1 0)
 	store i1 %_74, i1* %ntb
 
-    br label %if8
+    br label %if6
 
-if7:
+if5:
 
 	%_75 = load i8*, i8** %p_node
 
@@ -989,17 +981,17 @@ if7:
 	%_91 = call i1 %_90(i8* %_85, i1 0)
 	store i1 %_91, i1* %ntb
 
+    br label %if6
+
+if6:
+
+    br label %if7
+
+if7:
+
     br label %if8
 
 if8:
-
-    br label %if5
-
-if5:
-
-    br label %if2
-
-if2:
 
 	ret i1 1
 }
@@ -1050,7 +1042,7 @@ loop2:
 
 	%_27 = load i8*, i8** %c_node
 
-	store i8* %_27, i8** %p_node
+	storei8* %_27, i8** %p_node
 
 	%_28 = load i8*, i8** %c_node
 
@@ -1060,7 +1052,7 @@ loop2:
 	%_32 = load i8*, i8** %_31
 	%_33 = bitcast i8* %_32 to i8* (i8*)*
 	%_34 = call i8* %_33(i8* %_28)
-	store i8* %_34, i8** %c_node
+	storei8* %_34, i8** %c_node
 
 	br label %loop1
 
@@ -1138,7 +1130,7 @@ loop2:
 
 	%_27 = load i8*, i8** %c_node
 
-	store i8* %_27, i8** %p_node
+	storei8* %_27, i8** %p_node
 
 	%_28 = load i8*, i8** %c_node
 
@@ -1148,7 +1140,7 @@ loop2:
 	%_32 = load i8*, i8** %_31
 	%_33 = bitcast i8* %_32 to i8* (i8*)*
 	%_34 = call i8* %_33(i8* %_28)
-	store i8* %_34, i8** %c_node
+	storei8* %_34, i8** %c_node
 
 	br label %loop1
 
@@ -1259,9 +1251,9 @@ if1:
 	%_26 = load i32, i32* %v_key
 
 	%_27 =icmp slt i32 %_25, %_26
-    br  i1 %_27, label %if6, label %if7
+    br  i1 %_27, label %if5, label %if6
 
-if6:
+if5:
 	%_28 = load i8*, i8** %current_node
 
 	%_29 = bitcast i8* %_28 to i8***
@@ -1270,9 +1262,9 @@ if6:
 	%_32 = load i8*, i8** %_31
 	%_33 = bitcast i8* %_32 to i1 (i8*)*
 	%_34 = call i1 %_33(i8* %_28)
-    br  i1 %_34, label %if8, label %if9
+    br  i1 %_34, label %if7, label %if8
 
-if8:
+if7:
 	%_35 = load i8*, i8** %current_node
 
 	%_36 = bitcast i8* %_35 to i8***
@@ -1283,9 +1275,21 @@ if8:
 	%_41 = call i8* %_40(i8* %_35)
 	store i8* %_41, i8** %current_node
 
-    br label %if10
+    br label %if9
+
+if8:
+
+	store i1 0, i1* %cont
+
+    br label %if9
 
 if9:
+
+    br label %if10
+
+if6:
+
+	store i32 1, i32* %ifound
 
 	store i1 0, i1* %cont
 
@@ -1295,19 +1299,7 @@ if10:
 
     br label %if11
 
-if7:
-
-	store i32 1, i32* %ifound
-
-	store i1 0, i1* %cont
-
-    br label %if11
-
 if11:
-
-    br label %if5
-
-if5:
 
 	br label %loop1
 
