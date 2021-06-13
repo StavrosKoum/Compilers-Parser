@@ -973,9 +973,12 @@ public int get_meth_offset(String method,String myclass)
         
         //take total methods count
         int last_methOff = -8;
+        
         for(String key1: alloc_class.Methods_Table.keySet())
         {
+            
             meth_class = alloc_class.Methods_Table.get(key1);
+            
             if(last_methOff<meth_class.offset)
             {
                 last_methOff = meth_class.offset;
@@ -983,11 +986,38 @@ public int get_meth_offset(String method,String myclass)
         }
         int methods_count;
         if(last_methOff==-8)
-        methods_count =0;
+        {
+            //search superclass
+            alloc_class = Table.get(alloc_class.ex_class);
+
+            
+            for(String key1: alloc_class.Methods_Table.keySet())
+            {
+                
+                meth_class = alloc_class.Methods_Table.get(key1);
+                
+                if(last_methOff<meth_class.offset)
+                {
+                    last_methOff = meth_class.offset;
+                }
+            }
+            if(last_methOff==-8)
+            {
+                methods_count =0;
+            }
+            else
+            {
+                methods_count = (last_methOff/8) + 1;
+            }
+        }
         else
-        methods_count = (last_methOff/8) + 1;
+        {
+            methods_count = (last_methOff/8) + 1;
+        }
+        
         //System.out.println(last_methOff);
-        //System.out.println("******************-"+methods_count+"-*************************");
+        if(register_num==81)
+        System.out.println("******************-"+methods_count+"-*************************");
         
         String register,register1,register2;
 
