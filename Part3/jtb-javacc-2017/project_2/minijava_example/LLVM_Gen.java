@@ -105,7 +105,7 @@ public class LLVM_Gen extends GJDepthFirst<String,Void>
                                 // System.out.println(">>>>>>>>>>"+(Table.get(value.ex_class)).meth_count);
                                 ///////////////////////////////////
                                 //////////////////////////////////
-                                if( (meth_num == 0 || value.ex_class == null) || (meth_num == 0 && flag) )
+                                if( (meth_num == 0 && value.ex_class == null) || (meth_num == 0 && flag) )
                                 {
                                     emit_str = "i8* bitcast (" + give_types(meth_value.type) + " (" + give_args_types(meth_value.args_list,meth_value.empty_args) + ")* @" + value.class_name+"."+meth_value.method_name 
                                     +" to i8*)";
@@ -649,6 +649,7 @@ public int get_meth_offset(String method,String myclass)
 
         
         String my_expr  = n.f0.accept(this,null);
+        //System.out.println("11>"+my_expr);
         if(this.messageSend_flag)
         {
             //System.out.println("11>");
@@ -707,7 +708,7 @@ public int get_meth_offset(String method,String myclass)
         //search the above classes
         while(myVar == null)
         {
-            //System.out.println("^^^^^"+my_expr+"-"+tmp_class+"-"+myclass.ex_class);
+            System.out.println("^^^^^"+my_expr+"-"+tmp_class+"-"+myclass.ex_class);
             myclass = Table.get(myclass.ex_class);
             myVar = myclass.Variables_Table.get(my_expr+"class"); 
             System.out.println("ohh_loop");
@@ -1162,7 +1163,7 @@ public int get_meth_offset(String method,String myclass)
         register_num++;
         String reg = "%_"+ register_num;
         
-        emit("\n\t"+ reg+" =icmp slt "+e1+", "+e2);
+        emit("\n\t"+ reg+" = icmp slt "+e1+", "+e2);
         
         return "i1 "+ reg;
     }
@@ -1333,6 +1334,7 @@ public int get_meth_offset(String method,String myclass)
     */
     public String visit(NotExpression n,Void argu) throws Exception 
     {
+        //System.out.println("_________i1 %_" );
         String two = n.f1.accept(this,null);
         
 
@@ -1340,7 +1342,8 @@ public int get_meth_offset(String method,String myclass)
         tmp_array = two.split(" ");
         two = tmp_array[1];
         this.register_num++;
-        emit("\t%_"+ register_num+ "= xor i1 1, "+two);
+        emit("\t%_"+ register_num+ " = xor i1 1, "+two);
+        //System.out.println("_________i1 %_" + register_num);
         return "i1 %_" + register_num;
 
     }
@@ -1426,7 +1429,7 @@ public int get_meth_offset(String method,String myclass)
 
         
         
-        return "i1"+ reg;
+        return "i1 "+ reg;
     }
 
 
