@@ -1,7 +1,5 @@
 
-@.CallFromSuper_vtable = global [0 x i8*] []
-@.A_vtable = global [1 x i8*] [i8* bitcast (i32 (i8*)* @A.foo to i8*)]
-@.B_vtable = global [1 x i8*] [i8* bitcast (i32 (i8*)* @A.foo to i8*)]
+@.Add_vtable = global [0 x i8*] []
 
 declare i8* @calloc(i32, i32)
 declare i32 @printf(i8*, ...)
@@ -21,9 +19,9 @@ define void @throw_oob() {
     call void @exit(i32 1)
     ret void
 }
-define i32 @main(){	%b = alloca i8*
-	%rv = alloca i32
+define i32 @main(){
+	%_0 = add i32 12, 21
+	call void (i32) @print_int(i32 %_0)
 
 	ret i32 0
 }
-define i32 @A.foo(i8 %this)

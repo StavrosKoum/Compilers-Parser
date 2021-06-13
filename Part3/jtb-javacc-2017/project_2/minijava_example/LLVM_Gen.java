@@ -95,10 +95,17 @@ public class LLVM_Gen extends GJDepthFirst<String,Void>
                             meth_value = value.Methods_Table.get(key1);
                             if(meth_value.num_id == meth_num)
                             {
-
+                                boolean flag = false;
+                                //chech if there is an empty superclass
+                                if(Table.get(value.ex_class)!=null)
+                                {
+                                    if(Table.get(value.ex_class).meth_count==0)
+                                    flag = true;
+                                }
+                                // System.out.println(">>>>>>>>>>"+(Table.get(value.ex_class)).meth_count);
                                 ///////////////////////////////////
                                 //////////////////////////////////
-                                if(meth_num == 0 && value.ex_class == null )
+                                if( (meth_num == 0 || value.ex_class == null) || (meth_num == 0 && flag) )
                                 {
                                     emit_str = "i8* bitcast (" + give_types(meth_value.type) + " (" + give_args_types(meth_value.args_list,meth_value.empty_args) + ")* @" + value.class_name+"."+meth_value.method_name 
                                     +" to i8*)";

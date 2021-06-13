@@ -5,30 +5,33 @@ class Factorial{
 }
 
 class Fac {
-// public int ComputeFac1(int num){return 1;}
-//public int ComputeFac2(int num){return 1;}
-        int num_aux1 ;
-        
-        // int num_aux2 ;
-        // int num_aux3 ;
-        // boolean an;
-    public int ComputeFac(int num){
+//  public int ComputeFac1(int num){return 1;}
+// public int ComputeFac2(int num){return 1;}
+        int num_aux1 ; 
+        int num_aux2 ;
+        int num_aux3 ;
+        boolean an;
+public int ComputeFac(int num){
         int num_aux ;
-        num_aux1 = 2;
+        num_aux1 = 1;
         num_aux = num_aux1;
-        // 
-        // if(!true)
-        // System.out.println(666);
-        // else
-        // System.out.println(666);
-        // 
-        // while(num_aux<2)
-        // {
-        //     System.out.println(777);
-        //     num_aux = 3;
-        //     
-        // }
+        
+        //test ifstatement
+        if(!true)
+        System.out.println(888);
+        else
+        System.out.println(999);
+        
+        //test while
+        while(num_aux<2)
+        {
+            System.out.println(777);
+           num_aux = 3;
+             
+         }
         num_aux1 = 787 ; 
+        
+        //test and expression
         if ((num < 1) && (num_aux<4))
             num_aux = 1 ;
         else
