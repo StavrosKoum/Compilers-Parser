@@ -99,8 +99,6 @@ define i32 @BT.Start(i8* %this)
 	%_46 = call i1 %_45(i8* %_40, i32 24)
 	store i1 %_46, i1* %ntb
 
-	call void (i32) @print_int(i32 3333333)
-
 	%_47 = load i8*, i8** %root
 
 	%_48 = bitcast i8* %_47 to i8***
@@ -451,8 +449,6 @@ define i1 @Tree.Insert(i8* %this, i32 %.v_key)
 
 	store i1 1, i1* %cont
 
-	call void (i32) @print_int(i32 111111)
-
 	br label %loop1
 
 loop1:
@@ -490,8 +486,6 @@ if0:
     br  i1 %_28, label %if2, label %if3
 
 if2:
-	call void (i32) @print_int(i32 2222222)
-
 	%_29 = load i8*, i8** %current_node
 
 	%_30 = bitcast i8* %_29 to i8***
@@ -598,8 +592,6 @@ if5:
 	br label %loop1
 
 loop3:
-	call void (i32) @print_int(i32 2222222)
-
 	ret i1 1
 }
 define i1 @Tree.Delete(i8* %this, i32 %.v_key)

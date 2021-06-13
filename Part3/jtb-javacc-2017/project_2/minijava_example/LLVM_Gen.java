@@ -698,7 +698,7 @@ public int get_meth_offset(String method,String myclass)
         //search the above classes
         while(myVar == null)
         {
-            
+            //System.out.println("^^^^^"+my_expr+"-"+tmp_class+"-"+myclass.ex_class);
             myclass = Table.get(myclass.ex_class);
             myVar = myclass.Variables_Table.get(my_expr+"class"); 
             System.out.println("ohh_loop");
@@ -923,10 +923,15 @@ public int get_meth_offset(String method,String myclass)
 
         
         if(n.f4.present())
-        arguments += n.f4.accept(this, argu);
+        {
+            arguments += n.f4.accept(this, argu);
+        }
+        
 
-        if(register_num==68)
+        if(register_num==10)
         System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+arguments);
+        // System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+register_num);
+
         register_num++;
         reg1 = "%_" + register_num; 
         emit("\n\t"+reg1+" = call "+give_types(meth_type)+" "+reg+"("+arguments+")");
@@ -1132,11 +1137,10 @@ public int get_meth_offset(String method,String myclass)
     public String visit(ExpressionList n, Void argu ) throws Exception 
     {
         String _ret=", "+n.f0.accept(this, argu);
-
-        String msy = n.f1.accept(this, argu);
         
-        if(register_num==68)
-        System.out.println("$$$$$$>"+_ret+msy);
+        String msy = n.f1.accept(this, argu);
+        if(register_num==10)
+        System.out.println("$$$$$$>"+_ret+"-"+msy);
         if(msy!=null)
             return _ret+msy;
         else
@@ -1147,11 +1151,16 @@ public int get_meth_offset(String method,String myclass)
     * f0 -> ","
     * f1 -> Expression()
     */
+    
     public String visit(ExpressionTerm n, Void argu ) throws Exception 
     {
+        
+
+
         String _ret=", "+n.f1.accept(this,null);
-        if(register_num==68)
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+_ret);
+        //System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+register_num);
+        if(register_num==9||register_num==10)
+        System.out.println("~~~~~~~~~~TERM~~~~~~~~~~~>"+_ret);
         // n.f0.accept(this);
         // n.f1.accept(this);
         return _ret;
@@ -1160,9 +1169,13 @@ public int get_meth_offset(String method,String myclass)
     /**
     * f0 -> ( ExpressionTerm() )*
     */
-   public String visit(ExpressionTail n, Void argu ) throws Exception 
-   {
-            return n.f0.accept(this,null);
+    public String visit(ExpressionTail n, Void argu ) throws Exception 
+    {
+        
+        String _ret = n.f0.accept(this,null);
+        if(register_num==11||register_num==10)
+        System.out.println("~~~~~~~~~~TAIL~~~~~~~~~~~>"+_ret);
+        return _ret;
     }
 
     /**
