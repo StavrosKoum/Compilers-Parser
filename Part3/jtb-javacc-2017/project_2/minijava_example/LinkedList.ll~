@@ -120,7 +120,7 @@ define i1 @Element.Equal(i8* %this, i8* %.other)
 	%_14 = bitcast i8* %_13 to i32*
 	%_15 = load i32, i32* %_14
 
-	%_16 = call i1 %_11(i8* %this, i32 %_12, i32 %_15)	%_17= xor i1 1, %_16
+	%_16 = call i1 %_11(i8* %this, i32 %_12null, i32 %_15)	%_17= xor i1 1, %_16
     br  i1 %_17, label %if0, label %if1
 
 if0:
@@ -151,7 +151,7 @@ if1:
 	%_32 = bitcast i8* %_31 to i32*
 	%_33 = load i32, i32* %_32
 
-	%_34 = call i1 %_29(i8* %this, i32 %_30, i32 %_33)	%_35= xor i1 1, %_34
+	%_34 = call i1 %_29(i8* %this, i32 %_30null, i32 %_33)	%_35= xor i1 1, %_34
     br  i1 %_35, label %if3, label %if4
 
 if3:
@@ -363,7 +363,7 @@ define i8* @List.Insert(i8* %this, i8* %.new_elem)
 
 	%_10 = load i8*, i8** %aux03
 
-	%_11 = call i1 %_8(i8* %_3, i8* %_9, i8* %_10, i1 0)
+	%_11 = call i1 %_8(i8* %_3, i8* %_9null, i8* %_10, i1 0)
 	store i1 %_11, i1* %ret_val
 
 	%_12 = load i8*, i8** %aux02
@@ -825,7 +825,7 @@ define i32 @LL.Start(i8* %this)
 	%_31 = getelementptr i8*,i8** %_30, i32 0
 	%_32 = load i8*, i8** %_31
 	%_33 = bitcast i8* %_32 to i1 (i8*,i32,i32,i1)*
-	%_34 = call i1 %_33(i8* %_28, i32 25, i32 37000, i1 0)
+	%_34 = call i1 %_33(i8* %_28, i32 25null, i32 37000, i1 0)
 	store i1 %_34, i1* %aux01
 
 	%_35 = load i8*, i8** %head
@@ -865,7 +865,7 @@ define i32 @LL.Start(i8* %this)
 	%_56 = getelementptr i8*,i8** %_55, i32 0
 	%_57 = load i8*, i8** %_56
 	%_58 = bitcast i8* %_57 to i1 (i8*,i32,i32,i1)*
-	%_59 = call i1 %_58(i8* %_53, i32 39, i32 42000, i1 1)
+	%_59 = call i1 %_58(i8* %_53, i32 39null, i32 42000, i1 1)
 	store i1 %_59, i1* %aux01
 
 	%_60 = load i8*, i8** %el01
@@ -909,7 +909,7 @@ define i32 @LL.Start(i8* %this)
 	%_82 = getelementptr i8*,i8** %_81, i32 0
 	%_83 = load i8*, i8** %_82
 	%_84 = bitcast i8* %_83 to i1 (i8*,i32,i32,i1)*
-	%_85 = call i1 %_84(i8* %_79, i32 22, i32 34000, i1 0)
+	%_85 = call i1 %_84(i8* %_79, i32 22null, i32 34000, i1 0)
 	store i1 %_85, i1* %aux01
 
 	%_86 = load i8*, i8** %head
@@ -947,7 +947,7 @@ define i32 @LL.Start(i8* %this)
 	%_107 = getelementptr i8*,i8** %_106, i32 0
 	%_108 = load i8*, i8** %_107
 	%_109 = bitcast i8* %_108 to i1 (i8*,i32,i32,i1)*
-	%_110 = call i1 %_109(i8* %_104, i32 27, i32 34000, i1 0)
+	%_110 = call i1 %_109(i8* %_104, i32 27null, i32 34000, i1 0)
 	store i1 %_110, i1* %aux01
 
 	%_111 = load i8*, i8** %head
@@ -989,7 +989,7 @@ define i32 @LL.Start(i8* %this)
 	%_133 = getelementptr i8*,i8** %_132, i32 0
 	%_134 = load i8*, i8** %_133
 	%_135 = bitcast i8* %_134 to i1 (i8*,i32,i32,i1)*
-	%_136 = call i1 %_135(i8* %_130, i32 28, i32 35000, i1 0)
+	%_136 = call i1 %_135(i8* %_130, i32 28null, i32 35000, i1 0)
 	store i1 %_136, i1* %aux01
 
 	%_137 = load i8*, i8** %head
@@ -1061,7 +1061,7 @@ define i32 @LL.Start(i8* %this)
 	%_180 = bitcast i8* %_179 to i1 (i8*,i32,i32,i32)*
 	%_181 = load i32, i32* %i
 
-	%_182 = call i1 %_180(i8* %_175, i32 %_181, i32 1, i32 2)
+	%_182 = call i1 %_180(i8* %_175, i32 %_181null, i32 1, i32 2)
 	store i1 %_182, i1* %aux01
 
 	ret i32 0

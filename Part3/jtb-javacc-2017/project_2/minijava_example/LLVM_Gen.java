@@ -34,6 +34,8 @@ public class LLVM_Gen extends GJDepthFirst<String,Void>
     private String class_variable=null;
     private String alloca_expre_type = null;
 
+    private String danger_args = "";
+
 
 
     public LLVM_Gen(HashMap <String,class_class> MyTable,Writer wr,int class_count)
@@ -921,7 +923,7 @@ public int get_meth_offset(String method,String myclass)
 
         String arguments = pr_expr;
 
-        
+        this.danger_args ="";
         if(n.f4.present())
         {
             arguments += n.f4.accept(this, argu);
@@ -929,7 +931,7 @@ public int get_meth_offset(String method,String myclass)
         
 
         if(register_num==10)
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+arguments);
+        System.out.println("~~~~~~~~~~666~~~~~~~~~~~>"+arguments);
         // System.out.println("~~~~~~~~~~~~~~~~~~~~~>"+register_num);
 
         register_num++;
@@ -1138,13 +1140,14 @@ public int get_meth_offset(String method,String myclass)
     {
         String _ret=", "+n.f0.accept(this, argu);
         
-        String msy = n.f1.accept(this, argu);
+        n.f1.accept(this, argu);
         if(register_num==10)
-        System.out.println("$$$$$$>"+_ret+"-"+msy);
-        if(msy!=null)
-            return _ret+msy;
+        System.out.println("$$$$$$>"+_ret);
+        
+        if(this.danger_args==null)
+        return _ret;
         else
-            return _ret;
+        return _ret + this.danger_args;
     }
 
     /**
@@ -1163,6 +1166,7 @@ public int get_meth_offset(String method,String myclass)
         System.out.println("~~~~~~~~~~TERM~~~~~~~~~~~>"+_ret);
         // n.f0.accept(this);
         // n.f1.accept(this);
+        this.danger_args += _ret;
         return _ret;
     }
 
