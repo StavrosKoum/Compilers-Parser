@@ -421,7 +421,7 @@ public int get_meth_offset(String method,String myclass)
     @Override
     public String visit(MainClass n, Void argu) throws Exception {
         
-        
+        tmp_method = "class";
         String classname = n.f1.accept(this, null);
         this.tmp_class = classname;
         emit("define i32 @main(){");
@@ -447,6 +447,7 @@ public int get_meth_offset(String method,String myclass)
      */
     @Override
     public String visit(ClassDeclaration n, Void argu) throws Exception {
+        tmp_method = "class";
         String classname = n.f1.accept(this, null);
         //System.out.println("Classs: " + classname);
         // temp_method = "class";
@@ -469,6 +470,7 @@ public int get_meth_offset(String method,String myclass)
      */
     @Override
     public String visit(ClassExtendsDeclaration n, Void argu) throws Exception {
+        tmp_method = "class";
         String classname = n.f1.accept(this, null);
         tmp_class = classname;
         // temp_method = "class";
@@ -708,10 +710,10 @@ public int get_meth_offset(String method,String myclass)
         //search the above classes
         while(myVar == null)
         {
-            System.out.println("^^^^^"+my_expr+"-"+tmp_class+"-"+myclass.ex_class);
+            //System.out.println("^^^^^"+my_expr+"-"+tmp_class+"-"+myclass.ex_class);
             myclass = Table.get(myclass.ex_class);
             myVar = myclass.Variables_Table.get(my_expr+"class"); 
-            System.out.println("ohh_loop");
+            //System.out.println("ohh_loop");
         }
 
         //We have the variable now
@@ -777,6 +779,8 @@ public int get_meth_offset(String method,String myclass)
         String ret = null;
         String name = n.f0.accept(this, argu);
         String expr = n.f2.accept(this, argu);
+
+        System.out.println("---------->"+name+"="+expr);
         
         //String id = find_id_type(name);
 
@@ -805,10 +809,11 @@ public int get_meth_offset(String method,String myclass)
         //search if local variable
         if(tmp_class!= null && !tmp_class.equals("class"))
         {
+            System.out.println("---------->"+name+tmp_method);
             Variable_class scouter = Table.get(tmp_class).Variables_Table.get(name+tmp_method);
             //System.out.println("----------22>"+my_expr);
             if(scouter!=null)
-            {
+            { System.out.println("---------->"+name);
                 String scouterman = scouter.var_name;
                 //System.out.println(scouterman+"^^^^^^^^^^^^66");
                 scouterman = give_types(scouter.type);
