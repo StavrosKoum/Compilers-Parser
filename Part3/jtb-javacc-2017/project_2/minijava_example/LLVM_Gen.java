@@ -780,7 +780,7 @@ public int get_meth_offset(String method,String myclass)
         String name = n.f0.accept(this, argu);
         String expr = n.f2.accept(this, argu);
 
-        System.out.println("---------->"+name+"="+expr);
+        //System.out.println("---------->"+name+"="+expr);
         
         //String id = find_id_type(name);
 
@@ -809,11 +809,11 @@ public int get_meth_offset(String method,String myclass)
         //search if local variable
         if(tmp_class!= null && !tmp_class.equals("class"))
         {
-            System.out.println("---------->"+name+tmp_method);
+            //System.out.println("---------->"+name+tmp_method);
             Variable_class scouter = Table.get(tmp_class).Variables_Table.get(name+tmp_method);
             //System.out.println("----------22>"+my_expr);
             if(scouter!=null)
-            { System.out.println("---------->"+name);
+            { 
                 String scouterman = scouter.var_name;
                 //System.out.println(scouterman+"^^^^^^^^^^^^66");
                 scouterman = give_types(scouter.type);
@@ -833,7 +833,7 @@ public int get_meth_offset(String method,String myclass)
             
             myclass = Table.get(myclass.ex_class);
             myVar = myclass.Variables_Table.get(name+"class"); 
-            System.out.println("ohh_loop");
+            //System.out.println("ohh_loop");
         }
 
         //We have the variable now

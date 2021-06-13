@@ -15,70 +15,63 @@ import java.io.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        if(args.length != 1){
-            System.err.println("Usage: java Main <inputFile>");
-            System.exit(1);
-        }
+        // if(args.length != 1){
+        //     System.err.println("Usage: java Main <inputFile>");
+        //     System.exit(1);
+        // }
 
 
 
         FileInputStream fis = null;
-        try{
-            fis = new FileInputStream(args[0]);
-            MiniJavaParser parser = new MiniJavaParser(fis);
 
-            Goal root = parser.Goal();
-            System.err.println("Program parsed successfully.");
-
-            
-            
-            // HashMap<String,class_class> Table = new HashMap<String,class_class>();
-            //Table test = new Table();
-            //test.Insert_Class_Table("testCLASS");
-            //Table.put(test.class_name,test);
-            Table mine = new Table();
-            //System.out.println(Table);
-            root.accept(mine, null);
-
-            
-
-            Check_visitor la_polizia = new Check_visitor(mine.give_table());
-
-            root.accept(la_polizia, null);
-
-            mine.Print_Keys();
-
-            System.out.println("\n\n------------------------------------------------\n");
-
-           
-            //PART 2////////////////////
-            //create a file
-            String file_name = args[0].replace(".java", ".ll");
-            Writer wr = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file_name),"utf-8"));
-
-            //create VTable
-            LLVM_Gen llvm = new LLVM_Gen(mine.give_table(),wr,mine.counter);
-            llvm.create_vt();
-            llvm.define_util();
-
-            root.accept(llvm, null);
-            wr.close();
-            
-            // MyVisitor eval = new MyVisitor();
-           
-        }
-        catch(ParseException ex){
-            System.out.println(ex.getMessage());
-        }
-        catch(FileNotFoundException ex){
-            System.err.println(ex.getMessage());
-        }
-        finally{
+        for(int i=0;i<args.length;i++)
+        {
             try{
-                if(fis != null) fis.close();
+                fis = new FileInputStream(args[i]);
+                MiniJavaParser parser = new MiniJavaParser(fis);
+    
+                Goal root = parser.Goal();
+                System.err.println("Program parsed successfully.");
+    
+                
+                Table mine = new Table();
+                //System.out.println(Table);
+                root.accept(mine, null);
+                Check_visitor la_polizia = new Check_visitor(mine.give_table());
+                root.accept(la_polizia, null);
+                mine.Print_Keys();
+                System.out.println("\n\n------------------------------------------------\n");
+    
+               
+                //PART 2////////////////////
+                //create a file
+                String file_name = args[i].replace(".java", ".ll");
+                Writer wr = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file_name),"utf-8"));
+    
+                //create VTable
+                LLVM_Gen llvm = new LLVM_Gen(mine.give_table(),wr,mine.counter);
+                llvm.create_vt();
+                llvm.define_util();
+    
+                root.accept(llvm, null);
+                wr.close();
+                
+                // MyVisitor eval = new MyVisitor();
+               
             }
-            catch(IOException ex){
+            catch(ParseException ex){
+                System.out.println(ex.getMessage());
+            }
+            catch(FileNotFoundException ex){
                 System.err.println(ex.getMessage());
+            }
+            finally{
+                try{
+                    if(fis != null) fis.close();
+                }
+                catch(IOException ex){
+                    System.err.println(ex.getMessage());
+                }
             }
         }
     }
